@@ -1,0 +1,13 @@
+name: kitcat
+include: .
+flags: --cubical-compatible
+ --auto-inline
+ --exact-split
+ --no-import-sorts
+ --no-prop
+ --no-rewriting
+ --postfix-projections
+ --warning=noUnsupportedIndexedMatch
+ --warning=ClashesViaRenaming
+ --warning=LibUnknownField
+ --warning=UselessInline
