@@ -5,8 +5,8 @@
 
 module Base.Path.Prop where
 
-open import Base.Core
-open import Base.Path.Fiber
+open import Prim.Prelude
+open import Base.Iso
 
 is-wconstant : ∀ {𝓊 𝓋} {A : 𝓊 type} {B : 𝓋 type} → (A → B) → 𝓊 ⊔ 𝓋 type
 is-wconstant f = ∀ x y → f x ≡ f y
@@ -53,4 +53,20 @@ module prop where
    κ y = pc y .snd
 
    c : (y : A) (r : x ≡ y) → r ≡ (Id.inv (f x refl) ∙ f y r)
-   c x refl = sym-is-inverse (f x refl)
+   c x refl = sym-is-inverse (pc x .fst refl) ⁻¹
+
+record is-contr {𝓊} (A : 𝓊 type) : 𝓊 type where
+  constructor contr
+  field
+   ctr : A
+   paths : (x : A) → ctr ≡ x
+
+open is-contr ⦃ ... ⦄ public
+
+module contr where
+ unit : ∀ {𝓊} → is-contr (𝟙 {𝓊})
+ unit .ctr = ⋆
+ unit .paths = λ _ → refl
+
+ hsuc : ∀ {𝓊} {A : 𝓊 type} → is-contr A → is-prop A
+ hsuc (contr c p) a = tr (λ - → ∀ b → - ≡ b) (p a) p
