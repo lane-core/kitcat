@@ -14,9 +14,10 @@ infix 4 _≡_
 open import Prim.Universe
 open import Prim.Pi
 
-open import Control.Arrow
-open import Control.Reasoning
-open import Control.Underlying
+open import Global.Arrow
+open import Global.Cut
+--open import Global.Equivalence
+open import Global.Underlying
 
 module Id where
  data rel {𝓊} (A : 𝓊 type) : A → A → 𝓊 type where
@@ -24,9 +25,6 @@ module Id where
 
  Id : ∀ {𝓊} {A : 𝓊 type} → A → A → 𝓊 type
  Id {𝓊} {A} = rel A
-
- idn : ∀ {𝓊} {A : 𝓊 type} (x : A) → Id x x
- idn x = refl
 
  lhs rhs : ∀ {𝓊} {A : 𝓊 type} {x y : A} → Id x y → A
  lhs {_} {_} {x} = const x
@@ -57,13 +55,14 @@ module Id where
                 → Id (tr (id {𝓊 ⁺} {𝓊 type}) refl) (id {𝓊} {A})
    id-map-lemma = refl
 
+ idn : ∀ {𝓊} {A : 𝓊 type} (x : A) → Id x x
+ idn x = refl
 
- module _ {𝓊} {A : 𝓊 type} where
-  inv : {x y : A} → Id x y → Id y x
-  inv p = tr (λ - → Id - (lhs p)) p refl
+ inv : ∀ {𝓊} {A : 𝓊 type} {x y : A} → Id x y → Id y x
+ inv p = tr (λ - → Id - (lhs p)) p refl
 
-  concat : {x y z : A} → Id x y → Id y z → Id x z
-  concat p q = tr (Id (lhs p)) q p
+ concat : ∀ {𝓊} {A : 𝓊 type} {x y z : A} → Id x y → Id y z → Id x z
+ concat p q = tr (Id (lhs p)) q p
 
 open Id using (Id; refl; tr; ap; idtofun) public
 
@@ -83,8 +82,7 @@ module _ {𝓊} {A : 𝓊 type} {x y : A} where
   underlying-Id : Underlying (x ≡ y)
   underlying-Id = record { ℓ = 𝓊 ; ⌞_⌟ = λ _ → A }
 
-module _ {𝓊} {A : 𝓊 type} where
+module _ {𝓊} {A : 𝓊 type} {y z : A} where
  instance
-  reasoning-Id : ∀ {y z : A} → Reasoning (_≡ y) (λ _ → y ≡ z)
-  reasoning-Id {y} {z} .Reasoning.con = λ x (p : x ≡ y) (q : y ≡ z) → x ≡ z
-  reasoning-Id .seq = λ x → Id.concat
+  cut-Id : Cut A (_≡ y) (λ p → tgt p ≡ z → src p ≡ z)
+  cut-Id .seq = Id.concat {𝓊} {A}

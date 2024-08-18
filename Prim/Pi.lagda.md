@@ -1,6 +1,6 @@
 Lane Biocini
 July 9th, 2024
-revised August 1st, 2024
+revised August 15th, 2024
 
 ```agda
 
@@ -11,9 +11,7 @@ module Prim.Pi where
 infix -1 Pi ev-syntax
 
 open import Prim.Universe
-
-open import Control.Composition public
-open import Control.Underlying public
+open import Global.Underlying
 
 syntax Pi A (λ x → b) = Π x ꞉ A , b
 Pi : ∀ {𝓊 𝓋} (A : 𝓊 type) (B : A → 𝓋 type) → 𝓊 ⊔ 𝓋 type

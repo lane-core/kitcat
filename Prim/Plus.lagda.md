@@ -10,6 +10,7 @@ module Prim.Plus where
 infixr 3 _⊎_
 
 open import Prim.Universe
+open import Prim.Empty
 
 data _⊎_ {𝓊 𝓋} (X : 𝓊 type) (Y : 𝓋 type) : 𝓊 ⊔ 𝓋 type where
  inl : X → X ⊎ Y
@@ -30,8 +31,9 @@ plus-induction : ∀ {𝓊 𝓋 𝓌} {A : 𝓊 type} {B : 𝓋 type} {X : 𝓌 
 plus-induction = cases
 
 plus-functor : ∀ {𝓊 𝓋 𝓌 𝓏} {A : 𝓊 type} {B : 𝓋 type} {X : 𝓌 type} {Y : 𝓏 type}
-         → (f : A → X) (g : B → Y) → A ⊎ B → X ⊎ Y
+             → (f : A → X) (g : B → Y) → A ⊎ B → X ⊎ Y
 plus-functor f g = plus-induction (λ - → inl (f -)) (λ - → inr (g -))
 
 plus-comm : ∀ {𝓊 𝓋} {A : 𝓊 type} {B : 𝓋 type} → A ⊎ B → B ⊎ A
-plus-comm = cases inr inl
+plus-comm (inl x) = inr x
+plus-comm (inr x) = inl x

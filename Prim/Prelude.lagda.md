@@ -16,6 +16,6 @@ open import Prim.Nat public
 open import Prim.Id public
 open import Prim.Id.Homotopy public
 
-open import Control.Arrow public
-open import Control.Composition public
-open import Control.Reasoning public
+open import Global.Arrow public
+open import Global.Cut public
+open import Global.Underlying public

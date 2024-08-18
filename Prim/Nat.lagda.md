@@ -43,18 +43,24 @@ open import Prim.Universe
 open import Prim.Unit
 open import Prim.Empty
 
+empty-to-unit : ⊥ → ⊤
+empty-to-unit _ = ⋆
+
+empty-to-unit' : ⊥ → ⊤
+empty-to-unit' e = ex-falso e
+
 data Nat : Type where
  zero : Nat
  suc : (n : Nat) → Nat
 
 {-# BUILTIN NATURAL Nat #-}
 
-ind : ∀ {𝓊} (P : Nat → 𝓊 type)
-    → P zero
-    → ((k : Nat) → P k → P (suc k))
-    → (x : Nat) → P x
-ind P b s zero = b
-ind P b s (suc x) = s x (ind P b s x)
+induction : ∀ {𝓊} (P : Nat → 𝓊 type)
+          → P zero
+          → ((k : Nat) → P k → P (suc k))
+          → (x : Nat) → P x
+induction P b s zero = b
+induction P b s (suc x) = s x (induction P b s x)
 
 pred : Nat → Nat
 pred zero = zero
@@ -122,19 +128,13 @@ record NegNumeral {𝓊} (A : 𝓊 type) : 𝓊 ⁺ type where
   is-neg : Nat → 𝓊 type
   from-nat : (n : Nat) {{_ : is-neg n}} → A
 
-
-
 open Numeral ⦃ ... ⦄ using (is-pos) public
 open NegNumeral ⦃ ... ⦄ using (is-neg) public
 
 instance
  numeral-Nat : Numeral Nat
- numeral-Nat .is-pos = λ z → is-positive z
+ numeral-Nat .is-pos = λ z → ⊥
  numeral-Nat .Numeral.from-nat = λ n ⦃ z ⦄ → n
-
-open import Prim.Id
-test : Nat
-test = 0
 
 {-# BUILTIN FROMNAT Numeral.from-nat #-}
 {-# BUILTIN FROMNEG NegNumeral.from-nat #-}
