@@ -8,20 +8,36 @@ Aug 3rd, 2024
 module Base.Path.Fiber where
 
 open import Prim.Prelude
-
-sym-is-inverse : ∀ {𝓊} {A : 𝓊 type} {x y : A} (p : x ≡ y)
-                → refl ≡ ((Id.inv p) ∙ p)
-sym-is-inverse refl = refl
+open import Base.Iso
+--open import Control.Arrow
 
 module _ {𝓊 𝓋} {A : 𝓊 type} {B : 𝓋 type} where
- fiber : (A → B) → B → 𝓊 ⊔ 𝓋 type
- fiber f y = Σ x ꞉ A , f x ≡ y
+ record fiber (f : A → B) (y : B) : 𝓊 ⊔ 𝓋 type where
+  field
+   pt : A
+   path : f pt ≡ y
 
+ open fiber public
+
+ _$_ : (f : A → B) → (x : A) → (fiber f (f x))
+ _$_ f x .pt = x
+ _$_ f x .path = refl
+
+module _ {𝓊 𝓋} {A : 𝓊 type} {B : 𝓋 type} where
  instance
-  arrow-fiber : {f : A → B} {y : B} → Arrow (fiber f y)
-  arrow-fiber .src = fst
-  arrow-fiber .tgt = λ f → Id.rhs (f .snd)
+  Arrow-fiber : {f : A → B} {y : B} → Arrow (fiber f y)
+  Arrow-fiber .src = pt
+  Arrow-fiber .tgt = λ f → Id.rhs (f .path)
 
-  underlying-fiber : {f : A → B} {y : B} → Underlying (fiber f y)
-  underlying-fiber .Underlying.ℓ = 𝓋
-  underlying-fiber {f} {y} .⌞_⌟ = λ fib → f (fib .fst) ≡ y
+  Underlying-fiber : {f : A → B} {y : B} → Underlying (fiber f y)
+  Underlying-fiber .Underlying.ℓ = 𝓋
+  Underlying-fiber {f} {y} .⌞_⌟ = λ fib → f (fib .pt) ≡ y
+
+module _ {𝓊 𝓋 𝓌} {A : 𝓊 type} {B : 𝓋 type} {C : 𝓌 type}
+               {f : A → B} {g : B → C} {y : B} {z : C} where
+ instance
+  Cut-fiber : Cut B
+              (λ y → fiber g (g y))
+              λ {y} p → fiber (g ∘ f) (g (p .pt)) → fiber (g ∘ f) (g y)
+  Cut-fiber .seq {f} q p .pt = pt p
+  Cut-fiber .seq {f} q p .path = path p ∙ path q
