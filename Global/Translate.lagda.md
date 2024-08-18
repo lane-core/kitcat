@@ -5,7 +5,7 @@ August 1st, 2024
 
 {-# OPTIONS --safe #-}
 
-module Control.Translate where
+module Global.Translate where
 
 open import Prim.Universe
 
