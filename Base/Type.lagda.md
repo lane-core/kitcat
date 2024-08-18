@@ -6,9 +6,9 @@ May 04, 2024
 
 module Base.Type where
 
-open import Base.Core
+open import Prim.Prelude
 open import Base.Path.Prop
-open import Base.Path.Contr
+
 
 is-hlevel : ∀ {𝓊} → Nat → 𝓊 type → 𝓊 type
 is-hlevel zero A = is-contr A
@@ -55,66 +55,3 @@ module el where
 open el hiding (mk) public
 
 _hlevel_ = nType
-
--- path : ∀ {𝓊} (n : Nat) {A : 𝓊 type} → is-hlevel n A → {x y : A} → is-hlevel n (x ≡ y)
--- path zero C {x} {y} .center = contr.hsuc C x y
--- path zero C .paths = prop.hsuc (contr.hsuc C) _ _ _
--- path (suc n) hl = hsuc hl _ _
-
---  pair : ∀ {𝓊 𝓋} (n : Nat) {A : 𝓊 type} {B : 𝓋 type}
---       → is-hlevel n A
---       → is-hlevel n B
---       → is-hlevel n (A × B)
---  pair n Ahl Bhl = {!!}
-
---  equiv : ∀ {𝓊 𝓋} (n : Nat) {A : 𝓊 type} {B : 𝓋 type}
---        → is-hlevel n A → is-hlevel n B → is-hlevel n (A ≃ B)
---  equiv zero {A} {B} Ahl Bhl = contr (const (Bhl .center) , c-equiv) γ where
---   c-equiv : is-equiv (const (Bhl .center))
---   c-equiv = contr.to-equiv Ahl Bhl
-
---   γ : (eqv : A ≃ B) → ((λ _ → Bhl .center) , c-equiv) ≡ eqv
---   γ (f , s) = from ({!!} , {!!})
-
---  equiv (suc n) Ahl Bhl = {!from ?!}
-
--- sing : ∀ 𝓊 → 𝓊 ⁺ type
--- sing 𝓊 = 𝓊 hlevel 0
-
--- Ω : ∀ 𝓊 → 𝓊 ⁺ type
--- Ω 𝓊 = 𝓊 hlevel 1
-
--- _set : ∀ 𝓊 → 𝓊 ⁺ type
--- 𝓊 set = 𝓊 hlevel 2
-
--- _grpd : ∀ 𝓊 → 𝓊 ⁺ type
--- 𝓊 grpd = 𝓊 hlevel 3
-
--- Hom-set : ∀ {𝓊} → 𝓊 type → 𝓊 ⁺ type
--- Hom-set {𝓊} ob = (ob → ob → 𝓊 hlevel 2)
-
---  -- equiv : ∀ {𝓊} {n : Nat} {A B : 𝓊 type}
---  --               → is-hlevel n A
---  --               → is-hlevel n B
---  --               → is-hlevel n (A ≃ B)
---  -- equiv {𝓊} {zero} {A} hl-a hl-b .center = (λ z → hl-b .is-contr.center)
---  --                                     , ((λ z → hl-a .is-contr.center)
---  --                                       , hl-b .is-contr.paths)
---  --                                     , (λ v → hl-a .is-contr.center)
---  --                                     , hl-a .is-contr.paths
---  -- equiv {𝓊} {zero} {A} hl-a hl-b .paths (a , b) = {!!}
---  -- equiv {𝓊} {suc n} hl-a hl-b = {!!}
-
-
-
--- -- Nat.ind (λ x → is-hlevel (suc x) A → is-hlevel (suc (suc x)) A)
--- --                        (λ P x y → prop.hedberg x
--- --                                    (λ a → (λ v → P x a) , (λ _ _ → refl))
--- --                                    y)
--- --                        step
--- --                        n
--- --   where
--- --    step : (k : Nat) →
--- --            (is-hlevel (suc k) A → is-hlevel (suc (suc k)) A) →
--- --            is-hlevel (suc (suc k)) A → is-hlevel (suc (suc (suc k))) A
--- --    step k hl-s→ss hl-ss x y p q = {!!}
