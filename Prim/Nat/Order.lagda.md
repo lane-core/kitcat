@@ -37,10 +37,10 @@ module Prim.Nat.Order where
 
 open import Prim.Universe
 open import Prim.Nat
+open import Prim.Id using (_≡_)
 
 Nat-poset-unit : Nat → Nat → Type
 Nat-poset-unit m n = is-zero (sub m n)
 
 Nat-poset-idn : (m n : Nat) → Type
 Nat-poset-idn m n = sub m n ≡ 0
- where open import Prim.Id using (_≡_)
