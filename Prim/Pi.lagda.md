@@ -52,10 +52,10 @@ dom {𝓊} {𝓋} {A} = const A
 cod : ∀ {𝓊 𝓋} {A : 𝓊 type} {B : 𝓋 type} → (A → B) → 𝓋 type
 cod {𝓊} {𝓋} {A} {B} = const B
 
-ev : ∀ {𝓊 𝓋} {A : 𝓊 type} {B : A → 𝓋 type}
-   → Π B → (x : A) → B x
-ev f = f
-{-# INLINE ev #-}
+_$_ : ∀ {𝓊 𝓋} {A : 𝓊 type} {B : A → 𝓋 type}
+    → Π B → (x : A) → B x
+_$_ f = f
+{-# INLINE _$_ #-}
 
 S : ∀ {𝓊 𝓋 𝓌} {A : 𝓊 type} {B : A → 𝓋 type} {C : (x : A) → B x → 𝓌 type}
   → (Π x ꞉ A , Π y ꞉ B x , C x y)
@@ -67,4 +67,4 @@ instance
  underlying-Π : ∀ {𝓊 𝓋} {A : 𝓊 type} {B : A → 𝓋 type}
               → {x : A} → Underlying (Π B)
  underlying-Π {𝓊} .Underlying.ℓ = 𝓊
- underlying-Π {𝓊} {𝓋} {A} .⌞_⌟ p = A
+ underlying-Π {𝓊} {𝓋} {A} ._̣ p = A

@@ -40,14 +40,14 @@ course of research.
 module Prim.Nat where
 
 open import Prim.Universe
-open import Prim.Unit
-open import Prim.Empty
+open import Prim.Unit as unit using (⊤)
+open import Prim.Empty as empty using (⊥)
 
-empty-to-unit : ⊥ → ⊤
-empty-to-unit _ = ⋆
+-- empty-to-unit : ⊥ → ⊤
+-- empty-to-unit _ = ⋆
 
-empty-to-unit' : ⊥ → ⊤
-empty-to-unit' e = ex-falso e
+-- empty-to-unit' : ⊥ → ⊤
+-- empty-to-unit' e = ex-falso e
 
 data Nat : Type where
  zero : Nat
@@ -55,12 +55,12 @@ data Nat : Type where
 
 {-# BUILTIN NATURAL Nat #-}
 
-induction : ∀ {𝓊} (P : Nat → 𝓊 type)
+ind : ∀ {𝓊} (P : Nat → 𝓊 type)
           → P zero
           → ((k : Nat) → P k → P (suc k))
           → (x : Nat) → P x
-induction P b s zero = b
-induction P b s (suc x) = s x (induction P b s x)
+ind P b s zero = b
+ind P b s (suc x) = s x (ind P b s x)
 
 pred : Nat → Nat
 pred zero = zero
@@ -77,7 +77,7 @@ is-positive (suc n) = ⊤
 ```
 
 We'll also define addition here, as it is useful for many applications so it's
-good to have it as early as possible.
+good to have it as early as possible. Multiplication as well.
 
 ```
 
@@ -86,6 +86,10 @@ add zero n = n
 add (suc m) n = suc (add m n)
 {-# BUILTIN NATPLUS add #-}
 
+mul : Nat → Nat → Nat
+mul zero n = zero
+mul (suc m) n = add n (mul m n)
+{-# BUILTIN NATTIMES mul #-}
 ```
 
 Likewise it is also useful to have the monus operator.

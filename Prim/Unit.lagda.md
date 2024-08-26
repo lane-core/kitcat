@@ -16,7 +16,7 @@ open 𝟙 {{...}} public
 ⊤ = 𝟙
 {-# BUILTIN UNIT ⊤ #-}
 
-unit-induction : ∀ {𝓊} {P : ⊤ → 𝓊 type}
+ind : ∀ {𝓊} {P : ⊤ → 𝓊 type}
     → P ⋆
     → (x : ⊤) → P x
-unit-induction b = λ _ → b
+ind b = λ _ → b

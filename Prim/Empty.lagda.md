@@ -28,9 +28,8 @@ contrapositive : ∀ {𝓊 𝓋} {P : 𝓊 type} {Q : 𝓋 type}
       → (P → Q) → (Q → ⊥) → (P → ⊥)
 contrapositive a nq p = nq (a p)
 
-module Empty where
- ind : ∀ {𝓊 𝓋} (B : 𝟘 {𝓊} → 𝓋 type) → (e : 𝟘) → B e
- ind A = λ ()
+ind : ∀ {𝓊 𝓋} (B : 𝟘 {𝓊} → 𝓋 type) → (e : 𝟘) → B e
+ind A = λ ()
 
 module _ where
 ¬_ : ∀ {𝓊} → 𝓊 type → 𝓊 type
@@ -45,9 +44,6 @@ module _ where
 record Uninhabited {𝓊} (A : 𝓊 type) : 𝓊 type where
  field
   void : A → ⊥
-
- -- elim : ∀ {𝓋} {B : 𝓋 type} → A → B
- -- elim x = {!!}
 
 open Uninhabited ⦃ ... ⦄ public
 

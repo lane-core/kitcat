@@ -16,7 +16,7 @@ open import Agda.Primitive public
           ; Setω to 𝓤ω
           ; lzero to 𝓊₀
           ; lsuc to infixl 6 _⁺
-          ; _⊔_ to infixl 6 _⊔_
+          ; _⊔_ to infixl 4 _⊔_
           ) hiding (Prop) -- we work with the Univalent formulation of Prop
 
 _type : ∀ 𝓊 → Type (𝓊 ⁺)
