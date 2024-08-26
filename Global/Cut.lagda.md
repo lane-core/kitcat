@@ -31,13 +31,13 @@ module _ {𝓊 𝓋 𝓌} where
   _∘_ x = seq {x}
   cut-syntax x = seq {x}
   {-# INLINE _∘_ #-}
-  --{-# INLINE _,_⊢_ #-}
+  {-# INLINE cut-syntax #-}
 
  open Cut ⦃ ... ⦄ public
 
 {-# DISPLAY Cut.seq _ = _∙_ #-}
+{-# DISPLAY Cut._∙_ _ = _∙_ #-}
 {-# DISPLAY Cut._∘_ _ = _∘_ #-}
---{-# DISPLAY Cut._,_⊢_ _ = _,_⊢_ #-}
 
 module _ {𝓊 𝓋 𝓌} {A : 𝓊 type} {B : 𝓋 type} {C : B → 𝓌 type} where
  instance

@@ -25,11 +25,11 @@ open import Prim.Universe
 record Underlying {𝓊} (A : 𝓊 type) : 𝓤ω where
   field
     ℓ : Level
-    ⌞_⌟ : A → ℓ type
+    _̣ : A → ℓ type
 
 open Underlying ⦃ ... ⦄ hiding (ℓ) public
 
 underlying-fam : ∀ {𝓊 𝓋} {A : 𝓊 type} {B : A → 𝓋 type}
              → {x : A} → Underlying (B x)
 underlying-fam {𝓊} .Underlying.ℓ = 𝓊
-underlying-fam {𝓊} {𝓋} {A} .⌞_⌟ p = A
+underlying-fam {𝓊} {𝓋} {A} ._̣ p = A
