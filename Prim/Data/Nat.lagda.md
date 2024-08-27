@@ -37,17 +37,11 @@ course of research.
 
 {-# OPTIONS --safe #-}
 
-module Prim.Nat where
+module Prim.Data.Nat where
 
 open import Prim.Universe
-open import Prim.Unit as unit using (⊤)
-open import Prim.Empty as empty using (⊥)
-
--- empty-to-unit : ⊥ → ⊤
--- empty-to-unit _ = ⋆
-
--- empty-to-unit' : ⊥ → ⊤
--- empty-to-unit' e = ex-falso e
+open import Prim.Data.Unit as unit using (⊤)
+open import Prim.Data.Empty as empty using (⊥)
 
 data Nat : Type where
  zero : Nat
@@ -90,6 +84,7 @@ mul : Nat → Nat → Nat
 mul zero n = zero
 mul (suc m) n = add n (mul m n)
 {-# BUILTIN NATTIMES mul #-}
+
 ```
 
 Likewise it is also useful to have the monus operator.
@@ -106,8 +101,9 @@ sub (suc m) (suc n) = sub m n
 
 The distance function, which can also be used for relations possible to define
 on N. First and foremost we can use it to define the equality relation by
-pattern matching. Notice also that its case trees are identical to monus save for
-the case trees pertaining. We'll take advantage of this later.
+pattern matching. Notice also that its case trees are identical to monus in the
+case that the right argument is greater or equal to the left. We'll take
+advantage of this later.
 
 ```
 

@@ -5,10 +5,10 @@ March 30st, 2024
 
 {-# OPTIONS --safe #-}
 
-module Prim.Fin where
+module Prim.Data.Fin where
 
 open import Prim.Universe
-open import Prim.Nat renaming (add to _+_)
+open import Prim.Data.Nat renaming (add to _+_)
 open import Prim.Pi
 open import Global.Cut
 

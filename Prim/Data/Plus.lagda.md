@@ -5,7 +5,7 @@ March 27st, 2024
 
 {-# OPTIONS --safe #-}
 
-module Prim.Plus where
+module Prim.Data.Plus where
 
 infixr 3 _⊎_
 

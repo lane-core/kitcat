@@ -7,7 +7,7 @@ revised August 5th, 2024
 
 {-# OPTIONS --safe #-}
 
-module Prim.Id where
+module Prim.Data.Id where
 
 infixr -1 tr
 infix 4 _≡_

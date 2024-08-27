@@ -5,7 +5,7 @@ revised July 31st, 2024
 
 {-# OPTIONS --safe #-}
 
-module Prim.Sigma where
+module Prim.Data.Sigma where
 
 infix -1 Sigma
 infix 3 Σ

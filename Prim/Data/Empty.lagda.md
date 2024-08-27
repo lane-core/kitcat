@@ -6,7 +6,7 @@ revised August 3rd, 2024
 
 {-# OPTIONS --safe #-}
 
-module Prim.Empty where
+module Prim.Data.Empty where
 
 infix 3 ¬_
 

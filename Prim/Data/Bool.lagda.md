@@ -5,7 +5,7 @@ August 26th, 2024
 
 {-# OPTIONS --safe #-}
 
-module Prim.Bool where
+module Prim.Data.Bool where
 
 open import Prim.Universe
 

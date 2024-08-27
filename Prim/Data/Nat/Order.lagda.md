@@ -1,4 +1,5 @@
 Lane Biocini
+Aug 18th, 2024
 
 Here we have a few varieties of defining natural number partial orders. First we
 will consider the case of devising a hom over the unit type.
@@ -30,17 +31,27 @@ step will resolve upon two possibilities. The induction step satisfies the
 property we want for for the injectivity of the partial order, because if suc m
 ≤ suc n we have m ≤ n; naturally we want the base case to obtain when we recurse
 to 0 ≤ x for some number x. The case where monus equals the left side of the
-operator is zero,
+operator is zero.
 
 ```
-module Prim.Nat.Order where
+
+{-# OPTIONS --safe #-}
+
+module Prim.Data.Nat.Order where
 
 open import Prim.Universe
-open import Prim.Nat
-open import Prim.Id using (_≡_)
+open import Prim.Data.Nat
+open import Prim.Data.Id using (_≡_)
 
-Nat-poset-unit : Nat → Nat → Type
-Nat-poset-unit m n = is-zero (sub m n)
+```
 
-Nat-poset-idn : (m n : Nat) → Type
-Nat-poset-idn m n = sub m n ≡ 0
+We include two examples of ways to implement a partial order; one uses an
+observational definition and the other uses the identity type.
+
+```
+
+unit : Nat → Nat → Type
+unit m n = is-zero (sub m n)
+
+idn : (m n : Nat) → Type
+idn m n = sub m n ≡ 0
