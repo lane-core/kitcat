@@ -1,11 +1,11 @@
 name: kitcat
-include: .
+include: src
 flags: --cubical-compatible
  --auto-inline
  --exact-split
  --no-import-sorts
  --no-prop
- --no-rewriting
+ --two-level
  --postfix-projections
  --warning=noUnsupportedIndexedMatch
  --warning=ClashesViaRenaming

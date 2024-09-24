@@ -1,18 +1,18 @@
 Lane Biocini
-revised July 31st, 2024
+revised August 25th, 2024
 
 ```agda
 
 {-# OPTIONS --safe #-}
 
-module Prim.Data.Sigma where
+module Lib.Sigma where
 
 infix -1 Sigma
 infix 3 Σ
 infixr 4 _,_
 infixr 5 _×_
 
-open import Prim.Universe
+open import Lib.Prim
 
 record Σ {𝓊 𝓋} {A : 𝓊 type} (B : A → 𝓋 type) : 𝓊 ⊔ 𝓋 type where
  constructor _,_
