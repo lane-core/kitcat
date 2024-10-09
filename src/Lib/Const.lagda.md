@@ -8,7 +8,7 @@ The empty type and the unit type. First, a quote from Hegel
 
 {-# OPTIONS --safe #-}
 
-module Lib.Constant where
+module Lib.Const where
 
 infix 3 ¬_
 infix 3 ¬¬_
