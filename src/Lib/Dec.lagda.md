@@ -1,12 +1,15 @@
 Lane Biocini
 
+Credit to Ulf Norell's excellent [agda-prelude](https://github.com/UlfNorell/agda-prelude),
+I decided to use his Dec module as a starting point for ours.
+
 ```
 {-# OPTIONS --safe #-}
 
 module Lib.Dec where
 
 open import Lib.Prim
-open import Lib.Constant
+open import Lib.Const
 
 infix 0 if-yes_then_else_ if-no_then_else_
 
@@ -18,8 +21,8 @@ if-yes_then_else_ : ∀ {u v} {A : u type} {B : v type} → Dec A → B → B �
 if-yes yes _ then x else _ = x
 if-yes no  _ then _ else y = y
 
-ifNo_then_else_ : ∀ {u v} {A : u type} {B : v type} → Dec A → B → B → B
-ifNo d then x else y = ifYes d then y else x
+if-no_then_else_ : ∀ {u v} {A : u type} {B : v type} → Dec A → B → B → B
+if-no d then x else y = if-yes d then y else x
 
 Decided : ∀ {u} {P : u type} → Dec P → u type
 Decided {P = P} (yes _) = P

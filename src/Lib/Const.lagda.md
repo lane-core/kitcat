@@ -2,7 +2,7 @@ Lane Biocini
 March 27st, 2024
 revised Sept 4th, 2024 (added quote)
 
-The empty type and the unit type. First, a quote from Hegel
+The empty type and the unit type.
 
 ```agda
 
@@ -14,9 +14,11 @@ infix 3 ¬_
 infix 3 ¬¬_
 infix 3 ¬¬¬_
 
-open import Prim.Universe
+open import Lib.Prim
 
 ```
+
+First, a quote:
 
 "The one thing needed to achieve scientific progress - and it is essential to
 make an effort at gaining this quite simple insight into it - is the recognition
