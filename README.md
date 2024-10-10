@@ -19,8 +19,7 @@ A central aim of Kitcat is to survey and reevaluate results from the discipline 
 
 Our primary aim is to meaningfully relate results from the period "converging towards a *homotopical theory of computation*" ([Lafont, *Algebra and Geometry of Rewriting*](https://www.i2m.univ-amu.fr/~lafont/pub/agr.pdf)). Through this approach, we hope to:
 
-* Develop novel perspectives and methods to assist in developing new type theories
-* Establish meaningful directions distinguishing properly 21st-century type theories, aiding and clarifying results in the latest research directions of this exciting field
+* Develop novel perspectives and methods to assist establishing meaningful directions distinguishing properly 21st-century type theories, aiding and clarifying results in the latest research directions of this exciting field
 * Formalize important research in the history of graphical computation theories, along with results from their predecessors in systems like Linear Logic
 * Contribute to the ongoing evolution of mathematical foundations in computer science
 
