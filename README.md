@@ -13,15 +13,15 @@ While there are many libraries hosting excellent contributions from bright minds
 
 A central aim of Kitcat is to survey and reevaluate results from the discipline of [Homotopy Type Theory](https://ncatlab.org/nlab/show/homotopy+type+theory) from two perspectives: 
  1. **Reinterpretation:** We revisit early and foundational results through the lens of latest developments, exploring reformulations of various topics in univalent type theory with constructions like Iosef Petrakis's [Univalent typoids](https://arxiv.org/abs/2205.06651). 
- 2. **Historical Survey:** We trace back to the moment when homotopy theory ideas inspired mathematicians like Vladimir Voevodsky to explore the applicability of topological methods to computation theory. We aim to explore this development in conjunction with Voevodsky's contemporaries who were investigating similar connections from the perspective of graph theory. 
+ 2. **Historical Survey:** We trace back to the moment when homotopy theory inspired mathematicians like Vladimir Voevodsky to explore the applicability of topological methods to computation theory. We aim to explore this development in conjunction with Voevodsky's contemporaries who were investigating similar connections from the perspective of graph theory. 
  
 ## Goals
 
 Our primary aim is to meaningfully relate results from the period "converging towards a *homotopical theory of computation*" ([Lafont, *Algebra and Geometry of Rewriting*](https://www.i2m.univ-amu.fr/~lafont/pub/agr.pdf)). Through this approach, we hope to:
 
-* Develop novel perspectives and methods
-* Establish meaningful directions for 21st-century type theories, aiding and clarifying results in the latest research directions of this exciting field
+* Develop novel perspectives and methods to assist in developing new type theories
+* Establish meaningful directions distinguishing properly 21st-century type theories, aiding and clarifying results in the latest research directions of this exciting field
 * Formalize important research in the history of graphical computation theories, along with results from their predecessors in systems like Linear Logic
 * Contribute to the ongoing evolution of mathematical foundations in computer science
 
-We welcome contributions and discussions from researchers interested in these cutting-edge intersections of mathematics and computation.
+We welcome contributions and discussions from researchers interested in these cutting-edge intersections of mathematics and computation. We maintain a mailing list hosted on sourcehut, at [~lane/kitcat-devel](https://lists.sr.ht/~lane/kitcat-devel). 
