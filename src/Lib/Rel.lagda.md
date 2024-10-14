@@ -62,9 +62,6 @@ module rel where
    hcomp-to-rwhisker : horizontal-comp → whisker.right
    hcomp-to-rwhisker hcomp = (λ H h → hcomp H (idn h))
 
-   hcomp-to-vcomp : horizontal-comp → whisker.right
-   hcomp-to-vcomp hcomp = (λ H h → hcomp H (idn h))
-
    hcomp-to-whiskers : horizontal-comp → Σ _ ꞉ whisker.left , whisker.right
    hcomp-to-whiskers hcomp = hcomp-to-lwhisker hcomp , hcomp-to-rwhisker hcomp
 
@@ -79,8 +76,8 @@ module rel where
   where
 
   module idn where
-   left = ∀ {x y} (g : x ~ y) → (idn x ∙ g) ≈ g
-   module left where op = ∀ {x y} (g : x ~ y) → g ≈ (idn x ∙ g)
+   left = ∀ {x y} (f : x ~ y) → (idn x ∙ f) ≈ f
+   module left where op = ∀ {x y} (f : x ~ y) → f ≈ (idn x ∙ f)
 
    right = ∀ {x y} (f : x ~ y) → (f ∙ idn y) ≈ f
    module right where op = ∀ {x y} (f : x ~ y) → f ≈ (f ∙ idn y)
