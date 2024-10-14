@@ -12,7 +12,7 @@ module Lib.Trait.Typoid.Type where
 open import Lib.Prim
 open import Lib.Rel
 open import Lib.Data.Sigma using (Σ; Sigma)
-open import Lib.Trait.Psuedoequiv
+open import Lib.Trait.Setoid
 
 module typd where
  record structure {u v w} {ob : u type}
@@ -21,12 +21,12 @@ module typd where
   : u ⊔ (v ⊔ w) ⁺ type
   where
   field
-   1cell : psuedoequiv _≃_
-   2cell : pseqv-over-pseqv _≃_ _≅_
+   1cell : is-setoid _≃_
+   2cell : setoid-over _≃_ _≅_
 
-  open psuedoequiv 1cell public
+  open is-setoid 1cell public
   module _ {x y : ob} where
-   open psuedoequiv (2cell x y)
+   open is-setoid (2cell x y)
     renaming ( eqv to eqv2
              ; concat to concat2
              ; inv to inv2
