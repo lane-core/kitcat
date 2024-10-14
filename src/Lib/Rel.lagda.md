@@ -1,7 +1,7 @@
 Lane Biocini
 Oct 5th, 2024
 
-Definitions for relations
+Definitions for rels
 
 ```
 {-# OPTIONS --safe #-}
@@ -9,32 +9,33 @@ Definitions for relations
 module Lib.Rel where
 
 open import Lib.Prim
-open import Lib.Sigma
+open import Lib.Data.Sigma
 
-relation : ∀ {u} v → u type → u ⊔ v ⁺ type
-relation v ob = ob → ob → v type
+rel : ∀ {u} v → u type → u ⊔ v ⁺ type
+rel v ob = ob → ob → v type
 
-rel-over-rel : ∀ {u v} w {ob : u type} → relation v ob → u ⊔ v ⊔ w ⁺ type
-rel-over-rel w {ob} _~_ = {x y : ob} → relation w (x ~ y)
+rel-over-rel : ∀ {u v} w {ob : u type} → rel v ob → u ⊔ v ⊔ w ⁺ type
+rel-over-rel w {ob} _~_ = {x y : ob} → rel w (x ~ y)
 
 module rel where
  module _ {u v} {ob : u type}
-  (_~_ : relation v ob)
+  (_~_ : rel v ob)
   where
   reflexive = (x : ob) → x ~ x
+  composition = {x y z : ob} → y ~ z → x ~ y → x ~ z
   transitive = {x y z : ob} → x ~ y → y ~ z → x ~ z
   symmetric = {x y : ob} → x ~ y → y ~ x
 
  module _ {u v w} {ob : u type}
-  (_~_ : relation v ob)
-  (_≈_ : {x y : ob} → relation w (x ~ y))
+  (_~_ : rel v ob)
+  (_≈_ : {x y : ob} → rel w (x ~ y))
   (_∙_ : transitive _~_)
    where
    associative = {w x y z : ob} → (f : w ~ x) (g : x ~ y) (h : y ~ z)
                → ((f ∙ g) ∙ h) ≈ (f ∙ (g ∙ h))
 
  module _ {u v w} {ob : u type}
-  (_~_ : relation v ob)
+  (_~_ : rel v ob)
   (_≈_ : rel-over-rel w _~_)
   (_∙_ : transitive _~_)
   where
@@ -64,14 +65,14 @@ module rel where
    hcomp-to-vcomp : horizontal-comp → whisker.right
    hcomp-to-vcomp hcomp = (λ H h → hcomp H (idn h))
 
-   hcomp-to-whiskers : horizontal-comp → whisker.left × whisker.right
+   hcomp-to-whiskers : horizontal-comp → Σ _ ꞉ whisker.left , whisker.right
    hcomp-to-whiskers hcomp = hcomp-to-lwhisker hcomp , hcomp-to-rwhisker hcomp
 
    whiskers-to-hcomp : vertical-comp → whisker.left → whisker.right → horizontal-comp
    whiskers-to-hcomp _●_ lw rw {x} {y} {z} {f} {f'} {g} H K = rw H g ● lw f' K
 
  module _ {u v w} {ob : u type}
-  (_~_ : relation v ob)
+  (_~_ : rel v ob)
   (_≈_ : rel-over-rel w _~_)
   (_∙_ : transitive _~_)
   (idn : reflexive _~_)
@@ -114,3 +115,6 @@ module rel where
      field
       invl : left.op
       invr : right.op
+
+Rel : ∀ {u} v → u type → u ⊔ v ⁺ type
+Rel v ob = ob → ob → v type
