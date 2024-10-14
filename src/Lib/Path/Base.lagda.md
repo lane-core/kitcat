@@ -15,12 +15,6 @@ open import Lib.Rel
 open import Lib.Data.Fiber using (apc)
 open import Lib.Path.Type public
 
-```
-
-Our equality type is Coyoneda applied to the id function for some a.
-
-```
-
 tr : ∀ {u v} {A : u type} (B : A → v type) {x y : A} → x ≡ y → B x → B y
 tr B = J (λ z _ → B z)
 
