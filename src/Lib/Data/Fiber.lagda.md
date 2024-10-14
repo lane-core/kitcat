@@ -8,10 +8,10 @@ suitable to serve as our Fiber type. In particular, it is an identity system.
 
 {-# OPTIONS --safe  #-}
 
-module Lib.Fiber where
+module Lib.Data.Fiber where
 
 open import Lib.Prim
-open import Lib.Typoid
+open import Lib.Pi
 
 ```
 
@@ -29,6 +29,7 @@ this proof has an elimination principle, which is that for each point in the
 base space we can produce the corresponding point that is projected in E.
 
 ```
+
 module _ {u v} {E : u type} where
  data Bundle (B : E → v type) (f : Π B) : (e : E) → B e → u ⊔ v type where
   path : (e : E) → Bundle B f e (f e)
@@ -129,13 +130,13 @@ We give the interpretation of CoYoneda presented here in the fibrational model o
 dependent types as follows:
 
 CoYoneda defined for a function `f : E → B` on `a : B` of some base space `B`
-is a proof that for any `b : E` of a space E, we have a typd-structure encoding the
+is a proof that for any `b : E` of a space E, we have a structure encoding the
 type of computations performed on the point `a` by f, such that we can show that
 our chosen `a` is actually given by some `f b : B`; as such, CoYoneda is the
 fiber over a point a. It satisfies the properties of the CoYoneda type because
 as a type its inhabitants capture the necessary instances generating the possible
 computations given by a function f, thus one may program utilizing objects computed
-by programs `f (g (h (...)))` in advance of this computation. as the typd-structure of
+by programs `f (g (h (...)))` in advance of this computation. as the structure of
 path composition is given by the rewrites applied by the application of f, g, h, and
 so on.
 
