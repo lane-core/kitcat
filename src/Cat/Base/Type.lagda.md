@@ -13,36 +13,37 @@ eminently adaptable towards doing category theory I wager.
 
 {-# OPTIONS --safe #-}
 
-module Cat.Base where
+module Cat.Base.Type where
 
 open import Lib.Prim
-open import Lib.Pi
-open import Lib.Data.Sigma
-open import Lib.Path.Type
+open import Lib.Pi using (flip)
+open import Lib.Product
+
+open import Lib.Trait.Cut
 open import Lib.Trait.Typoid.Type
+open import Lib.Trait.Typoid.Base
 
 record category u v w : (u ⊔ v ⊔ w) ⁺ type where
- infixl 40 _∙_
  infix 0 _≈_
  field
   ob : u type
   hom : ob → ob → v type
   idn : ∀ a → hom a a
-  _∙_ : ∀ {a b c} → hom a b → hom b c → hom a c
+  concat : ∀ {a b c} → hom a b → hom b c → hom a c
 
   _≈_ : ∀ {a b} → hom a b → hom a b → w type
   assoc : ∀ {a b c d} (f : hom a b) (g : hom b c) (h : hom c d)
-        → f ∙ g ∙ h ≈ f ∙ (g ∙ h)
-  idnl : ∀ {x y} (f : hom x y) → idn x ∙ f ≈ f
-  idnr : ∀ {x y} (f : hom x y) → f ∙ idn y ≈ f
+        → concat (concat f g) h ≈ concat f (concat g h)
+  idnl : ∀ {x y} (f : hom x y) → concat (idn x) f ≈ f
+  idnr : ∀ {x y} (f : hom x y) → concat f (idn y) ≈ f
   hcomp : {a b c : ob} {f f' : hom a b} {g g' : hom b c}
-        → f ≈ f' → g ≈ g' → f ∙ g ≈ f' ∙ g'
+        → f ≈ f' → g ≈ g' → concat f g ≈ concat f' g'
 
   -- Carette, when you're right you're right (see notes in:
   -- https://agda.github.io/agda-categories/Categories.Category.Core.html)
-  idn-idn : ∀ x → idn x ∙ idn x ≈ idn x
+  idn-idn : ∀ x → concat (idn x) (idn x) ≈ idn x
   assoc-inv : ∀ {a b c d} (f : hom c d) (g : hom b c) (h : hom a b)
-            → h ∙ (g ∙ f) ≈ h ∙ g ∙ f
+            → concat h (concat g f) ≈ concat (concat h g) f
 
   _≋_ : ∀ {a b} {f g : hom a b} → f ≈ g → f ≈ g → w type
   has-typd : (a b : ob) → has-typoid (_≈_ {a} {b}) (_≋_ {a} {b})
@@ -52,6 +53,10 @@ record category u v w : (u ⊔ v ⊔ w) ⁺ type where
  hom-typoid a b .snd = record { _≃_ = _≈_ ; _≅_ = _≋_ ; has-typd = has-typd a b }
 
  private module hom {a b : ob} = Typoid (hom-typoid a b)
+
+ instance
+  hom-cut : {y z : ob} → Cut ob (λ x → hom x y) (λ x _ → hom y z → hom x z)
+  hom-cut .seq = concat
 
  _◁_ : ∀ {a b c} (f : hom a b) {g h : hom b c} → g ≈ h → f ∙ g ≈ f ∙ h
  _◁_ f H = hcomp (hom.eqv f) H
@@ -63,7 +68,7 @@ record category u v w : (u ⊔ v ⊔ w) ⁺ type where
  op .ob = ob
  op .hom = flip hom
  op .idn = idn
- op ._∙_ = flip _∙_
+ op .concat = flip concat
  op ._≈_ = _≈_
  op .assoc = assoc-inv
  op .idnl = idnr
