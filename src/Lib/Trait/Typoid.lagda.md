@@ -10,5 +10,6 @@ From Iosif Petrakis's paper [Univalent Typds](https://arxiv.org/abs/2205.06651v1
 module Lib.Trait.Typoid where
 
 open import Lib.Trait.Typoid.Type public
+open import Lib.Trait.Typoid.Base public
 open import Lib.Trait.Typoid.Equality public
 open import Lib.Trait.Typoid.Function public

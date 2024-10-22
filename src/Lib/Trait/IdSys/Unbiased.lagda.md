@@ -38,10 +38,10 @@ module unbiased-id-sys {u v} {ob : u type}
  concat : {x y z : ob} → fam x y → fam y z → fam x z
  concat {x} p q = tr (λ w → fam x w) q p
 
- setoid : is-setoid fam
- setoid .is-setoid.eqv = idn
- setoid .is-setoid.inv = inv
- setoid .is-setoid.concat = concat
+ setoid : has-setoid fam
+ setoid .has-setoid.eqv = idn
+ setoid .has-setoid.inv = inv
+ setoid .has-setoid.concat = concat
 
 unbiased-htpy-sys : ∀ {u v} (ob : u type)
                   → ([id] : unbiased-id-sys v ob) → u ⊔ v ⁺ type

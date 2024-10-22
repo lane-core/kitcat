@@ -1,4 +1,5 @@
 Lane Biocini
+Oct 10th, 2024
 
 Credit to Ulf Norell's excellent [agda-prelude](https://github.com/UlfNorell/agda-prelude),
 I decided to use his Dec module as a starting point for ours.
@@ -6,10 +7,11 @@ I decided to use his Dec module as a starting point for ours.
 ```
 {-# OPTIONS --safe #-}
 
-module Lib.Dec where
+module Lib.Data.Dec where
 
 open import Lib.Prim
-open import Lib.Const
+open import Lib.Data.Empty
+open import Lib.Trait.Uninhabited
 
 infix 0 if-yes_then_else_ if-no_then_else_
 

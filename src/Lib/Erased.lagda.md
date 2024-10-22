@@ -8,11 +8,12 @@ module Lib.Erased where
 
 open import Lib.Prim
 open import Lib.Data.Empty
+open import Lib.Negation
 
 data [erased]-is-only-for-printing : Type where
   [erased] : [erased]-is-only-for-printing
 
-private postulate erasedBottom : ⊥
+private postulate erasedBottom : 𝟘 {u₀}
 
 {-# DISPLAY erasedBottom = [erased] #-}
 

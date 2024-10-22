@@ -5,18 +5,22 @@ Type-class for uninhabited types
 
 ```
 
-module Lib.Uninhabited where
+{-# OPTIONS --safe #-}
+
+module Lib.Trait.Uninhabited where
+
+infixl 8 ¬_
 
 open import Lib.Prim
 open import Lib.Data.Empty
 
-record Uninhabited {u} (A : u type) : u type where
+record ¬_ {u} (A : u type) : u type where
  field
-  void : A → ⊥
+  void : A → 𝟘 {u}
 
-open Uninhabited ⦃ ... ⦄ public
+open ¬_ ⦃ ... ⦄ public
 
-module _ {u} {A : u type} where
- instance
-  null : {{¬ A}} → Uninhabited A
-  null {{na}} .void = na
+instance
+ -- nice
+ empty-void : ∀ {u} → ¬ 𝟘 {u}
+ empty-void .void ∅ = ∅

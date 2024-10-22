@@ -14,9 +14,9 @@ We also lean on 1lab's formalization of this concept, with some tweaks of course
 module Lib.Trait.Numeral where
 
 open import Lib.Prim
-open import Lib.Rel
+open import Lib.Rel.Base
+open import Lib.Data.Empty
 open import Lib.Data.Nat
-open import Lib.Trait.IdSys.Type public
 
 ```
 
@@ -39,7 +39,7 @@ open NegNumeral ⦃ ... ⦄ using (is-neg) public
 
 instance
  numeral-Nat : Numeral Nat
- numeral-Nat .is-pos = λ z → ⊥
+ numeral-Nat .is-pos = λ z → 𝟘 {u₀}
  numeral-Nat .Numeral.from-nat = λ n ⦃ z ⦄ → n
 
 {-# BUILTIN FROMNAT Numeral.from-nat #-}

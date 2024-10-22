@@ -31,10 +31,3 @@ Hegel, Science of Logic
 record 𝟙 {u} : u type where instance constructor ⋆
 open 𝟙 {{...}} public
 {-# BUILTIN UNIT 𝟙 #-}
-
-⊤ : Type
-⊤ = 𝟙
-
-module unit where
- ind : ∀ {u} {P : ⊤ → u type} → P ⋆ → (x : ⊤) → P x
- ind b = λ _ → b
