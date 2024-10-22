@@ -13,9 +13,9 @@ open import Lib.Prim
 open import Lib.Trait.Setoid
 open import Lib.Path.Type
 open import Lib.Path.Base
-open is-setoid
+open has-setoid
 
-path-setoid : ∀ {u} (A : u type) → is-setoid (Id A)
+path-setoid : ∀ {u} (A : u type) → has-setoid (Id A)
 path-setoid A .eqv = path
 path-setoid A .inv = path-inv
 path-setoid A .concat = path-concat

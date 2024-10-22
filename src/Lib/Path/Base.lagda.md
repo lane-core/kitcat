@@ -10,9 +10,9 @@ Type definitions for our Path type
 module Lib.Path.Base where
 
 open import Lib.Prim
-open import Lib.Rel
+open import Lib.Rel.Base
 
-open import Lib.Data.Fiber using (apc)
+open import Lib.Data.Bundle using (apc)
 open import Lib.Path.Type public
 
 tr : ∀ {u v} {A : u type} (B : A → v type) {x y : A} → x ≡ y → B x → B y
@@ -23,8 +23,8 @@ ap : ∀ {u v} {A : u type} {B : v type}
 ap f = apc (λ x → x) f
 
 module _ {u} {A : u type} where
- path-concat : rel.transitive (Id A)
+ path-concat : transitive (Id A)
  path-concat {x} f g = tr (x ≡_) g f
 
- path-inv : rel.symmetric (Id A)
+ path-inv : symmetric (Id A)
  path-inv {x} f = tr (_≡ x) f refl

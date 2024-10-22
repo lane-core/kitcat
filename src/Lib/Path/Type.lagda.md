@@ -12,8 +12,7 @@ module Lib.Path.Type where
 infix 0 _≡_
 
 open import Lib.Prim
-open import Lib.Data.Fiber using (CoYoneda; apc)
-open import Lib.Data.Fiber using (path) public
+open import Lib.Data.Bundle using (CoYoneda; apc; path) public
 
 ```
 

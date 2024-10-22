@@ -8,17 +8,16 @@ suitable to serve as our Fiber type. In particular, it is an identity system.
 
 {-# OPTIONS --safe  #-}
 
-module Lib.Data.Fiber where
+module Lib.Data.Bundle where
 
 open import Lib.Prim
-open import Lib.Pi
 
 ```
 
 This is the type of fiber bundles; projections from a base space given by B,
 where the term of our dependent type family is a projection function applied on
 the point `e : E`. The path leading towards `e` is given by the action of
-`f : Π B`, and this function applied to a term `e : E` produces a term `f e : B e`
+`f : (e : E) → B e`, and this function applied to a term `e : E` produces a term `f e : B e`
 corresponding to the point in the base space that is reached by the path. To
 have this `f` entails that this definition induces a type family recording all such
 paths reachable with any `f`; it is in this sense we call this type a Bundle.
@@ -31,14 +30,14 @@ base space we can produce the corresponding point that is projected in E.
 ```
 
 module _ {u v} {E : u type} where
- data Bundle (B : E → v type) (f : Π B) : (e : E) → B e → u ⊔ v type where
+ data Bundle (B : E → v type) (f : (e : E) → B e) : (e : E) → B e → u ⊔ v type where
   path : (e : E) → Bundle B f e (f e)
 
- module _ {B : E → v type} {f : Π B} {e : E} {x : B e} where
+ module _ {B : E → v type} {f : (e : E) → B e} {e : E} {x : B e} where
   pt : Bundle B f e x → E
   pt = λ _ → e
 
-  proj : (f : Π B) (e : E) → Bundle B f e (f e)
+  proj : (f : (e : E) → B e) (e : E) → Bundle B f e (f e)
   proj f = path
 
 ```
@@ -46,18 +45,18 @@ module _ {u v} {E : u type} where
 We can define our type's notion of induction and transport typd-straightaway
 
 ```
- ind : ∀ {w} {B : E → v type} {f : Π B} {e : E}
+ bundle-ind : ∀ {w} {B : E → v type} {f : (e : E) → B e} {e : E}
      → (P : (y : B e) → Bundle B f e y → w type)
      → P (f e) (path e)
      → (b : B e) (q : Bundle B f e b)
      → P b q
- ind P p b (path ._) = p
+ bundle-ind P p b (path ._) = p
 
 
  trb : ∀ {w} {B : E → v type} {e : E} (P : B e → w type)
-     → {b : B e} {f : Π B} → Bundle B f e b
+     → {b : B e} {f : (e : E) → B e} → Bundle B f e b
      → P (f e) → P b
- trb P {b} q p = ind (λ y _ → P y) p b q
+ trb P {b} q p = bundle-ind (λ y _ → P y) p b q
 
 
 ```
@@ -65,15 +64,16 @@ We can define our type's notion of induction and transport typd-straightaway
 Computation rules
 
 ```
-ind-htpy-β : ∀ {u v w} {E : u type} (B : E → v type) {e : E} {f : Π B}
+
+bundle-ind-β : ∀ {u v} {E : u type} (B : E → v type) {e : E} {f : (e : E) → B e}
+      → Bundle B (λ - → bundle-ind (λ y _ → B y) (f -) - (path e)) e (f e)
+bundle-ind-β B {e} = path e
+
+bundle-ind-htpy-β : ∀ {u v w} {E : u type} (B : E → v type) {e : E} {f : (e : E) → B e}
       → (P : (y : B e) → Bundle B f e y → w type)
       → (p : P (f e) (path e))
-      → Bundle (P (f e)) (ind P p (f e)) (path e) p
-ind-htpy-β B {e} P p = path (path e)
-
-ind-β : ∀ {u v} {E : u type} (B : E → v type) {e : E} {f : Π B}
-      → Bundle B (λ - → ind (λ y _ → B y) (f -) - (path e)) e (f e)
-ind-β B {e} = path e
+      → Bundle (P (f e)) (bundle-ind P p (f e)) (path e) p
+bundle-ind-htpy-β B {e} P p = path (path e)
 
 ```
 
@@ -106,13 +106,13 @@ in other words, this composes the function like the S-combinator.
 ```
 
 apb : ∀ {u v w} {E : u type} {B : E → v type} {D : (x : E) → B x → w type}
-    → (f : Π B) (g : (x : E) → (a : B x) → D x a)
+    → (f : (e : E) → B e) (g : (x : E) → (a : B x) → D x a)
     → {e : E} {b : B e} (p : Bundle B f e b)
     → Bundle (D e) (g e) b (trb (D e) p (g e (f e)))
 apb f g (path _) = path (f _)
 
 aps : ∀ {u v w} {E : u type} {B : E → v type} {D : (x : E) → B x → w type}
-      → (f : Π B) (g : (x : E) → (a : B x) → D x a)
+      → (f : (e : E) → B e) (g : (x : E) → (a : B x) → D x a)
       → {e : E} {b : B e} {c : D e (f e)}
       → (p : Bundle (D e) (g e) (f e) c)
       → Bundle (λ - → D - (f -)) (λ - → g - (f -)) e c
@@ -143,7 +143,7 @@ so on.
 ```
 
 CoYoneda : ∀ {u v} {E : u type} {B : v type} → (E → B) → B → E → v type
-CoYoneda {u} {v} {E} {B} f a = Bundle (λ _ → B) id a ∘ f
+CoYoneda {u} {v} {E} {B} f a x = Bundle (λ _ → B) (λ - → -) a (f x)
 
 apc : ∀ {u v w} {E : u type} {B : v type} {D : w type}
     → (f : E → B) (g : B → D)
