@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Check if at least one symbol was provided
+if [ "$#" -eq 0 ]; then
+	echo "Error: Please provide at least one symbol name."
+	echo "Usage: $0 symbol1 [symbol2 ...]"
+	exit 1
+fi
+
+# Get the absolute path to the Git repository root
+git_root=$(git rev-parse --show-toplevel)/src
+
+# Get current directory
+current_dir=$(pwd)
+
+# Remove the git_root path (plus the trailing slash) from current_dir to get relative path
+relative_path=${current_dir#"$git_root/"}
+
+# Check if we're at repository root
+if [ "$relative_path" != "$current_dir" ]; then
+    # Replace slashes with dots
+    dot_path=$(echo "$relative_path" | tr '/' '.')
+fi
+
+# Process each symbol name provided as an argument
+for s in "$@"; do
+	# Create Type.lagda.md file with the specified content
+	cat >"$s.lagda.md" <<EOF
+\`\`\`agda
+
+{-# OPTIONS --safe --cubical-compatible #-}
+
+module $dot_path.$s where
+
+open import $dot_path.$s.Type public
+EOF
+
+echo "Created $(pwd)/$s.lagda.md"
+done
+
+echo "All files have been created successfully."

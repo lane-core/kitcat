@@ -1,0 +1,136 @@
+#!/bin/sh
+
+# mmv - Move and rename Agda modules with automatic refactoring
+# Usage: mmv <old_module_name> <new_module_name>
+# Example: mmv Prim.Base Lib.Mod
+
+# Function to convert module name to file path
+module_to_path() {
+    echo "$1" | sed 's/\./\//g'
+}
+
+# Function to escape dots for sed pattern matching
+escape_for_sed() {
+    echo "$1" | sed 's/\./\\./g'
+}
+
+# Check arguments
+if [ $# -ne 2 ]; then
+    echo "Usage: mmv <old_module_name> <new_module_name>"
+    echo "Example: mmv Prim.Base Lib.Mod"
+    exit 1
+fi
+
+OLD_MODULE="$1"
+NEW_MODULE="$2"
+
+echo "=== Agda Module Refactoring Tool ==="
+echo "Moving '$OLD_MODULE' to '$NEW_MODULE'"
+echo
+
+# Find git root
+echo "Finding git repository root..."
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ $? -ne 0 ]; then
+    echo "Error: Not in a git repository"
+    exit 1
+fi
+echo "Git root: $GIT_ROOT"
+echo
+
+# Convert module names to file paths
+OLD_PATH=$(module_to_path "$OLD_MODULE")
+NEW_PATH=$(module_to_path "$NEW_MODULE")
+
+OLD_FILE="$GIT_ROOT/src/$OLD_PATH.lagda.md"
+NEW_FILE="$GIT_ROOT/src/$NEW_PATH.lagda.md"
+
+echo "Source file: $OLD_FILE"
+echo "Target file: $NEW_FILE"
+echo
+
+# Check if source file exists
+if [ ! -f "$OLD_FILE" ]; then
+    echo "Error: Source file does not exist: $OLD_FILE"
+    exit 1
+fi
+
+# Check if target file already exists
+if [ -f "$NEW_FILE" ]; then
+    echo "Error: Target file already exists: $NEW_FILE"
+    echo "Please remove or rename the existing file first."
+    exit 1
+fi
+
+# Create destination directory if needed
+NEW_DIR=$(dirname "$NEW_FILE")
+if [ ! -d "$NEW_DIR" ]; then
+    echo "Creating destination directory: $NEW_DIR"
+    mkdir -p "$NEW_DIR"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create directory: $NEW_DIR"
+        exit 1
+    fi
+fi
+
+# Check if file is tracked by git and move accordingly
+echo "Moving file..."
+if git ls-files --error-unmatch "$OLD_FILE" >/dev/null 2>&1; then
+    echo "File is tracked by git, using 'git mv'"
+    git mv "$OLD_FILE" "$NEW_FILE"
+    if [ $? -ne 0 ]; then
+        echo "Error: git mv failed"
+        exit 1
+    fi
+else
+    echo "File is not tracked by git, using 'mv'"
+    mv "$OLD_FILE" "$NEW_FILE"
+    if [ $? -ne 0 ]; then
+        echo "Error: mv failed"
+        exit 1
+    fi
+fi
+echo "✓ File moved successfully"
+echo
+
+# Perform search and replace
+echo "Performing recursive search and replace in $GIT_ROOT/src/"
+echo "Replacing all instances of '$OLD_MODULE' with '$NEW_MODULE'"
+echo
+
+# Escape old module name for sed pattern matching
+OLD_MODULE_ESCAPED=$(escape_for_sed "$OLD_MODULE")
+
+# Count files that will be updated
+TOTAL_FILES=0
+UPDATED_FILES=0
+
+# Process both .lagda.md and .agda files
+for pattern in "*.lagda.md" "*.agda"; do
+    find "$GIT_ROOT/src" -name "$pattern" -type f | while read -r file; do
+        TOTAL_FILES=$((TOTAL_FILES + 1))
+        if grep -q "$OLD_MODULE" "$file"; then
+            echo "Updating: $(echo "$file" | sed "s|$GIT_ROOT/||")"
+            # Use temporary file for POSIX compliance with sed -i
+            sed "s/$OLD_MODULE_ESCAPED/$NEW_MODULE/g" "$file" > "$file.tmp"
+            if [ $? -eq 0 ]; then
+                mv "$file.tmp" "$file"
+                UPDATED_FILES=$((UPDATED_FILES + 1))
+            else
+                echo "Warning: Failed to update $file"
+                rm -f "$file.tmp"
+            fi
+        fi
+    done
+done
+
+echo
+echo "=== Refactoring Summary ==="
+echo "✓ Module file moved from $OLD_PATH.lagda.md to $NEW_PATH.lagda.md"
+echo "✓ All references updated throughout the source tree"
+echo "✓ Refactoring complete!"
+echo
+echo "Next steps:"
+echo "- Review the changes with 'git diff' if using git"
+echo "- Test that your Agda code still type-checks"
+echo "- Commit the changes when satisfied"

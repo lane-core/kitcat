@@ -1,0 +1,154 @@
+#!/bin/bash
+
+# Default values
+DIRECTORY="$PWD"
+EXTENSION="lagda.md"
+OLD_STRING="\$prev"
+NEW_STRING="\$final"
+VERBOSE=false
+BACKUP=false
+DRY_RUN=false
+
+# Function to display help
+show_help() {
+	echo "Usage: $(basename "$0") [OPTIONS]"
+	echo
+	echo "Replace strings in files with specified extension"
+	echo
+	echo "Options:"
+	echo "  -d, --directory DIR    Directory to search (default: current directory)"
+	echo "  -e, --extension EXT    File extension to search for (default: lagda.md)"
+	echo "  -o, --old STRING       String to replace (default: \$prev)"
+	echo "  -n, --new STRING       Replacement string (default: \$final)"
+	echo "  -b, --backup           Create backup files before making changes"
+	echo "  -v, --verbose          Show detailed information about operations"
+	echo "  -t, --dry-run          Show what would be done without making changes"
+	echo "  -h, --help             Display this help and exit"
+	echo
+	echo "Example: $(basename "$0") -d ./src -e md -o '\$old' -n '\$new' -v -b"
+}
+
+# Parse command-line arguments
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	-d | --directory)
+		DIRECTORY="$2"
+		shift 2
+		;;
+	-e | --extension)
+		EXTENSION="$2"
+		shift 2
+		;;
+	-o | --old)
+		OLD_STRING="$2"
+		shift 2
+		;;
+	-n | --new)
+		NEW_STRING="$2"
+		shift 2
+		;;
+	-b | --backup)
+		BACKUP=true
+		shift
+		;;
+	-v | --verbose)
+		VERBOSE=true
+		shift
+		;;
+	-t | --dry-run)
+		DRY_RUN=true
+		shift
+		;;
+	-h | --help)
+		show_help
+		exit 0
+		;;
+	*)
+		echo "Unknown option: $1"
+		show_help
+		exit 1
+		;;
+	esac
+done
+
+# Check if fd command is available, use find as fallback
+if command -v fd &>/dev/null; then
+	FIND_CMD="fd . \"$DIRECTORY\" -e $EXTENSION"
+else
+	echo "fd command not found, using find instead"
+	FIND_CMD="find \"$DIRECTORY\" -type f -name \"*.$EXTENSION\""
+fi
+
+# Create backup extension if backup is enabled
+BACKUP_EXT=""
+if $BACKUP; then
+	BACKUP_EXT=".bak"
+fi
+
+# Prepare sed command for different systems
+SED_ARGS="-i$BACKUP_EXT"
+if [[ "$(uname)" == "Darwin" ]]; then
+	# macOS requires an argument after -i
+	if [[ -z "$BACKUP_EXT" ]]; then
+		SED_ARGS="-i ''"
+	else
+		SED_ARGS="-i $BACKUP_EXT"
+	fi
+fi
+
+# Display info about what will be done
+echo "Configuration:"
+echo "  Directory: $DIRECTORY"
+echo "  File extension: $EXTENSION"
+echo "  Old string: $OLD_STRING"
+echo "  New string: $NEW_STRING"
+echo "  Backup: $BACKUP"
+echo "  Dry run: $DRY_RUN"
+echo ""
+
+# Process files
+count=0
+if $DRY_RUN; then
+	echo "DRY RUN - no changes will be made"
+	echo ""
+
+	# Using process substitution to count lines
+	file_list=$(eval "$FIND_CMD")
+	for file in $file_list; do
+		matches=$(grep -c "$OLD_STRING" "$file" 2>/dev/null || echo "0")
+		if [ "$matches" -gt 0 ]; then
+			echo "Would replace $matches occurrences in: $file"
+			count=$((count + 1))
+		fi
+	done
+else
+	# Perform actual replacements
+	file_list=$(eval "$FIND_CMD")
+	for file in $file_list; do
+		if $VERBOSE; then
+			echo "Processing file: $file"
+		fi
+
+		matches=$(grep -c "$OLD_STRING" "$file" 2>/dev/null || echo "0")
+		if [ "$matches" -gt 0 ]; then
+			if $VERBOSE; then
+				echo "  - Found $matches occurrences to replace"
+			fi
+
+			eval "sed $SED_ARGS 's/$OLD_STRING/$NEW_STRING/g' \"$file\""
+			count=$((count + 1))
+		elif $VERBOSE; then
+			echo "  - No matches found"
+		fi
+	done
+fi
+
+# Display summary
+echo ""
+if $DRY_RUN; then
+	echo "DRY RUN SUMMARY: Would modify $count files"
+else
+	echo "SUMMARY: Modified $count files"
+fi
+
+exit 0

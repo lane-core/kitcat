@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Check if an argument is provided
+if [ $# -ne 1 ]; then
+	echo "Usage: $0 <Module.Path.Name>"
+	exit 1
+fi
+
+# Parse the input
+module_path=$1
+last_dot_position=$(echo $module_path | awk -F. '{print NF-1}')
+git_root=$(git rev-parse --show-toplevel)
+
+# Extract directory path and filename
+if [ $last_dot_position -eq 0 ]; then
+	# No dots in the input
+	DIR_PATH=$git_root/src
+	FILE_NAME=$module_path
+else
+	# Extract directory path (replacing dots with slashes)
+	DIR_PATH=$git_root/src/$(echo $module_path | sed 's/\.[^.]*$//' | sed 's/\./\//g')
+	# Extract file name (after the last dot)
+	FILE_NAME=$(echo $module_path | sed 's/.*\.//')
+fi
+
+# Create the full directory path
+mkdir -p "$DIR_PATH"
+
+# Create the file with the specified content
+cat >"$DIR_PATH/$FILE_NAME.lagda.md" <<EOL
+\`\`\`agda
+{-# OPTIONS --safe --erased-cubical #-}
+
+module $module_path where
+
+open import Prim.Type
+\`\`\`
+EOL
+
+echo "Created file: $DIR_PATH/$FILE_NAME.lagda.md"

@@ -1,13 +1,16 @@
-name: kitcat
+name: kitcat-0.1
 include: src
-flags: --cubical-compatible
- --auto-inline
- --exact-split
- --no-import-sorts
- --no-prop
- --two-level
- --postfix-projections
- --warning=noUnsupportedIndexedMatch
- --warning=ClashesViaRenaming
- --warning=LibUnknownField
- --warning=UselessInline
+depend:
+flags:
+  --no-import-sorts
+  --no-sized-types
+  --erasure
+  --auto-inline
+  --erased-matches
+  --exact-split
+  --hidden-argument-puns
+  --postfix-projections
+  --qualified-instances
+
+  -Werror
+  -WnoUnsupportedIndexedMatch

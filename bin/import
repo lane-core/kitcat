@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Check if at least one symbol was provided
+if [ "$#" -eq 0 ]; then
+	echo "Error: Please provide at least one symbol name."
+	echo "Usage: $0 symbol1 [symbol2 ...]"
+	exit 1
+fi
+
+# Process each symbol name provided as an argument
+for s in "$@"; do
+	# Create directory for the symbol
+	mkdir -p "$s"
+
+	# Create Type.lagda.md file with the specified content
+	cat >"$s/Type.lagda.md" <<EOF
+\`\`\`agda
+
+{-# OPTIONS --safe --cubical-compatible #-}
+
+module Data.$s.Type where
+
+open import Agda.Builtin.$s public
+EOF
+
+	echo "Created $s/Type.lagda.md"
+done
+
+echo "All files have been created successfully."
