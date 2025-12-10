@@ -1,17 +1,31 @@
 ```
 
-{-# OPTIONS --safe --erased-cubical #-}
+{-# OPTIONS --safe --cubical-compatible #-}
 
-module Data.Fin where
+module Lib.Data.Fin where
 
-open import Prim.Type
+open import Lib.Type
+open import Lib.Nat
+open IndOrd
 
-open import Agda.Builtin.List public
-open import Prim.Data.Nat
-open import Prim.Interval
-open import Prim.Kan
-open import Prim.Path
---open import Data.Nat
+-- module Fin where
+--   record Fin (n : Nat) : Type where
+--     constructor fin
+--     field
+--       ar : Nat
+--       instance @0 pf : S ar ≤ n
 
-open import Prim.Data.Fin public
+--   open Fin public
 
+--   zero : Fin 1
+--   zero = fin Z (s≤s 0≤)
+
+--   suc : ∀ {n} → Fin n → Fin (S n)
+--   suc {(Z)} f = zero
+--   suc {S n} (fin ar pf) .Fin.ar = S ar
+--   suc {S n} (fin ar pf) .Fin.pf = s≤s pf
+
+--   elim : ∀ {u} {A : Type u} → Fin 0 → A
+--   elim (fin Z ())
+
+-- open Fin using (Fin; zero; suc) hiding (module Fin) public

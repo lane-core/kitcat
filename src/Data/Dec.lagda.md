@@ -4,11 +4,11 @@
 
 module Data.Dec where
 
-open import Prim.Type
-open import Prim.Interval
-open import Prim.Kan
-open import Prim.Path
-open import Prim.Data.Sigma
+open import Lib.Type
+open import Lib.Cubical.Base
+open import Lib.Cubical.Kan
+open import Lib.Path
+open import Lib.Sigma
 
 data Dec {u} (A : Type u) : Type u where
   yes : A → Dec A
@@ -50,12 +50,12 @@ module _ {u} {A : Type u} where
       Κ : {a : A} (s r : x ≡ a) → f s ≡ f r
       Κ {a} = ρ x a .snd
 
-      H : (s : x ≡ y) → PathP (λ i → x ≡ s i) (f refl) (f s)
+      H : (s : x ≡ y) → PathP (λ i → x ≡ s i) (f rfl) (f s)
       H s j = f {s j} (λ i → s (i ∧ j))
 
       p≡q : p ≡ q
       p≡q j i = hcomp (∂ i ∨ ∂ j) λ where
-        k (i = i0) → f refl k
+        k (i = i0) → f rfl k
         k (i = i1) → Κ p q j k
         k (j = i0) → H p i k
         k (j = i1) → H q i k

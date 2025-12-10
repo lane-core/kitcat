@@ -8,8 +8,8 @@ Sept 17th, 2024 (edited Oct 2025)
 
 module Coyo where
 
-open import Prim.Type renaming (funcomp to infixr 40 _∘_)
-open import Prim.Data.Sigma
+open import Lib.Type renaming (funcomp to infixr 40 _∘_)
+open import Lib.Sigma
 
 infix 0 _＝_
 ```

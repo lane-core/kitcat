@@ -4,16 +4,16 @@
 
 module Data.Vec where
 
-open import Prim.Type
+open import Lib.Type
 
 open import Agda.Builtin.List public
-open import Prim.Data.Nat
-open import Prim.Interval
-open import Prim.Kan
-open import Prim.Path
+open import Lib.Nat
+open import Lib.Interval
+open import Lib.Kan
+open import Lib.Path
 open import Data.Nat
 
-open import Prim.Data.Fin public
+open import Lib.Data.Fin public
 open ≤ℕ
 open Path renaming (concat to infixl 40 _∙_)
 

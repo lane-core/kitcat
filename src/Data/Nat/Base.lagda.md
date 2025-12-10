@@ -4,16 +4,16 @@
 
 module Data.Nat.Base where
 
-open import Prim.Type
-open import Prim.Interval
+open import Lib.Type
+open import Lib.Interval
 
-import Prim.Path as Path
+import Lib.Path as Path
 open Path
   using (_≡_; idtofun; sym; ap; is-set)
   renaming (concat to infixl 40 _∙_)
 
 open import Data.Dec
-import Prim.Data.Nat as N
+import Lib.Nat as N
 
 open N using (Nat; S; Z) renaming (add to _+_)
 

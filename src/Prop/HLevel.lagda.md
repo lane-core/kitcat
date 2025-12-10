@@ -3,9 +3,9 @@
 
 module Prop.HLevel where
 
-open import Prim.Type
-open import Prim.Data
-open import Prim.Path
+open import Lib.Type
+open import Lib.Data
+open import Lib.Path
 
 record is-contr {u} (A : Type u) : Type u where
   constructor contr

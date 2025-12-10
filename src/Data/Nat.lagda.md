@@ -4,16 +4,19 @@
 
 module Data.Nat where
 
-open import Prim.Type
-open import Prim.Interval
+open import Lib.Type
+open import Lib.Cubical.Base
 
-import Prim.Path as Path
+import Lib.Path as Path
 open Path
-  using (_≡_; idtofun; sym; ap; is-set)
-  renaming (concat to infixl 40 _∙_)
+  using (idtofun; hsym; ap; is-set)
+
+open import Lib.Path.Gpd
+  using ()
+  renaming (cat to infixl 40 _∙_)
 
 open import Data.Dec
-import Prim.Data.Nat as N
+import Lib.Nat as N
 
 open N using (Nat; S; Z) public
 
@@ -21,6 +24,7 @@ private variable
   u : Level
   m n : Nat
 
+```
 module Nat where
   open N public
   open N using () renaming (add to _+_)

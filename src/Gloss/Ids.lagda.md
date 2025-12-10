@@ -6,8 +6,8 @@ set of assumptions, implementing Sterling's reflexive graphs paper
 
 module Ids where
 
-open import Prim.Type
-open import Prim.Data.Sigma
+open import Lib.Type
+open import Lib.Sigma
 
 record Ids : Typeω where
   infix 2 _＝_
