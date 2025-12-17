@@ -4,9 +4,9 @@
 
 module HData.Rack where
 
-open import Lib.Type
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan
+open import Lib.Core.Prim
+open import Lib.Core.Base
+open import Lib.Core.Kan
 open import Lib.Equiv
 open import Lib.Path
 open import Lib.Sigma

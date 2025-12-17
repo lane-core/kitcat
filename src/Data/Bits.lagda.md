@@ -6,8 +6,8 @@ Based on Tesla Zhang's "Two tricks to Trivialize Higher-Indexed Families" (2023)
 
 module Data.Bits where
 
-open import Lib.Type
-open import Lib.Cubical.Base
+open import Lib.Core.Prim
+open import Lib.Core.Base
 open import Lib.Nat
 open import Lib.Bool
 

@@ -6,9 +6,9 @@ October 23, 2025
 
 module Lib.Path.Homotopy where
 
-open import Lib.Type
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan hiding (fill)
+open import Lib.Core.Prim
+open import Lib.Core.Base
+open import Lib.Core.Kan hiding (fill)
 open import Lib.Path
 open import Lib.Path.Gpd renaming (module cat to cat; cat to infixr 40 _∙_)
 open import Lib.Sigma

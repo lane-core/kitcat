@@ -4,8 +4,8 @@
 
 module Lib.Groupoid.Base where
 
-open import Lib.Type
-open import Lib.Builtin
+open import Lib.Core.Prim
+open import Lib.Core.Type
 open import Lib.Equal hiding (_≃_; _≅_)
 
 record Graph u v : Type (u ₊ ⊔ v ₊) where

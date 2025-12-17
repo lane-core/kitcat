@@ -19,9 +19,9 @@ use our conn lemma generating squares of the form `Square p p q q`.
 
 module Lib.Path.Monoid where
 
-open import Lib.Type
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan hiding (fill)
+open import Lib.Core.Prim
+open import Lib.Core.Base
+open import Lib.Core.Kan hiding (fill)
 open import Lib.Path
 open import Lib.Path.Gpd renaming (cat to infixr 40 _∙_)
 open import Lib.Sigma
@@ -133,9 +133,6 @@ ybe {w} {x} {y} {z} p q r s i j = hcomp (∂ j ∨ ~ i) λ where
       k (j = i0) → fill s (hsym r) i k
       k (k = i0) → {!!}
 
-    -- aa : a0 ≡ a1
-    -- aa = commutes2 s (hsym r) (hsym p) q {!λ i j → abx!}
-
     a : x ≡ y
     a i = abx i i
 
@@ -144,13 +141,6 @@ ybe {w} {x} {y} {z} p q r s i j = hcomp (∂ j ∨ ~ i) λ where
 
     H : Square p rfl q composite
     H = fill (hsym p) q
-
-    -- K' : Square rfl composite r s
-    -- K' i j = hcomp (∂ i ∨ j) λ where
-    --   k (i = i0) → {!!}
-    --   k (i = i1) → r j
-    --   k (j = i1) → s (i ∨ ~ k)
-    --   k (k = i0) → {!q (i ∨ j)!}
 
     H' : Square p rfl q a
     H' i j = hcomp (∂ i ∨ ∂ j) λ where

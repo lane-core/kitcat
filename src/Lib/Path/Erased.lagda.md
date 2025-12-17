@@ -3,12 +3,12 @@
 
 module Lib.Path.Erased where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Erased
 open import Lib.Sigma
 
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan using (transp; hcomp; hfill; coe0i; coe01)
+open import Lib.Core.Base
+open import Lib.Core.Kan using (transp; hcomp; hfill; coe0i; coe01)
 
 open import Lib.Path using (J0; is-contr; ctr; paths)
 open import Lib.Path.Gpd as Path

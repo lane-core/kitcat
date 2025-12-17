@@ -4,8 +4,8 @@
 
 module Data.Nat where
 
-open import Lib.Type
-open import Lib.Cubical.Base
+open import Lib.Core.Prim
+open import Lib.Core.Base
 
 import Lib.Path as Path
 open Path

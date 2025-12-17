@@ -3,7 +3,7 @@
 
 module Data.Cat where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Interval
 open import Lib.Sigma
 open import Lib.Path

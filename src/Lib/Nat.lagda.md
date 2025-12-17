@@ -4,7 +4,7 @@
 
 module Lib.Nat where
 
-open import Lib.Type
+open import Lib.Core.Prim
 
 import Agda.Builtin.Nat
 

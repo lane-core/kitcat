@@ -4,7 +4,7 @@
 
 module Data.Nat.Order where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Interval
 open import Lib.Kan
 open import Lib.Sigma

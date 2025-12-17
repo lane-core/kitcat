@@ -4,7 +4,7 @@
 
 module Data.Nat.Base where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Interval
 
 import Lib.Path as Path

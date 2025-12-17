@@ -6,7 +6,7 @@ Based on Tesla Zhang's "Two tricks to Trivialize Higher-Indexed Families" (2023)
 
 module Data.Graph where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Nat
 
 record Graph u v : Type₊ (u ⊔ v) where

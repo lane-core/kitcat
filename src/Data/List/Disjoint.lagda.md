@@ -3,10 +3,10 @@
 
 module Data.List.Disjoint where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Sigma
 open import Data.List
-open import Lib.Cubical.Base
+open import Lib.Core.Base
 open import Lib.Path.Erased
 
 open import Rel.Ternary.Base
