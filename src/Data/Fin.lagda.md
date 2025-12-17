@@ -4,7 +4,7 @@
 
 module Lib.Data.Fin where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Nat
 open IndOrd
 

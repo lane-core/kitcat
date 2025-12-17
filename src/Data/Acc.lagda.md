@@ -4,8 +4,8 @@
 
 module Data.Acc where
 
-open import Lib.Type
-open import Lib.Cubical.Base
+open import Lib.Core.Prim
+open import Lib.Core.Base
 open import Lib.Path
 open import Lib.Nat hiding (ind)
 

@@ -4,11 +4,11 @@
 
 module Data.Path where
 
-open import Lib.Type
+open import Lib.Core.Prim
 
-import Lib.Cubical.Kan; module Kan = Lib.Cubical.Kan hiding (transp)
+import Lib.Core.Kan; module Kan = Lib.Core.Kan hiding (transp)
 import Lib.Path.HLevel; module HLevel = Lib.Path.HLevel
-open import Lib.Cubical.Base public
+open import Lib.Core.Base public
 open import Lib.Path public
 open import Lib.Path.Gpd public
 

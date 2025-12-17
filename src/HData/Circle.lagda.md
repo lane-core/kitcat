@@ -4,8 +4,8 @@
 
 module HData.Circle where
 
-open import Lib.Type
-open import Lib.Cubical.Base
+open import Lib.Core.Prim
+open import Lib.Core.Base
 
 open import Data.Bits
 

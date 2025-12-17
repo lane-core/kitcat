@@ -7,8 +7,8 @@ From Tesla Zhang's [Two tricks to trivialize higher indexed families](https://ar
 module HData.Helix where
 
 open import Lib.Prim
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan
+open import Lib.Core.Base
+open import Lib.Core.Kan
 open import Lib.Equiv
 open import Lib.Path
 open import Lib.Path.Gpd renaming (module cat to cat; cat to infixr 40 _∙_)

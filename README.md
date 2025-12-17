@@ -1,34 +1,25 @@
-# Kitcat: A research kit for univalent mathematics and computability theory
+# Kitcat: A univalent programming library for Cubical Agda
 
-This library written in the mathematical proof assistant, dependent type theory, and functional programming language [Agda](https://github.com/agda/agda), currently in an early stage of development, is directed towards the study of mathematics and theories of computation from the [univalent point of view](https://en.wikipedia.org/wiki/Univalent_foundations). Specifically, we focus on developing the methods of *graphical* theories of computation within type theory, such as:
-* [Interaction Nets](https://wiki.xxiivv.com/site/interaction_nets.html)
-* [String Diagrams](https://arxiv.org/abs/2305.08768)
-* More generally, the sorts of mathematical structures defined in the rich theory underpinning [Braided](https://ncatlab.org/nlab/show/braided+monoidal+category) and [Symmetric Monoidal Categories](https://ncatlab.org/nlab/show/symmetric+monoidal+category)
+Kitcat is an experimental library for [Cubical Agda](https://agda.readthedocs.io/en/latest/index.html) centered on general purpose programming, whose underpinnings lie in a theory of **virtual categorical structures** formalized in univalent foundations, which guides the overall design and implementation of the library. This is an active research project intended as a vehicle for exploring applied univalent mathematics while pinning down useful abstractions intended to be useful to Agda hackers of all stripes.
+
+> **WIP** — The API is not yet stable. Expect breaking changes.
+
+## Scope
+
+Kitcat is not a formalization library in the style of agda-categories or 1lab. Its focus is on providing an opinionated foundation for programming with categorical abstractions, with an emphasis on usability.
+
+The library aims to provide ergonomic interfaces for both programming and formalization: functors, natural transformations, limits, adjunctions, monads — built on a modular virtual category theory framework intended to serve as a cohesive API throughout. Quality of life features and metaprogramming facilities are planned where they make sense.
+
+Research branches may appear in alternative tags. Thin-cloning recommended.
+
+## Foundations
+
+The library explores a presentation of univalent type theory and higher category theory formalization drawing on Capriotti–Kraus's prior work formalizing [Univalent higher categories](https://arxiv.org/abs/1707.03693) and [∞-categorical models of HoTT](https://arxiv.org/abs/2009.01883), [Petrakis's univalent typoids](https://arxiv.org/abs/2205.06651), and Sterling's [virtual bicategory theory](https://www.jonmsterling.com/005B) and [reflexive graph lenses](https://arxiv.org/abs/2303.10986).
+
+The core abstraction is the _virtual graph_: a graph with 2-cells satisfying a propositional contractibility condition on composites, which generalizes but is trivially satisfied by the native ∞-groupoid structure of types. Research is ongoing, but early results seem promising that this provides a suitable setting for synthetic higher category theory.
 
 ## Related Work
 
-To point towards more established work that serves as an influence for the work done here, there are many libraries hosting excellent contributions from the bright minds exploring this exciting field.
-
-To name just five (of many more):
-
-* [agda-categories](https://github.com/agda/agda-categories): An extensive category theory library for Agda intended to be a seamless complement to the [Agda Standard Library](https://github.com/agda/agda-stdlib). My choice of hom-typoids was aided by the approach of this library using setoids.
-* [agda-prelude](https://github.com/UlfNorell/agda-prelude): Ulf Norell's Agda library geared towards performance. In particular, we aim to port over many of the modules and draw insight from Norell's library design, as he put a lot of careful work in structuring this development.
-* [agda-unimath](https://unimath.github.io/agda-unimath/): By far the most organized and exhaustive explorations of univalent type theory and its applications in Agda, began by the excellent Egbert Rijke, who is responsible for a new book on the subject called Introduction to Homotopy Type Theory to be published by Cambridge but currently available as an [arXiv preprint](https://arxiv.org/abs/2212.11082). This library and text will serve as a reference point for our work.
-* [TypeTopology](https://www.cs.bham.ac.uk/~mhe/TypeTopology/): The excellent "virtual blackboard" founded by Martin Escardo and which hosts both fresh and established formalized results in studies as varied as Domain Theory, Category and Game Theory. I am a current contributor at this repository.
-* [1lab](https://1lab.dev/): an "experiment in discoverable formalisation: an extensive library of formalised mathematics, presented as an explorable reference resource" notable for formalizing all of its development in Cubical Agda
-
-## Research Perspectives
-
-A central aim of Kitcat is to survey and reevaluate results from the discipline of [Homotopy Type Theory](https://ncatlab.org/nlab/show/homotopy+type+theory) from two perspectives: 
- 1. **Reinterpretation:** We revisit early and foundational results through the lens of latest developments, exploring reformulations of various topics in univalent type theory with constructions like Iosef Petrakis's [Univalent typoids](https://arxiv.org/abs/2205.06651). 
- 2. **Historical Survey:** We trace back to the moment when homotopy theory inspired mathematicians like Vladimir Voevodsky to explore the applicability of topological methods to computation theory. We aim to explore this development in conjunction with Voevodsky's contemporaries who were investigating similar connections from the perspective of graph theory. 
- 
-## Goals
-
-Our primary aim is to meaningfully relate results from the period "converging towards a *homotopical theory of computation*" ([Lafont, *Algebra and Geometry of Rewriting*](https://www.i2m.univ-amu.fr/~lafont/pub/agr.pdf)). Through this approach, we hope to:
-
-* Develop novel perspectives and methods to establish new ways of distinguishing and characterizing properly 21st-century type theories, aiding and clarifying results in the latest research directions of this exciting field
-* Formalize important research in the history of graphical computation theories, along with results from their predecessors in systems like Linear Logic
-* Contribute to the ongoing evolution of mathematical foundations in computer science
-
-We welcome contributions and discussions from researchers interested in these cutting-edge intersections of mathematics and computation. We maintain a mailing list hosted on sourcehut, at [~lane/kitcat-devel](https://lists.sr.ht/~lane/kitcat-devel). 
+- [1lab](https://1lab.dev/) — Formalised mathematics as explorable reference
+- [agda-unimath](https://unimath.github.io/agda-unimath/) — Systematic univalent foundations at scale
+- [agda-categories](https://github.com/agda/agda-categories) — Mature category theory for the Agda ecosystem

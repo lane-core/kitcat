@@ -4,10 +4,10 @@
 
 module HData.Quandle where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Builtin hiding (_∷_)
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan
+open import Lib.Core.Base
+open import Lib.Core.Kan
 open import Lib.Path
 open import Lib.Equal renaming (cat to infixr 40 _∙_)
 

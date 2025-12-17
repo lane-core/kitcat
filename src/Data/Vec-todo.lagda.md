@@ -4,7 +4,7 @@
 
 module Braid.Type where
 
-open import Lib.Type
+open import Lib.Core.Prim
 
 open import Agda.Builtin.List public
 open import Lib.Nat

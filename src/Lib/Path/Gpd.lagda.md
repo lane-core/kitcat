@@ -19,52 +19,52 @@ use our conn lemma generating squares of the form `Square p p q q`.
 
 module Lib.Path.Gpd where
 
-open import Lib.Type
-open import Lib.Builtin
-open import Lib.Equal hiding (refl)
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan hiding (fill)
-open import Lib.Path
+open import Lib.Core.Prim
+open import Lib.Core.Type
+open import Lib.Core.Base
+open import Lib.Core.Kan hiding (fill)
+open import Lib.Path renaming (refl to rfl)
+open import Lib.Underlying
 
 private variable
   u v : Level
   A : I → Type u
 
-module cat2 {u} {A : I → Type u} where
-  sys : {w x : A i0} {y z : A i1}
-      → x ≡ w → x ≡ y :: A → y ≡ z
-      → (i : I) → Partials (∂ i) (λ _ → A i)
-  sys p q r i = λ where
-    j (i = i0) → p j
-    j (j = i0) → q i
-    j (i = i1) → r j
+-- module cat2 {u} {A : I → Type u} where
+--   sys : {w x : A i0} {y z : A i1}
+--       → x ≡ w → x ≡ y :: A → y ≡ z
+--       → (i : I) → Partials (∂ i) (λ _ → A i)
+--   sys p q r i = λ where
+--     j (i = i0) → p j
+--     j (j = i0) → q i
+--     j (i = i1) → r j
 
-  cat2 : {w x : A i0} {y z : A i1}
-      → x ≡ w → x ≡ y :: A → y ≡ z → w ≡ z :: A
-  cat2 p q r i = hcomp (∂ i) (sys p q r i)
+--   cat2 : {w x : A i0} {y z : A i1}
+--       → x ≡ w → x ≡ y :: A → y ≡ z → w ≡ z :: A
+--   cat2 p q r i = hcomp (∂ i) (sys p q r i)
 
-  fill : {w x : A i0} {y z : A i1}
-       → (p : x ≡ w) (q : x ≡ y :: A) (r : y ≡ z)
-       → SquareP (λ i _ → A i) p q r (cat2 p q r)
-  fill p q r i j = hfill (∂ i) j (sys p q r i)
+--   fill : {w x : A i0} {y z : A i1}
+--        → (p : x ≡ w) (q : x ≡ y :: A) (r : y ≡ z)
+--        → SquareP (λ i _ → A i) p q r (cat2 p q r)
+--   fill p q r i j = hfill (∂ i) j (sys p q r i)
 
-  refl : {x : A i0} {y : A i1} (p : x ≡ y :: A) → cat2 rfl p rfl ≡ p
-  refl p i j = fill rfl p rfl j (~ i)
+--   refl : {x : A i0} {y : A i1} (p : x ≡ y :: A) → cat2 rfl p rfl ≡ p
+--   refl p i j = fill rfl p rfl j (~ i)
 
-  is-composite : {w : A i0} {z : A i1} → w ≡ z :: A → A i0 → A i1 → Type u
-  is-composite {w} {z} s x y = Σ p :: (x ≡ w)
-                             , Σ q :: (x ≡ y :: A)
-                             , Σ r :: (y ≡ z)
-                             , Square p q r s
+--   is-composite : {w : A i0} {z : A i1} → w ≡ z :: A → A i0 → A i1 → Type u
+--   is-composite {w} {z} s x y = Σ p :: (x ≡ w)
+--                              , Σ q :: (x ≡ y :: A)
+--                              , Σ r :: (y ≡ z)
+--                              , Square p q r s
 
-  record Path-composite {x : A i0} {z : A i1} (s : x ≡ z :: A) : Type u where
-    field
-      {a0} : A i0
-      {a1} : A i1
-      composite : is-composite s a0 a1
+--   record Path-composite {x : A i0} {z : A i1} (s : x ≡ z :: A) : Type u where
+--     field
+--       {a0} : A i0
+--       {a1} : A i1
+--       composite : is-composite s a0 a1
 
-open cat2 using (cat2; Path-composite; is-composite) public
-{-# DISPLAY hcomp _ (cat2.sys p q r i) = cat2 p q r i #-}
+-- open cat2 using (cat2; Path-composite; is-composite) public
+-- {-# DISPLAY hcomp _ (cat2.sys p q r i) = cat2 p q r i #-}
 
 module catr {x : A i0} {y : A i1} where
   sys : {z : A i1} (p : x ≡ y :: A) (q : y ≡ z)
@@ -89,197 +89,181 @@ open catr using (catr) public
 
 module catl {y : A i0} {z : A i1} where
   catl : {x : A i0} → x ≡ y → y ≡ z :: A → x ≡ z :: A
-  catl p q = cat2 (hsym p) q rfl
+  catl p q = cat2 (sym p) q rfl
 
   fill : {x : A i0} (p : x ≡ y) (q : y ≡ z :: A)
-       → hsym p ≡ rfl :: ∂.square _≡_ q (catl p q)
-  fill p q = cat2.fill (hsym p) q rfl
+       → sym p ≡ rfl :: ∂.square _≡_ q (catl p q)
+  fill p q = cat2.fill (sym p) q rfl
 
   refl : (q : y ≡ z :: A) → catl rfl q ≡ q
   refl q j i = fill rfl q i (~ j)
 
 open catl using (catl) public
 
-hconn : {A : I → Type u} {x y : A i0} {z : A i1}
-     → (p : x ≡ y) (q : y ≡ z :: A)
-     → SquareP (λ i j → A (i ∧ j)) p p q q
-hconn {A} {y} {z} p q i j = hcomp (∂ i ∨ ∂ j) sys
-  module hconn where
-    sys : Partials (∂ i ∨ ∂ j) (λ _ → A (i ∧ j))
-    sys k (k = i0) = q (i ∧ j)
-    sys k (i = i0) = p (j ∨ ~ k)
-    sys k (j = i0) = p (i ∨ ~ k)
-    sys k (j = i1) = q i
-    sys k (i = i1) = q j
-{-# DISPLAY hcomp _ (hconn.sys p q i j) = hconn p q i j #-}
+-- module cat where
+--   module _ {A : I → Type u} {x : A i0} {y z : A i1} (p : x ≡ y :: A) (q : y ≡ z) where
+--     sys : (i : I) → Partials (∂ i) (λ _ → A i)
+--     sys i k (i = i0) = x
+--     sys i k (k = i0) = p i
+--     sys i k (i = i1) = q k
 
-conn : {A : Type u} {x y z : A} (p : x ≡ y) (q : y ≡ z) → Square p p q q
-conn = hconn
+--     cat : x ≡ z :: A
+--     cat i = hcomp (∂ i) (sys i)
 
-module cat where
-  module _ {A : I → Type u} {x : A i0} {y z : A i1} (p : x ≡ y :: A) (q : y ≡ z) where
-    sys : (i : I) → Partials (∂ i) (λ _ → A i)
-    sys i k (i = i0) = x
-    sys i k (k = i0) = p i
-    sys i k (i = i1) = q k
+--     fill : rfl ≡ q :: ∂.square _≡_ p cat
+--     fill i j = hfill (∂ i) j (sys i)
 
-    cat : x ≡ z :: A
-    cat i = hcomp (∂ i) (sys i)
+--   private
+--     infixr 40 _∙_
+--     _∙_ = cat
 
-    fill : rfl ≡ q :: ∂.square _≡_ p cat
-    fill i j = hfill (∂ i) j (sys i)
+--   module _ {A : I → Type u} where
+--     cfill : {x : A i0} {y z : A i1} (p : x ≡ y :: A) (q : y ≡ z)
+--           → SquareP (λ i j → A (i ∨ ~ j)) (sym p) rfl q (p ∙ q)
+--     cfill {y} p q i j = hcomp (∂ i ∨ ~ j) λ where
+--       k (j = i0) → y
+--       k (i = i0) → p (~ j)
+--       k (k = i0) → p (i ∨ ~ j)
+--       k (i = i1) → q (j ∧ k)
 
-  private
-    infixr 40 _∙_
-    _∙_ = cat
+--     bfill : {x : A i0} {y z : A i1} (p : x ≡ y :: A) (q : y ≡ z)
+--           → SquareP (λ i j → A (i ∨ j)) p (p ∙ q) rfl q
+--           -- p ≡ rfl :: ∂.square _≡_ (p ∙ q) q
+--     bfill p q i j = hcomp (∂ i ∨ j) λ where
+--       k (i = i0) → p j
+--       k (i = i1) → q k
+--       k (j = i1) → q (i ∧ k)
+--       k (k = i0) → p (i ∨ j)
 
-  module _ {A : I → Type u} where
-    cfill : {x : A i0} {y z : A i1} (p : x ≡ y :: A) (q : y ≡ z)
-          → SquareP (λ i j → A (i ∨ ~ j)) (hsym p) rfl q (p ∙ q)
-    cfill {y} p q i j = hcomp (∂ i ∨ ~ j) λ where
-      k (j = i0) → y
-      k (i = i0) → p (~ j)
-      k (k = i0) → p (i ∨ ~ j)
-      k (i = i1) → q (j ∧ k)
+--     rfill : {x : A i0} {y z : A i1} (p : x ≡ y :: A) (q : y ≡ z)
+--           → SquareP (λ i j → A (i ∨ ~ j)) (sym p) q rfl (p ∙ q)
+--           -- → sym p ≡ erfl z :: ∂.square _≡_ q (p ∙ q)
+--     rfill {y} p q i j = hcomp (∂ i ∨ ~ j) λ where
+--       k (j = i0) → q (i ∧ k)
+--       k (i = i0) → p (~ j)
+--       k (k = i0) → p (i ∨ ~ j)
+--       k (i = i1) → q k
 
-    bfill : {x : A i0} {y z : A i1} (p : x ≡ y :: A) (q : y ≡ z)
-          → SquareP (λ i j → A (i ∨ j)) p (p ∙ q) rfl q
-          -- p ≡ rfl :: ∂.square _≡_ (p ∙ q) q
-    bfill p q i j = hcomp (∂ i ∨ j) λ where
-      k (i = i0) → p j
-      k (i = i1) → q k
-      k (j = i1) → q (i ∧ k)
-      k (k = i0) → p (i ∨ j)
+--   cone : {A : Type u} {x y z : A} (q : y ≡ z) (r : x ≡ z)
+--        → Square q (cat q (sym r)) r (erfl z)
+--   cone q r i j = hcomp (∂ i ∨ j) λ where
+--     k (i = i0) → q (j ∧ k)
+--     k (i = i1) → r (j ∨ ~ k)
+--     k (j = i1) → q (i ∨ k)
+--     k (k = i0) → q i
 
-    rfill : {x : A i0} {y z : A i1} (p : x ≡ y :: A) (q : y ≡ z)
-          → SquareP (λ i j → A (i ∨ ~ j)) (hsym p) q rfl (p ∙ q)
-          -- → hsym p ≡ erfl z :: ∂.square _≡_ q (p ∙ q)
-    rfill {y} p q i j = hcomp (∂ i ∨ ~ j) λ where
-      k (j = i0) → q (i ∧ k)
-      k (i = i0) → p (~ j)
-      k (k = i0) → p (i ∨ ~ j)
-      k (i = i1) → q k
+--   fan : {A : Type u} {x y z : A} (p : x ≡ y) (q : x ≡ z)
+--       → Square p (erfl x) q (cat (sym p) q)
+--   fan {x} p q i j = hcomp (∂ i ∨ ~ j) λ where
+--     k (i = i0) → p j
+--     k (j = i0) → x
+--     k (i = i1) → q (j ∧ k)
+--     k (k = i0) → p (~ i ∧ j)
 
-  cone : {A : Type u} {x y z : A} (q : y ≡ z) (r : x ≡ z)
-       → Square q (cat q (hsym r)) r (erfl z)
-  cone q r i j = hcomp (∂ i ∨ j) λ where
-    k (i = i0) → q (j ∧ k)
-    k (i = i1) → r (j ∨ ~ k)
-    k (j = i1) → q (i ∨ k)
-    k (k = i0) → q i
+--   lpush : {A : Type u} {w x y z : A}
+--         → (p : x ≡ w) (q : x ≡ y) (r : y ≡ z) (s : w ≡ z)
+--         → Square p q r s → Square (erfl x) q r (p ∙ s)
+--   lpush {x} p q r s sq i j = hcomp (∂ i ∨ ~ j) λ where
+--     k (i = i0) → x
+--     k (j = i0) → q (i ∧ k)
+--     k (i = i1) → sq k j
+--     k (k = i0) → p (i ∧ j)
 
-  fan : {A : Type u} {x y z : A} (p : x ≡ y) (q : x ≡ z)
-      → Square p (erfl x) q (cat (hsym p) q)
-  fan {x} p q i j = hcomp (∂ i ∨ ~ j) λ where
-    k (i = i0) → p j
-    k (j = i0) → x
-    k (i = i1) → q (j ∧ k)
-    k (k = i0) → p (~ i ∧ j)
+--   rpush : {A : Type u} {w x y z : A} (p : x ≡ w) (q : x ≡ y) (r : y ≡ z) (s : w ≡ z)
+--         → Square p q r s → Square p (erfl x) (q ∙ r) s
+--   rpush {x} p q r s sq i j = hcomp (∂ j ∨ ~ i) λ where
+--     k (j = i0) → x
+--     k (i = i0) → p (j ∧ k)
+--     k (j = i1) → sq i k
+--     k (k = i0) → q (i ∧ j)
 
-  lpush : {A : Type u} {w x y z : A}
-        → (p : x ≡ w) (q : x ≡ y) (r : y ≡ z) (s : w ≡ z)
-        → Square p q r s → Square (erfl x) q r (p ∙ s)
-  lpush {x} p q r s sq i j = hcomp (∂ i ∨ ~ j) λ where
-    k (i = i0) → x
-    k (j = i0) → q (i ∧ k)
-    k (i = i1) → sq k j
-    k (k = i0) → p (i ∧ j)
+--   rpop : {A : Type u} {w x y z : A} (p : x ≡ w) (q : x ≡ y) (r : y ≡ z) (s : w ≡ z)
+--        → Square p (erfl x) (q ∙ r) s → Square p q r s
+--   rpop p q r s sq i j = hcomp (∂ i ∨ ∂ j) λ where
+--     k (i = i0) → p j
+--     k (i = i1) → bfill q r j k
+--     k (j = i0) → q (i ∧ k)
+--     k (j = i1) → s i
+--     k (k = i0) → sq i j
 
-  rpush : {A : Type u} {w x y z : A} (p : x ≡ w) (q : x ≡ y) (r : y ≡ z) (s : w ≡ z)
-        → Square p q r s → Square p (erfl x) (q ∙ r) s
-  rpush {x} p q r s sq i j = hcomp (∂ j ∨ ~ i) λ where
-    k (j = i0) → x
-    k (i = i0) → p (j ∧ k)
-    k (j = i1) → sq i k
-    k (k = i0) → q (i ∧ j)
+--   -- compositor : {A : I → Type u} {w x : A i0} {y z : A i1}
+--   --            → (p : w ≡ x) (q : x ≡ y :: A) (r : y ≡ z)
+--   --            → Square {!!} (cat q r) {!!} (cat2 {!!} q r)
+--   -- compositor p q r i j = hcomp (∂ i ∨ ~ j) λ where
+--   --   k (i = i0) → {!!} -- p (~ k)
+--   --   k (i = i1) → {!!} -- fill q r j k
+--   --   k (j = i0) → {!!} -- p (i ∨ ~ k)
+--   --   k (k = i0) → {!!} -- q (i ∧ j)
 
-  rpop : {A : Type u} {w x y z : A} (p : x ≡ w) (q : x ≡ y) (r : y ≡ z) (s : w ≡ z)
-       → Square p (erfl x) (q ∙ r) s → Square p q r s
-  rpop p q r s sq i j = hcomp (∂ i ∨ ∂ j) λ where
-    k (i = i0) → p j
-    k (i = i1) → bfill q r j k 
-    k (j = i0) → q (i ∧ k)
-    k (j = i1) → s i
-    k (k = i0) → sq i j
+--   unique : {A : I → Type u} {x : A i0} {y z : A i1}
+--          → {p : x ≡ y :: A} {q : y ≡ z} (r : x ≡ z :: A)
+--          → Square (erfl x) p q r
+--          → r ≡ p ∙ q
+--   unique {p} {q} r sq i =
+--     Composite.unique rfl p q (r , sq) (p ∙ q , fill p q) i .fst
 
-  -- compositor : {A : I → Type u} {w x : A i0} {y z : A i1}
-  --            → (p : w ≡ x) (q : x ≡ y :: A) (r : y ≡ z)
-  --            → Square {!!} (cat q r) {!!} (cat2 {!!} q r)
-  -- compositor p q r i j = hcomp (∂ i ∨ ~ j) λ where
-  --   k (i = i0) → {!!} -- p (~ k)
-  --   k (i = i1) → {!!} -- fill q r j k
-  --   k (j = i0) → {!!} -- p (i ∨ ~ k)
-  --   k (k = i0) → {!!} -- q (i ∧ j)
+--   Tri : {A : I → Type u} {x : A i0} {y z : A i1}
+--       → x ≡ y :: A → y ≡ z → x ≡ z :: A → Type u
+--   Tri p q s = s ≡ p ∙ q
 
-  unique : {A : I → Type u} {x : A i0} {y z : A i1}
-         → {p : x ≡ y :: A} {q : y ≡ z} (r : x ≡ z :: A)
-         → Square (erfl x) p q r
-         → r ≡ p ∙ q
-  unique {p} {q} r sq i =
-    Composite.unique rfl p q (r , sq) (p ∙ q , fill p q) i .fst
+--   unitl : {A : Type u} {x y : A} (p : x ≡ y) → rfl ∙ p ≡ p
+--   unitl p i j = rfill rfl p j (~ i)
 
-  Tri : {A : I → Type u} {x : A i0} {y z : A i1}
-      → x ≡ y :: A → y ≡ z → x ≡ z :: A → Type u
-  Tri p q s = s ≡ p ∙ q
+--   unitr : {x : A i0} {y : A i1} (p : x ≡ y :: A) → p ∙ rfl ≡ p
+--   unitr p i j = fill p rfl j (~ i)
 
-  unitl : {A : Type u} {x y : A} (p : x ≡ y) → rfl ∙ p ≡ p
-  unitl p i j = rfill rfl p j (~ i)
+--   invl : {A : Type u} {x y : A} (p : x ≡ y) → cat (sym p) p ≡ rfl
+--   invl {x} {y} p i j = hcomp (∂ j ∨ i) λ where
+--         k (j = i0) → y
+--         k (k = i0) → p (~ j)
+--         k (j = i1) → p k
+--         k (i = i1) → p (~ j ∨ k)
 
-  unitr : {x : A i0} {y : A i1} (p : x ≡ y :: A) → p ∙ rfl ≡ p
-  unitr p i j = fill p rfl j (~ i)
+--   invr : {A : Type u} {x y : A} (p : x ≡ y) → cat p (sym p) ≡ rfl
+--   invr p = invl (sym p)
 
-  invl : {A : Type u} {x y : A} (p : x ≡ y) → cat (hsym p) p ≡ rfl
-  invl {x} {y} p i j = hcomp (∂ j ∨ i) λ where
-        k (j = i0) → y
-        k (k = i0) → p (~ j)
-        k (j = i1) → p k
-        k (i = i1) → p (~ j ∨ k)
+--   assoc : {A : Type u} {w x y z : A} (p : w ≡ x) (q : x ≡ y) (r : y ≡ z)
+--         → cat p (cat q r) ≡ cat (cat p q) r
+--   assoc {y} p q r k = transpose (fill p q) k ∙ transpose (rfill q r) (~ k)
 
-  invr : {A : Type u} {x y : A} (p : x ≡ y) → cat p (hsym p) ≡ rfl
-  invr p = invl (hsym p)
+--   hsqueeze : {A : Type u} {x y : A} {p q : x ≡ y} → p ∙ rfl ≡ rfl ∙ q → p ≡ q
+--   hsqueeze {p} {q} h = cat2 (unitr p) h (unitl q)
 
-  assoc : {A : Type u} {w x y z : A} (p : w ≡ x) (q : x ≡ y) (r : y ≡ z)
-        → cat p (cat q r) ≡ cat (cat p q) r
-  assoc {y} p q r k = transpose (fill p q) k ∙ transpose (rfill q r) (~ k)
+--   vsqueeze : {A : Type u} {x y : A} {p q : x ≡ y} → rfl ∙ p ≡ q ∙ rfl → p ≡ q
+--   vsqueeze {p} {q} h = cat2 (unitl p) h (unitr q)
 
-  hsqueeze : {A : Type u} {x y : A} {p q : x ≡ y} → p ∙ rfl ≡ rfl ∙ q → p ≡ q
-  hsqueeze {p} {q} h = cat2 (unitr p) h (unitl q)
+--   baxter : {A : Type u} {w x y z : A}
+--          → (p : w ≡ x) (q : w ≡ y) (r : y ≡ z) (s : x ≡ z) (c : x ≡ y)
+--          → (H : Square p rfl q c)
+--          → (K : Square s c r rfl)
+--          → p ∙ s ≡ q ∙ r
+--   baxter {w} {x} {y} {z} p q r s c H K i j = hcomp (∂ j ∨ ~ i) λ where
+--     k (j = i0) → w -- H i (~ k)
+--     k (i = i0) → fill p s j k -- fill p s j k
+--     k (j = i1) → K i k -- s (i ∨ k)
+--     k (k = i0) → H i j -- K i j
 
-  vsqueeze : {A : Type u} {x y : A} {p q : x ≡ y} → rfl ∙ p ≡ q ∙ rfl → p ≡ q
-  vsqueeze {p} {q} h = cat2 (unitl p) h (unitr q)
+--   commutes : {A : Type u} {w x y z : A}
+--            → (p : w ≡ x) (q : x ≡ z) (r : w ≡ y) (s : y ≡ z)
+--            → Square p r s q → cat p q ≡ cat r s
+--   commutes {w} p q r s sq i j = hcomp (∂ j ∨ ~ i) λ where
+--     k (j = i0) → p (~ i ∧ ~ k)
+--     k (j = i1) → s (~ i ∨ k)
+--     k (i = i0) → rfill p q j k
+--     k (k = i0) → sq j (~ i)
 
-  baxter : {A : Type u} {w x y z : A}
-         → (p : w ≡ x) (q : w ≡ y) (r : y ≡ z) (s : x ≡ z) (c : x ≡ y)
-         → (H : Square p rfl q c)
-         → (K : Square s c r rfl)
-         → p ∙ s ≡ q ∙ r
-  baxter {w} {x} {y} {z} p q r s c H K i j = hcomp (∂ j ∨ ~ i) λ where
-    k (j = i0) → w -- H i (~ k)
-    k (i = i0) → fill p s j k -- fill p s j k
-    k (j = i1) → K i k -- s (i ∨ k)
-    k (k = i0) → H i j -- K i j
+--   lwhisker : {A : Type u} {x y z : A} (p : x ≡ y) {q r : y ≡ z} → q ≡ r → p ∙ q ≡ p ∙ r
+--   lwhisker p = ap (cat p)
 
-  commutes : {A : Type u} {w x y z : A}
-           → (p : w ≡ x) (q : x ≡ z) (r : w ≡ y) (s : y ≡ z)
-           → Square p r s q → cat p q ≡ cat r s
-  commutes {w} p q r s sq i j = hcomp (∂ j ∨ ~ i) λ where
-    k (j = i0) → p (~ i ∧ ~ k)
-    k (j = i1) → s (~ i ∨ k)
-    k (i = i0) → rfill p q j k
-    k (k = i0) → sq j (~ i)
+--   rwhisker : {A : Type u} {x y z : A} {p q : x ≡ y} (r : y ≡ z) → p ≡ q → p ∙ r ≡ q ∙ r
+--   rwhisker r = ap (_∙ r)
 
-  lwhisker : {A : Type u} {x y z : A} (p : x ≡ y) {q r : y ≡ z} → q ≡ r → p ∙ q ≡ p ∙ r
-  lwhisker p = ap (cat p)
-
-  rwhisker : {A : Type u} {x y z : A} {p q : x ≡ y} (r : y ≡ z) → p ≡ q → p ∙ r ≡ q ∙ r
-  rwhisker r = ap (_∙ r)
-
-open cat using (cat) public
+-- open cat using (cat) public
 
 {-# DISPLAY hcomp _ (cat.sys p q i) = cat p q i #-}
 
 -- cat : {A : I → Type u} {x y : A i0} {z : A i1} (p : x ≡ y) (q : y ≡ z :: A) → x ≡ z :: A
--- cat p q = cat2 (hsym p) q rfl
+-- cat p q = cat2 (sym p) q rfl
 
 ap-sq : {A : Type u} {B : Type v} (f : A → B) {x00 x10 x01 x11 : A}
       → {p : x00 ≡ x01} {q : x00 ≡ x10} {r : x10 ≡ x11} {s : x01 ≡ x11}
@@ -287,11 +271,11 @@ ap-sq : {A : Type u} {B : Type v} (f : A → B) {x00 x10 x01 x11 : A}
       → Square (ap f p) (ap f q) (ap f r) (ap f s)
 ap-sq f sq i j = f (sq i j)
 
-sq-cancel : {A : Type u} {x y z : A} (p : x ≡ y) (q : y ≡ z) → Square q (hsym p) p (hsym q)
+sq-cancel : {A : Type u} {x y z : A} (p : x ≡ y) (q : y ≡ z) → Square q (sym p) p (sym q)
 sq-cancel p q i j = conn p q (~ i) j
 
 tri-vinv : {A : Type u} {x y z : A} (p : x ≡ z) (q : x ≡ y) (r : y ≡ z)
-         → Square p q r rfl → Square p rfl q (hsym r)
+         → Square p q r rfl → Square p rfl q (sym r)
 tri-vinv p q r sq i j = hcomp (∂ i ∨ ∂ j) λ where
   k (i = i0) → p j
   k (i = i1) → sq-cancel q r k j
@@ -303,8 +287,8 @@ paste : {A : Type u} {w x y z : A}
       → {p : w ≡ x} (w0 : x ≡ z)
       → {q : w ≡ y} (w1 : y ≡ z)
       → (r : x ≡ y)
-      → Square w0 r w1 (erfl z)
-      → Square (hsym p) rfl r q
+      → Square w0 r w1 (erefl z)
+      → Square (sym p) rfl r q
       → Square p q w1 w0
 paste {w} {x} {z} {p} w0 {q} w1 r sq1 sq2 i j = hcomp (∂ i ∨ ∂ j) λ where
   k (i = i1) → sq1 k j
@@ -317,7 +301,7 @@ paste-alt : {A : Type u} {w x y z : A}
       → (p : w ≡ x) (q : w ≡ y) (r : x ≡ y)
       → (w0 : x ≡ z) (w1 : y ≡ z)
       → Square w0 r w1 rfl
-      → Square p (erfl w) q r
+      → Square p (erefl w) q r
       → Square q p w0 w1
 paste-alt p q r w0 w1 sq sq2 i j = hcomp (∂ i ∨ ∂ j) λ where
   k (i = i1) → tri-vinv w0 r w1 sq (~ k) (j)
@@ -326,20 +310,11 @@ paste-alt p q r w0 w1 sq sq2 i j = hcomp (∂ i ∨ ∂ j) λ where
   k (k = i0) → sq2 j i
   k (i = i0) → q (j ∧ k)
 
-loop-rfl : {A : Type u} {x y : A} (p : x ≡ y) (q : y ≡ y)
-         → Square p rfl p q → q ≡ rfl
-loop-rfl p q sq i j = hcomp (∂ i ∨ ∂ j) λ where
-  k (i = i0) → conn p q j k
-  k (i = i1) → p (j ∨ k)
-  k (j = i0) → p k
-  k (j = i1) → q (i ∨ k)
-  k (k = i0) → sq i j
-
 module contr-map {v} {A : Type u} {B : Type v} {f : A → B} (e : is-qinv f) where
   private
     g = e .is-qinv.inv
-    η = e .is-qinv.sec
-    ε = e .is-qinv.retr
+    η = e .is-qinv.unit
+    ε = e .is-qinv.counit
 
   module _ {y : B} ((x , p) : fiber f y) where
     faces0 : (i j : I) → Partial (∂ i ∨ ~ j) A
@@ -358,13 +333,13 @@ module contr-map {v} {A : Type u} {B : Type v} {f : A → B} (e : is-qinv f) whe
       π₀ : g y ≡ g y
       π₀ i = hcomp (∂ i) (faces0 i)
 
-      θ₀ : Square rfl (ap g (hsym (ε y))) (η (g y)) π₀
+      θ₀ : Square rfl (ap g (sym (ε y))) (η (g y)) π₀
       θ₀ i j = hfill (∂ i) j (faces0 i)
 
       π₁ : g y ≡ x
       π₁ i = hcomp (∂ i) (faces1 i)
 
-      θ₁ : Square rfl (ap g (hsym p)) (η x)  π₁
+      θ₁ : Square rfl (ap g (sym p)) (η x)  π₁
       θ₁ i j = hfill (∂ i) j (faces1 i)
 
       fiber-sys : (i j : I) → Partial (∂ i ∨ ~ j) A
@@ -405,8 +380,8 @@ module contr-map {v} {A : Type u} {B : Type v} {f : A → B} (e : is-qinv f) whe
     counit = ε y
 
     private
-      φ : Square rfl p (hsym (ε y)) (ap f (hsym path))
-      φ = tri.by-comp (hsym (ε y)) (ap f path) (hsym p) (rrotate filler)
+      φ : Square rfl p (sym (ε y)) (ap f (sym path))
+      φ = tri.by-comp (sym (ε y)) (ap f path) (sym p) (rrotate filler)
 
     adj : ap f unit ≡ ε (f x)
     adj i j = hcomp (∂ i ∨ ∂ j) λ where
@@ -420,16 +395,15 @@ module contr-map {v} {A : Type u} {B : Type v} {f : A → B} (e : is-qinv f) whe
     fiber-path i .fst = path i
     fiber-path i .snd = filler i
 
-  contr : (y : B) → is-contr (fiber f y)
-  contr y .ctr = g y , ε y
-  contr y .paths = fiber-path
+  cntr : (y : B) → is-contr (fiber f y)
+  cntr y .center = g y , ε y
+  cntr y .paths = fiber-path
 
--- fiber-paths : ∀ {v} {A : Type u} {B : Type v} {f : A → B} {y : B}
---             → {f1 f2 : fiber f y}
---             → f1 ≡ f2
---             → Σ p :: f1 .fst ≡ f2 .fst , ap f p ∙ f2 .snd ≡ f1 .snd
--- fiber-paths {f} p = {!!} where
---   c = contr-map.fiber-path (record { inv = {!!} ; sec = {!!} ; retr = {!!} })
+fiber-paths : ∀ {v} {A : Type u} {B : Type v} {f : A → B} {y : B}
+            → {f1 f2 : fiber f y}
+            → f1 ≡ f2
+            → Σ p ∶ f1 .fst ≡ f2 .fst , cat (ap f p) (f2 .snd) ≡ f1 .snd
+fiber-paths {f} p = {!!}
 
 -- homotopy-natural : ∀ {u v} {A : Type u} {B : Type v}
 --                → {f g : A → B}
@@ -459,7 +433,7 @@ module cat where
 
   infixr 40 _∙_
   module _ {A : I → Type u} {x y : A i0} {z : A i1} (p : x ≡ y) (q : y ≡ z :: A) where
-    fill : SquareP (λ i j → A (i ∧ j)) (hsym p) rfl q (cat p q)
+    fill : SquareP (λ i j → A (i ∧ j)) (sym p) rfl q (cat p q)
     fill i j = hcomp (∂ i ∨ ~ j) λ where
       k (i = i0) → p (~ j ∨ ~ k)
       k (j = i0) → y
@@ -481,7 +455,7 @@ module cat where
       k (k = i0) → q i
 
   cone : {A : Type u} {x y z : A} (q : y ≡ z) (r : x ≡ z)
-   → Square q (cat q (hsym r)) r rfl
+   → Square q (cat q (sym r)) r rfl
   cone {z = z} q r i j = hcomp (∂ i ∨ j) λ where
     k (i = i0) → q (j ∨ ~ k)
     k (k = i0) → r (~ i ∨ j)
@@ -489,11 +463,11 @@ module cat where
     k (j = i1) → z
 
   fan : {A : Type u} {x y z : A} (p : x ≡ y) (q : x ≡ z)
-   → Square p rfl q (cat (hsym p) q)
-  fan p q = fill (hsym p) q
+   → Square p rfl q (cat (sym p) q)
+  fan p q = fill (sym p) q
 
   rfill : {A : Type u} {x y z : A} (p : x ≡ y) (q : y ≡ z)
-        → Square (hsym p) q rfl (cat p q)
+        → Square (sym p) q rfl (cat p q)
   rfill p q i j = hcomp (∂ i ∨ ~ j) λ where
     k (i = i0) → p (~ j ∨ ~ k)
     k (i = i1) → q (j ∨ k)
@@ -545,7 +519,7 @@ module cat where
   Tri : {A : I → Type u} {x y : A i0} {z : A i1} (p : x ≡ y) (q : y ≡ z :: A) (s : x ≡ z :: A) → Type u
   Tri p q s = s ≡ p ∙ q
 
-  invl : {A : Type u} {x y : A} (p : x ≡ y) → cat (hsym p) p ≡ rfl
+  invl : {A : Type u} {x y : A} (p : x ≡ y) → cat (sym p) p ≡ rfl
   invl {x} {y} p i j = hcomp (∂ j ∨ i) sys
     module invl where
       sys = λ where
@@ -556,8 +530,8 @@ module cat where
 
   {-# DISPLAY hcomp _ (invl.sys p q i) = invl p q i #-}
 
-  invr : {A : Type u} {x y : A} (p : x ≡ y) → cat p (hsym p) ≡ rfl
-  invr p = invl (hsym p)
+  invr : {A : Type u} {x y : A} (p : x ≡ y) → cat p (sym p) ≡ rfl
+  invr p = invl (sym p)
 
   unitl : {A : Type u} {x y : A} (p : x ≡ y) → cat rfl p ≡ p
   unitl {x} {y} p i j = hcomp (∂ j ∨ i) sys
@@ -664,7 +638,7 @@ module cat where
     k (j = i1) → s i
     k (k = i0) → sq j i
 
-  coh : {A : Type u} {x y z : A} (p : x ≡ y) (q : y ≡ z) → cat p q ≡ cat2 (hsym p) rfl q
+  coh : {A : Type u} {x y z : A} (p : x ≡ y) (q : y ≡ z) → cat p q ≡ cat2 (sym p) rfl q
   coh {y} p q i j = hcomp (∂ j ∨ ~ i) λ where
     k (j = i0) → p (~ k)
     k (j = i1) → q k
@@ -743,7 +717,7 @@ module Coh where
   module _ {A : Type u}  where
     coh : {x y z : A} (p : x ≡ y) (q : y ≡ z)
         → SquareP (∂.cube _≡_ q (catl p q) p (catr p q) (sq-cancel p q) (composite p q))
-            (catl.fill p q) (lhs (hsym p)) (catr.fill p q) (hsym (lhs q))
+            (catl.fill p q) (lhs (sym p)) (catr.fill p q) (sym (lhs q))
     coh p q i j k = hcomp (∂ j ∨ ~ k) λ where
       l (j = i0) → p (~ i ∧ ~ k ∨ ~ l)
       l (k = i0) → conn p q (~ i) j
@@ -754,7 +728,7 @@ module Coh where
     cat-cat p q j = λ k → coh p q (~ k) k j
 
     fill : {x y z : A} (p : x ≡ y) (q : y ≡ z)
-         → Square (hsym p) rfl q (cmp p q)
+         → Square (sym p) rfl q (cmp p q)
     fill p q i j = hcomp (∂ i ∨ ~ j) sys where
       sys = λ where
         k (i = i0) → p (~ j)
@@ -771,7 +745,7 @@ module Coh where
       k (k = i0) → cat.fill p q i j
 
     rfill : {x y z : A} (p : x ≡ y) (q : y ≡ z)
-          → Square (hsym p) q rfl (cmp p q)
+          → Square (sym p) q rfl (cmp p q)
     rfill p q i j = hcomp (∂ i ∨ ~ j) λ where
       k (i = i0) → p (~ j ∧ k)
       k (k = i0) → conn p q i (i ∧ j)
@@ -790,19 +764,19 @@ module Coh where
     idpt x i j = fill (erfl x) rfl j (~ i)
 
   module _ {A : Type u} {x y : A} where
-    invl : (p : x ≡ y) → cmp (hsym p) p ≡ rfl
+    invl : (p : x ≡ y) → cmp (sym p) p ≡ rfl
     invl p i j = hcomp (∂ j ∨ i) sys where
       sys = λ where
         k (j = i0) → p (~ i ∨ k)
-        k (k = i0) → conn (hsym p) p j (i ∨ j)
+        k (k = i0) → conn (sym p) p j (i ∨ j)
         k (j = i1) → y
         k (i = i1) → p (j ∨ k)
 
-    invr : (p : x ≡ y) → cmp p (hsym p) ≡ rfl
+    invr : (p : x ≡ y) → cmp p (sym p) ≡ rfl
     invr p i j = hcomp (∂ j ∨ i) sys where
       sys = λ where
         k (j = i0) → p (i ∧ ~ k)
-        k (k = i0) → conn p (hsym p) j (i ∨ j)
+        k (k = i0) → conn p (sym p) j (i ∨ j)
         k (j = i1) → x
         k (i = i1) → p (~ j ∧ ~ k)
 

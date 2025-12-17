@@ -4,7 +4,7 @@
 
 module Lib.Base where
 
-open import Lib.Type
+open import Lib.Core.Prim
 
 Π : ∀ {u v} {A : Type u} → (A → Type v) → Type (u ⊔ v)
 Π B = ∀ x → B x

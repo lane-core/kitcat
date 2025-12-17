@@ -6,13 +6,13 @@ October 23, 2025
 
 module Lib.Iso where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Sigma
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan hiding (fill)
+open import Lib.Core.Base
+open import Lib.Core.Kan hiding (fill)
 open import Lib.Path
 open import Lib.Path.HLevel
-open import Lib.Cubical.Sub
+open import Lib.Core.Sub
 
 private variable
   u v : Level

@@ -19,9 +19,9 @@ use our conn lemma generating squares of the form `Square p p q q`.
 
 module Lib.Path.Gpd where
 
-open import Lib.Type
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan hiding (fill)
+open import Lib.Core.Prim
+open import Lib.Core.Base
+open import Lib.Core.Kan hiding (fill)
 open import Lib.Path
 open import Lib.Sigma
 

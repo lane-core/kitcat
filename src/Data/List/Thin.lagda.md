@@ -3,7 +3,7 @@
 
 module Data.List.Thin where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Data.List
 
 pattern _:<_ x xs = xs ∷ x

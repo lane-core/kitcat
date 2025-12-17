@@ -4,7 +4,7 @@
 
 module Data.List where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Api.Op.Bracket public
 
 private variable

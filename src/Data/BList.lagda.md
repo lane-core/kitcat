@@ -6,11 +6,11 @@ Braided lists as a HIT
 
 module Data.BList where
 
-open import Lib.Type
+open import Lib.Core.Prim
 open import Lib.Sigma
 open import Data.Nat
-open import Lib.Cubical.Base
-open import Lib.Cubical.Kan hiding (fill)
+open import Lib.Core.Base
+open import Lib.Core.Kan hiding (fill)
 open import Lib.Equiv
 open import Lib.Path as Path
 open import Lib.Path.Gpd renaming (module cat to cat; cat to infixr 40 _∙_)
