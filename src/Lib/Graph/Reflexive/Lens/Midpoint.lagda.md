@@ -2,58 +2,36 @@
 
 {-# OPTIONS --safe --erased-cubical --no-guardedness --no-sized-types #-}
 
-open import Lib.Graph.Reflexive.Base
-module Lib.Graph.Reflexive.Lens.Midpoint {u v} (R : Rx u v) where
+import Lib.Graph.Reflexive.Base
+import Lib.Graph.Reflexive.Displayed
+
+module Lib.Graph.Reflexive.Lens.Midpoint {u v} (R : Lib.Graph.Reflexive.Base.Rx u v) where
+
+open Lib.Graph.Reflexive.Base
 
 open import Lib.Core.Prim
 open import Lib.Core.Type
-open import Lib.Path
-open import Lib.Graph.Reflexive.Displayed R
+open import Lib.Core.Base
 open Rx R renaming (₀ to Ob; ₁ to infix 4 _~>_)
 
-module _ {w z} (B : ∀ {x y} → x ~> y → Rx w z) where
+module midpoint {w z} (B : ∀ {x y} → x ~> y → Rx w z) where
   private module B {x} {y} p = Rx (B {x} {y} p)
 
-  -- Left injection: from source's ρ-component into edge component
-  LInj : Type (u ⊔ v ⊔ w)
-  LInj = ∀ {x y} (p : x ~> y) → B.₀ (ρ x) → B.₀ p
+  left-injective : Type (u ⊔ v ⊔ w)
+  left-injective = ∀ {x y} (p : x ~> y) → B.₀ (rx x) → B.₀ p
 
-  -- Right injection: from target's ρ-component into edge component
-  RInj : Type (u ⊔ v ⊔ w)
-  RInj = ∀ {x y} (p : x ~> y) → B.₀ (ρ y) → B.₀ p
+  right-injective : Type (u ⊔ v ⊔ w)
+  right-injective = ∀ {x y} (p : x ~> y) → B.₀ (rx y) → B.₀ p
 
-  -- Midpoint unitor: L and R connect at ρ
-  MidUnitor : LInj → RInj → Type (u ⊔ w ⊔ z)
-  MidUnitor L R = ∀ {x} (u : B.₀ (ρ x))
-                → B.₁ (ρ x) (L (ρ x) u) (R (ρ x) u)
+  mid-unitor : left-injective → right-injective → Type (u ⊔ w ⊔ z)
+  mid-unitor L R = ∀ {x} (u : B.₀ (rx x)) → B.₁ (rx x) (L (rx x) u) (R (rx x) u)
 
-  -- Lax unitor for right injection
-  RInjLaxUnitor : RInj → Type (u ⊔ w ⊔ z)
-  RInjLaxUnitor R = ∀ {x} (u : B.₀ (ρ x)) → B.₁ (ρ x) u (R (ρ x) u)
+  lax-unitor : right-injective → Type (u ⊔ w ⊔ z)
+  lax-unitor R = ∀ {x} (u : B.₀ (rx x)) → B.₁ (rx x) u (R (rx x) u)
 
-  -- Display of a bivariant midpoint lens
-  module display (L : LInj) (R : RInj) (μ : MidUnitor L R) where
-    disp-vtx : Vtx w
-    disp-vtx x = B.₀ (ρ x)
-
-    disp-edge : Edge z disp-vtx
-    disp-edge p u v = B.₁ p (L p u) (R p v)
-
-    disp-drefl : DRefl disp-edge
-    disp-drefl u = μ u
-
-    disp : DRx w z
-    disp .DRx.vtx = disp-vtx
-    disp .DRx.edge = disp-edge
-    disp .DRx.drefl = disp-drefl
-
--- Bundled bivariant midpoint lens
-record MidLens w z : Type (u ⊔ v ⊔ w ₊ ⊔ z ₊) where
-  field
-    family : ∀ {x y} → x ~> y → Rx w z
-  private module B {x} {y} p = Rx (family {x} {y} p)
-  field
-    linj : ∀ {x y} (p : x ~> y) → B.₀ (ρ x) → B.₀ p
-    rinj : ∀ {x y} (p : x ~> y) → B.₀ (ρ y) → B.₀ p
-    mid-unitor : ∀ {x} (u : B.₀ (ρ x)) → B.₁ (ρ x) (linj (ρ x) u) (rinj (ρ x) u)
-    rinj-lax : ∀ {x} (u : B.₀ (ρ x)) → B.₁ (ρ x) u (rinj (ρ x) u)
+  record mid-lens : Type (u ⊔ v ⊔ w ⊔ z) where
+    field
+      linj : left-injective
+      rinj : right-injective
+      munitor : mid-unitor linj rinj
+      rinj-lax-unitor : lax-unitor rinj

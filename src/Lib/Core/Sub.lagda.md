@@ -4,13 +4,12 @@
 module Lib.Core.Sub where
 
 open import Lib.Core.Prim
-open import Lib.Core.Type
 open import Lib.Core.Base
-open import Lib.Core.Kan
 
-private module X where
+private module S where
   open import Agda.Builtin.Cubical.Sub public
-open X renaming (primSubOut to outS; Sub to _[_↦_]) public
+open S renaming (primSubOut to outS; Sub to _[_↦_]) public
+
 
 partial-pushout
   : ∀ {ℓ} (i j : I) {A : Partial (i ∨ j) (Type ℓ)}

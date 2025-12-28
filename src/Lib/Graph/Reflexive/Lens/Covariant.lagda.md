@@ -2,53 +2,42 @@
 
 {-# OPTIONS --safe --erased-cubical --no-guardedness --no-sized-types #-}
 
-open import Lib.Graph.Reflexive.Base
-module Lib.Graph.Reflexive.Lens.Covariant {u v} (R : Rx u v) where
+import Lib.Graph.Reflexive.Base
+import Lib.Graph.Reflexive.Displayed
+
+module Lib.Graph.Reflexive.Lens.Covariant {u v w z}
+  (R : Lib.Graph.Reflexive.Base.Rx u v)
+  (let module D = Lib.Graph.Reflexive.Displayed R)
+  (D : D.Disp-rx w z) where
+
+open Lib.Graph.Reflexive.Base
+private module G = Lib.Graph.Reflexive.Displayed.Disp-rx D
 
 open import Lib.Core.Prim
 open import Lib.Core.Type
-open import Lib.Path
-open import Lib.Graph.Reflexive.Displayed R
+open import Lib.Core.Base
 open Rx R renaming (₀ to Ob; ₁ to infix 4 _~>_)
 
-module _ {w z} (B : Ob → Rx w z) where
-  private module B x = Rx (B x)
+module cov where
+  -- pushback along an edge
+  push : Type (u ⊔ v ⊔ w)
+  push = ∀ {x y} → x ~> y → G.vtx x → G.vtx y
 
-  -- Pushforward along an edge
-  Push : Type (u ⊔ v ⊔ w)
-  Push = ∀ {x y} → x ~> y → B.₀ x → B.₀ y
+  -- Lax unitor: original points to pushback along rx
+  oplax-unitor : push → Type (u ⊔ w ⊔ z)
+  oplax-unitor P = ∀ {x} (u : G.vtx x) → G.₂ (rx x) (P (rx x) u) u
 
-  -- Oplax unitor: pushforward along ρ points back to original
-  OplaxUnitor : Push → Type (u ⊔ w ⊔ z)
-  OplaxUnitor P = ∀ {x} (u : B.₀ x) → B.₁ x (P (ρ x) u) u
+  universal-push : push → Type (u ⊔ v ⊔ w ⊔ z)
+  universal-push P = ∀ {x y} (p : x ~> y) (u : G.vtx x)
+                   → is-prop (Σ v ∶ G.vtx y , G.₂ (rx y) (P p u) v)
 
-  -- Universal pushforwards: fans at pushed vertices are props
-  HasUniversalPush : Push → Type (u ⊔ v ⊔ w ⊔ z)
-  HasUniversalPush P = ∀ {x y} (p : x ~> y) (u : B.₀ x)
-                     → is-prop (Σ v ∶ B.₀ y , B.₁ y (P p u) v)
+  -- lax contravariant lens
+  record lens : Type (u ⊔ v ⊔ w ⊔ z) where
+    field
+      has-push : ∀ {x y} → x ~> y → G.vtx x → G.vtx y
+      has-oplax-unitor : oplax-unitor has-push
 
-  -- Display of an oplax covariant lens
-  module display (P : Push) (ε : OplaxUnitor P) where
-
-    disp-vtx : Vtx w
-    disp-vtx x = B.₀ x
-
-    disp-edge : Edge z disp-vtx
-    disp-edge {y = y} p u v = B.₁ y (P p u) v
-
-    disp-drefl : DRefl disp-edge
-    disp-drefl u = ε
-
-    disp : DRx w z
-    disp .DRx.vtx = disp-vtx
-    disp .DRx.edge = disp-edge
-    disp .DRx.drefl = disp-drefl
-
--- Bundled oplax covariant lens
-record CovLens w z : Type (u ⊔ v ⊔ w ₊ ⊔ z ₊) where
-  field
-    family : Ob → Rx w z
-  private module B x = Rx (family x)
-  field
-    push : ∀ {x y} → x ~> y → B.₀ x → B.₀ y
-    oplax-unitor : ∀ {x} (u : B.₀ x) → B.₁ x (push (ρ x) u) u
+    disp : Lib.Graph.Reflexive.Displayed.Disp-rx R w z
+    disp .D.Disp-rx.vtx x = G.vtx x
+    disp .D.Disp-rx.₂ {y = y} p u = G.₂ (rx y) (has-push p u)
+    disp .D.Disp-rx.drefl x u = has-oplax-unitor u

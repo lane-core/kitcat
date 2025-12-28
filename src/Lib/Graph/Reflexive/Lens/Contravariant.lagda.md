@@ -2,53 +2,42 @@
 
 {-# OPTIONS --safe --erased-cubical --no-guardedness --no-sized-types #-}
 
-open import Lib.Graph.Reflexive.Base
-module Lib.Graph.Reflexive.Lens.Contravariant {u v} (R : Rx u v) where
+import Lib.Graph.Reflexive.Base
+import Lib.Graph.Reflexive.Displayed
+
+module Lib.Graph.Reflexive.Lens.Contravariant {u v w z}
+  (R : Lib.Graph.Reflexive.Base.Rx u v)
+  (let module D = Lib.Graph.Reflexive.Displayed R)
+  (D : D.Disp-rx w z) where
+
+open Lib.Graph.Reflexive.Base
+private module G = Lib.Graph.Reflexive.Displayed.Disp-rx D
 
 open import Lib.Core.Prim
 open import Lib.Core.Type
-open import Lib.Path
-open import Lib.Graph.Reflexive.Displayed R
+open import Lib.Core.Base
 open Rx R renaming (₀ to Ob; ₁ to infix 4 _~>_)
 
-module _ {w z} (B : Ob → Rx w z) where
-  private module B x = Rx (B x)
+module ctrv where
+  -- pullback along an edge
+  pull : Type (u ⊔ v ⊔ w)
+  pull = ∀ {x y} → x ~> y → G.vtx y → G.vtx x
 
-  -- Pullback along an edge
-  Pull : Type (u ⊔ v ⊔ w)
-  Pull = ∀ {x y} → x ~> y → B.₀ y → B.₀ x
+  -- Lax unitor: original points to pullback along rx
+  lax-unitor : pull → Type (u ⊔ w ⊔ z)
+  lax-unitor P = ∀ {x} (u : G.vtx x) → G.₂ (rx x) u (P (rx x) u) -- x u (P (rx x) u)
 
-  -- Lax unitor: original points to pullback along ρ
-  LaxUnitor : Pull → Type (u ⊔ w ⊔ z)
-  LaxUnitor P = ∀ {x} (u : B.₀ x) → B.₁ x u (P (ρ x) u)
+  universal-pull : pull → Type (u ⊔ v ⊔ w ⊔ z)
+  universal-pull P = ∀ {x y} (p : x ~> y) (v : G.vtx y)
+                     → is-prop (Σ u ∶ G.vtx x , G.₂ (rx x) u (P p v)) -- x u (P p v))
 
-  -- Universal pullbacks: co-fans at pulled vertices are props
-  HasUniversalPull : Pull → Type (u ⊔ v ⊔ w ⊔ z)
-  HasUniversalPull P = ∀ {x y} (p : x ~> y) (v : B.₀ y)
-                     → is-prop (Σ u ∶ B.₀ x , B.₁ x u (P p v))
+  -- lax contravariant lens
+  record lens : Type (u ⊔ v ⊔ w ⊔ z) where
+    field
+      has-pull : ∀ {x y} → x ~> y → G.vtx y → G.vtx x
+      has-lax-unitor : lax-unitor has-pull
 
-  -- Display of a lax contravariant lens
-  module display (P : Pull) (η : LaxUnitor P) where
-
-    disp-vtx : Vtx w
-    disp-vtx x = B.₀ x
-
-    disp-edge : Edge z disp-vtx
-    disp-edge {x = x} p u v = B.₁ x u (P p v)
-
-    disp-drefl : DRefl disp-edge
-    disp-drefl u = η
-
-    disp : DRx w z
-    disp .DRx.vtx = disp-vtx
-    disp .DRx.edge = disp-edge
-    disp .DRx.drefl = disp-drefl
-
--- Bundled lax contravariant lens
-record CtrvLens w z : Type (u ⊔ v ⊔ w ₊ ⊔ z ₊) where
-  field
-    family : Ob → Rx w z
-  private module B x = Rx (family x)
-  field
-    pull : ∀ {x y} → x ~> y → B.₀ y → B.₀ x
-    lax-unitor : ∀ {x} (u : B.₀ x) → B.₁ x u (pull (ρ x) u)
+    disp : Lib.Graph.Reflexive.Displayed.Disp-rx R w z
+    disp .D.Disp-rx.vtx x = G.vtx x
+    disp .D.Disp-rx.₂ {x = x} p u v = G.₂ (rx x) u (has-pull p v)
+    disp .D.Disp-rx.drefl x u = has-lax-unitor u

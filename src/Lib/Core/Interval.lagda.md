@@ -2,7 +2,7 @@
 
 {-# OPTIONS --cubical --safe --no-sized-types --no-guardedness #-}
 
-module Lib.Core.Glue where
+module Lib.Core.Interval where
 
 open import Lib.Core.Prim using (Type; Level)
 open import Lib.Core.Type
@@ -10,20 +10,20 @@ open import Lib.Core.Base
 open import Lib.Core.HCompU
 open import Lib.Core.Equiv
 
-private primitive
-  primGlue    : ∀ {ℓ ℓ'} (A : Type ℓ) {φ : I}
-    → (T : Partial φ (Type ℓ')) → (e : PartialP φ (λ o → T o ≃ A))
-    → Type ℓ'
-  prim^glue   : ∀ {ℓ ℓ'} {A : Type ℓ} {φ : I}
-    → {T : Partial φ (Type ℓ')} → {e : PartialP φ (λ o → T o ≃ A)}
-    → PartialP φ T → A → primGlue A T e
-  prim^unglue : ∀ {ℓ ℓ'} {A : Type ℓ} {φ : I}
-    → {T : Partial φ (Type ℓ')} → {e : PartialP φ (λ o → T o ≃ A)}
-    → primGlue A T e → A
+htransport : ∀ {u} (P : Htpy (λ _ → Type u)) → P i0 → P i1
+htransport = coe01
+{-# INLINE htransport #-}
 
-private variable ℓ ℓ' : Level
+hrefl : {x : A} → Htpy (λ _ → A)
+hrefl {x = x} _ = x
 
-Glue : (A : Type ℓ) {φ : I}
-     → (Te : Partial φ (Σ T ∶ Type ℓ' , T ≃ A)) → Type ℓ'
-Glue A {φ} Te = primGlue A (λ x → Te x .fst) (λ x → Te x .snd)
+Cube : ∀ {u} → Nat → Type (u ₊)
+Cube {u} Z = Type u
+Cube (S n) = I → Cube n
 
+Line : u → Type₊ u
+Line u = Cube n
+
+-- app : ∀ {u v} {A : I → Type u} {B : ∀ i → A i → Type v}
+--     → (f : ∀ {i} (x : A i) → B i x) (p : Htpy A) → Htpy (λ i → B i (p i))
+-- app f p i = f (p i)

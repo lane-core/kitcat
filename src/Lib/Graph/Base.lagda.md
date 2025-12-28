@@ -1,13 +1,13 @@
 ```agda
 
-{-# OPTIONS --safe --cubical-compatible --no-guardedness --no-sized-types #-}
+{-# OPTIONS --safe --erased-cubical --no-guardedness --no-sized-types #-}
 
 module Lib.Graph.Base where
 
 open import Lib.Core.Prim
 open import Lib.Core.Type
+open import Lib.Core.Base
 open import Lib.Core.Cast
-open import Lib.Underlying
 
 record Graph u v : Type₊ (u ⊔ v) where
   constructor Gph
@@ -55,7 +55,7 @@ module _ {u} {C : Type u} ⦃ G : Graphical C ⦄ where
   ob = G.₀
 
 module graph {u v} (G : Graph u v) where
-  private module G = Graph G
+  private module G = Graph G; _~>_ = G.₁; infix 6 _~>_
   module displayed where
     vtx : ∀ w → Type (u ⊔ w ₊)
     vtx w = ∣ G ∣ → Type w
@@ -66,6 +66,25 @@ module graph {u v} (G : Graph u v) where
   reflexive = ∀ x → G.₁ x x
   involutive = ∀ {x y} → G.₁ x y → G.₁ y x
   transitive = ∀ {x y z} → G.₁ x y → G.₁ y z → G.₁ x z
+
+    -- Fan (outward): edges out of a vertex
+  fan : G.₀ → Type (u ⊔ v)
+  fan x = Σ y ∶ G.₀ , x ~> y
+
+  -- Cofan (inward): edges into a vertex
+  cofan : G.₀ → Type (u ⊔ v)
+  cofan y = Σ x ∶ G.₀ , x ~> y
+
+  -- Univalence: fans are propositional
+  is-univalent : Type (u ⊔ v)
+  is-univalent = ∀ x → is-prop (fan x)
+
+  -- Equivalent via cofans
+  is-univalent-op : Type (u ⊔ v)
+  is-univalent-op = ∀ y → is-prop (cofan y)
+
+
+
 
 -- module _ {u v} {C : Type u} {D : Type v} ⦃ G : Graphical C ⦄ ⦃ F : Graphical D ⦄ where
 --   private

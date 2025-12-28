@@ -6,27 +6,6 @@ module Lib.Base where
 
 open import Lib.Core.Prim
 
-Π : ∀ {u v} {A : Type u} → (A → Type v) → Type (u ⊔ v)
-Π B = ∀ x → B x
-
-id : ∀ {u} {@0 A : Type u} → A → A
-id = λ x → x
-{-# INLINE id #-}
-
-idfun : ∀ {u} (@0 A : Type u) → A → A
-idfun A = λ x → x
-{-# INLINE idfun #-}
-
-const : ∀ {u v} {@0 A : Type u} {@0 B : Type v} → A → B → A
-const a ._ = a
-{-# INLINE const #-}
-
-_∘_ : ∀ {u v w} {@0 A : Type u} {@0 B : A → Type v} {@0 C : ∀ a → B a → Type w}
-     → ({x : A} (y : B x) → C x y) → (f : Π B) (x : A) → C x (f x)
-_∘_ g f = λ x → g {x} (f x)
-infixr 40 _∘_
-{-# INLINE _∘_ #-}
-
 Nt : ∀ {u v w} → {A : Type u} → (A → Type v) → (A → Type w) → Type (u ⊔ v ⊔ w)
 Nt P Q = ∀ x → P x → Q x
 

@@ -2,17 +2,15 @@
 
 {-# OPTIONS --safe --erased-cubical --no-guardedness --no-sized-types #-}
 
-open import Lib.Graph
+open import Lib.Graph.Base
 open import Lib.Graph.Virtual.Base
 module Lib.Graph.Virtual.Cocartesian {u v w} (V : V-graph u v w) where
 
 open import Lib.Core.Prim
 open import Lib.Core.Type
+open import Lib.Core.HLevel
 open import Lib.Core.Base
 open import Lib.Core.Kan using (hcomp; hfill; transport-filler)
-open import Lib.Path hiding (to-path; to-path-over)
-open import Lib.Equal hiding (_∙_; _⨾_)
-open import Lib.Underlying
 
 
 open V-graph V
@@ -34,23 +32,23 @@ record is-eq-rel {u} {A : Type u} (R : A → A → Type u) : Type u where
     inv : ∀ {x y} → R x y → R y x
     cat : ∀ {x y z} → R x y → R y z → R x z
 
-module EqRel u where
-  ob : Type₊ u
-  ob = Σ A ∶ Type u , Σ R ∶ (A → A → Type u) , is-set A × is-eq-rel R
+-- module EqRel u where
+--   ob : Type₊ u
+--   ob = Σ A ∶ Type u , Σ R ∶ (A → A → Type u) , is-set A × is-eq-rel R
 
-  module ob (x : ob) where
-    ₀ = x .fst
-    rel = x .snd .fst
-    ctx-set = x .snd .snd .fst
-    eq-rel = x .snd .snd .snd
+--   module ob (x : ob) where
+--     ₀ = x .fst
+--     rel = x .snd .fst
+--     ctx-set = x .snd .snd .fst
+--     eq-rel = x .snd .snd .snd
 
-  record hom (A B : ob) : Type u where
-    private
-      module A = ob A
-      module B = ob B
-    field
-      F₀ : B.₀ → A.₀
-      coh : ∀ {x y} → B.rel x y → A.rel (F₀ x) (F₀ y)
+--   record hom (A B : ob) : Type u where
+--     private
+--       module A = ob A
+--       module B = ob B
+--     field
+--       F₀ : B.₀ → A.₀
+--       coh : ∀ {x y} → B.rel x y → A.rel (F₀ x) (F₀ y)
 
 
 ```
@@ -76,40 +74,6 @@ is-left-divisible {x} f = ∀ {z : Ob} (s : x ~> z) → is-contr (cofibroid f s)
 
 is-right-divisible : {x y : Ob} → x ~> y → Type (u ⊔ v ⊔ w)
 is-right-divisible {y} f = ∀ {w : Ob} (s : w ~> y) → is-contr (fibroid f s)
-
-module ≈-from-Embedding {x y z : Ob} (q : y ~> z) (q-emb : is-left-embedding q) where
-  _≈_ : x ~> y → x ~> y → Type (v ⊔ w)
-  f ≈ g = Σ s ∶ x ~> z , (f ∙ q => s) × (g ∙ q => s)
-
-  -- Key: use that cofibroid q s is a prop for any s
-  -- In particular, cofibroid q (f ∙ q) is a prop
-
-  ≈-is-prop : ∀ {f g} → is-prop (f ≈ g)
-  ≈-is-prop {f} {g} (s , α , β) (s' , α' , β') i = base-path i , fiber-path i where
-  -- Σ-path base-path fiber-path where
-
-    -- The key: (q, α) and (q, α') both lie in cofibroid f (s) and cofibroid f (s')
-    -- But we need to connect s and s' first
-
-    -- From composites-prop: s = f ∙ q = s'
-    base-path : s ＝ s'
-    base-path = cat (sym (to-path α)) (to-path α')
-
-    -- Now use q-emb: cofibroid q s is a prop
-    -- The extensions (q, α) from f ∙ q lie in this prop
-    fiber-path : PathP (λ i → (f ∙ q => base-path i) × (g ∙ q => base-path i)) (α , β) (α' , β')
-    fiber-path j = φ j , θ j where
-      cofibroid-fiber-prop : ∀ f s → is-prop (f ∙ q => s)
-      cofibroid-fiber-prop f s = {!!} -- derived from composites-prop + q-emb
-
-      φ = is-prop→PathP (λ i → cofibroid-fiber-prop f (base-path i)) α α'
-      θ = is-prop→PathP (λ i → cofibroid-fiber-prop g (base-path i)) β β'
-      -- Each 2-cell type f ∙ q => s appears as a fiber of the prop total space
-
-
-```
-f : x ~> y
-```
 
 record is-isomorphism {x y : Ob} (q : x ~> y) : Type (u ⊔ v ⊔ w) where
   field
@@ -137,7 +101,7 @@ module cocartesian {x y : Ob} (q : x ~> y) (p : is-isomorphism q) where
   lhtpy : ∀ {w} (s : w ~> y) →  divl s ∙ q => s
   lhtpy s = unit.center s .snd
 
-  lpaths : ∀ {w} (s : w ~> y) ((e , u) : fibroid q s) → (divl s , lhtpy s) ＝ (e , u)
+  lpaths : ∀ {w} (s : w ~> y) ((e , u) : fibroid q s) → (divl s , lhtpy s) ≡ (e , u)
   lpaths = unit.paths
 
   unit-prop : ∀ {w} (s : w ~> y) → is-prop (fibroid q s)
@@ -149,7 +113,7 @@ module cocartesian {x y : Ob} (q : x ~> y) (p : is-isomorphism q) where
   rhtpy : ∀ {z} → (s : x ~> z) →  q ∙ divr s => s
   rhtpy s = counit.center s .snd
 
-  rpaths : ∀ {z} → (s : x ~> z) ((e , u) : cofibroid q s) → (divr s , rhtpy s) ＝ (e , u)
+  rpaths : ∀ {z} → (s : x ~> z) ((e , u) : cofibroid q s) → (divr s , rhtpy s) ≡ (e , u)
   rpaths = counit.paths
 
   counit-prop : ∀ {z} (s : x ~> z) → is-prop (cofibroid q s)
@@ -192,7 +156,7 @@ module cocartesian {x y : Ob} (q : x ~> y) (p : is-isomorphism q) where
   lsym : y ~> x
   lsym = divl counit
 
-  lsym-unique : (h : y ~> x) → q ∙ h => q ∙ lsym → lsym ＝ h
+  lsym-unique : (h : y ~> x) → q ∙ h => q ∙ lsym → lsym ≡ h
   lsym-unique h α = ap fst (counit-prop (q ∙ lsym) (lsym , crefl) (h , α))
 
   lsym-contr : is-contr (Σ r ∶ y ~> x , q ∙ r  => (q ∙ lsym))
@@ -217,19 +181,19 @@ module cocartesian {x y : Ob} (q : x ~> y) (p : is-isomorphism q) where
   J-rsym P base s ε = subst (λ (s , ε) → P s ε) (rsym-contr .paths (s , ε)) base
 
   -- to-path for unit
-  unit-to-path : (h : x ~> x) → h ∙ q => q → unit ＝ h
+  unit-to-path : (h : x ~> x) → h ∙ q => q → unit ≡ h
   unit-to-path h α = ap fst (lpaths q (h , α))
 
   -- to-path for counit
-  counit-to-path : (h : y ~> y) → q ∙ h => q → counit ＝ h
+  counit-to-path : (h : y ~> y) → q ∙ h => q → counit ≡ h
   counit-to-path h α = ap fst (rpaths q (h , α))
 
   -- to-path for lsym
-  lsym-to-path : (r : y ~> x) → q ∙ r => q ∙ lsym → lsym ＝ r
+  lsym-to-path : (r : y ~> x) → q ∙ r => q ∙ lsym → lsym ≡ r
   lsym-to-path r ε = ap fst (lsym-contr .paths (r , ε))
 
   -- to-path for rsym
-  rsym-to-path : (s : y ~> x) → s ∙ q => rsym ∙ q → rsym ＝ s
+  rsym-to-path : (s : y ~> x) → s ∙ q => rsym ∙ q → rsym ≡ s
   rsym-to-path s ε = ap fst (rsym-contr .paths (s , ε))
 
   invl-contr : is-contr (Σ h ∶ y ~> x , h ∙ q => counit)
@@ -246,7 +210,7 @@ module cocartesian {x y : Ob} (q : x ~> y) (p : is-isomorphism q) where
          → ∀ h α → P h α
   J-invl P base h α = subst (λ (h , α) → P h α) (unit-prop counit (lsym , invl) (h , α)) base
 
-  invl-to-path : (h : y ~> x) → h ∙ q => counit → lsym ＝ h
+  invl-to-path : (h : y ~> x) → h ∙ q => counit → lsym ≡ h
   invl-to-path h α = ap fst (unit-prop counit (lsym , invl) (h , α))
 
   invr : q ∙ rsym => unit
@@ -263,7 +227,7 @@ module cocartesian {x y : Ob} (q : x ~> y) (p : is-isomorphism q) where
            → ∀ h α → P h α
   J-invr P base h α = subst (λ (h , α) → P h α) (counit-prop unit (rsym , invr) (h , α)) base
 
-  invr-to-path : (h : y ~> x) → q ∙ h => unit → rsym ＝ h
+  invr-to-path : (h : y ~> x) → q ∙ h => unit → rsym ≡ h
   invr-to-path h α = ap fst (counit-prop unit (rsym , invr) (h , α))
 
   -- fibroid q (rsym ∙ q) = Σ h : y ~> x, h ∙ q => rsym ∙ q
@@ -300,13 +264,13 @@ record _≈_ {x y} (f g : x ~> y) : Type (u ⊔ v ⊔ w) where
 --   ≈-is-prop : {f g : x ~> y} → is-prop (f ≈ g)
 --   ≈-is-prop {f} {g} (s , α , β) (s' , α' , β') =
 --     let -- Use counit-prop: cofibroid q s is propositional
---         f0 : (s , α) ＝ (s' , α')
+--         f0 : (s , α) ≡ (s' , α')
 --         f0 = composites-prop (s , α) (s' , α')
 
---         f1 : {!!} ＝ {!!}
+--         f1 : {!!} ≡ {!!}
 --         f1 = counit-prop {!!} {!!} {!!}
 
---         p0 : s ＝ s'
+--         p0 : s ≡ s'
 --         p0 = ap fst f0
 --         p1 : PathP (λ i → {!Σ s ∶ x ~> z , (f ∙ q => ?) × (g ∙ q => ?)!}) (α , β) (α' , β')
 --         p1 = {!ap snd p!}
@@ -327,7 +291,7 @@ cocart-idem-unique : ∀ {x} (q q' : x ~> x)
                    → (let k = cq' .is-isomorphism.left q .center .fst
                           H = cq' .is-isomorphism.left q .center .snd)
                    → q' ∙ (q' ∙ k) => (q' ∙ k)
-                   → q ＝ q'
+                   → q ≡ q'
 cocart-idem-unique {x} q q' cq cq' idem-q lin = ap fst path module cocart-idem-unique where
   module iso = cocartesian q cq
   module iso' = cocartesian q' cq'
@@ -366,7 +330,7 @@ cocart-idem-unique' : ∀ {x} (q q' : x ~> x)
                     → (idem-q : q ∙ q => q)
                     → (let k' = cq' .is-isomorphism.right q .center .fst)
                     → ((k' ∙ q') ∙ q') => (k' ∙ q')
-                    → q ＝ q'
+                    → q ≡ q'
 cocart-idem-unique' {x} q q' cq cq' idem-q thk =
     ap fst (is-contr→is-prop (cq .is-isomorphism.left q) (q , idem-q) (q' , qq'=>q))
     where
@@ -392,7 +356,7 @@ cocart-idem-unique' {x} q q' cq cq' idem-q thk =
 --                    → (let k = cq' .is-isomorphism.left q .center .fst
 --                           module k = cocartesian q' cq')
 --                    → (lin : q' ∙ (q' ∙ k) => (q' ∙ k))
---                    → (q , idem-q) ＝ (q' , {!!})
+--                    → (q , idem-q) ≡ (q' , {!!})
 -- cocart-idem-unique-alt {x} q q' cq cq' idem-q lin =
 --   is-contr→is-prop (cq .is-isomorphism.right q) (q , idem-q) (q' , q'q=>q)
 --     where
@@ -420,7 +384,7 @@ cocart-idem-unique' {x} q q' cq cq' idem-q thk =
 --       unitp' : (cc'.unit ∙ q') => q'
 --       unitp' = cc'.unitp
 
---       f0 : q' ∙ q ＝ q
+--       f0 : q' ∙ q ≡ q
 --       f0 i = composites-prop (q' ∙ q , crefl) (q , q'q=>q) i .fst
 ```
 
@@ -437,21 +401,21 @@ linear :
 
 2-prop : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s s' : x ~> z}
         → (α : f ∙ g => s) (β : f ∙ g => s')
-        → (s , α) ＝ (s' , β)
+        → (s , α) ≡ (s' , β)
 2-prop α β = composites-prop (_ , α) (_ , β)
 
 lower-path : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s s' : x ~> z}
-         → f ∙ g => s → f ∙ g => s' → s ＝ s'
+         → f ∙ g => s → f ∙ g => s' → s ≡ s'
 lower-path α β = ap fst (2-prop α β)
 
 2-fibers : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s : x ~> z}
           → (α : f ∙ g => s)
-          → hcenter ＝ (s , α)
+          → hcenter ≡ (s , α)
 2-fibers {f} {g} {s} α = 2-prop crefl α
 
 2-op-fibers : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s : x ~> z}
           → (α : f ∙ g => s)
-          → (s , α) ＝ hcenter
+          → (s , α) ≡ hcenter
 2-op-fibers {f} {g} {s} α = 2-prop α crefl
 
 2-idem : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s s' : x ~> z}
@@ -469,17 +433,17 @@ lower-path α β = ap fst (2-prop α β)
   p = 2-fibers α
   q = 2-fibers β
 
-  path : (s , α) ＝ (s' , β)
+  path : (s , α) ≡ (s' , β)
   path = composites-prop (s , α) (s' , β)
 
 3-op-path : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s : x ~> z}
           → (α : f ∙ g => s)
-          → 2-prop α crefl ＝ cat (erefl (s , α)) (2-op-fibers α)
+          → 2-prop α crefl ≡ cat (erefl (s , α)) (2-op-fibers α)
 3-op-path {f} {g} α =  is-contr→is-set (composites-contr f g) _ _ (2-prop α crefl) (cat refl (2-op-fibers α))
 
 3-path : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s : x ~> z}
        → (α : f ∙ g => s)
-       → 2-prop crefl α ＝ cat (2-fibers α) (erefl (s , α))
+       → 2-prop crefl α ≡ cat (2-fibers α) (erefl (s , α))
 3-path {f} {g} α = is-contr→is-set (composites-contr f g) _ _ (2-prop crefl α) (cat (2-fibers α) refl)
 
 3-coherence : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s s' : x ~> z}
@@ -809,17 +773,17 @@ lower-path α β = ap fst (2-prop α β)
 --   counit-prop' = iso'.counit-prop
 
 --   -- Derive idem from lin via the unitl-comp construction
---   lin-coh : ∀ {y} (f : x ~> y) → (u.idn ∙ f , u.lin f) ＝ (f , crefl)
+--   lin-coh : ∀ {y} (f : x ~> y) → (u.idn ∙ f , u.lin f) ≡ (f , crefl)
 --   lin-coh f = counit-prop (u.idn ∙ f) _ _
 
 --   -- Derive idem from lin via the unitl-comp construction
---   lin'-coh : ∀ {y} (f : x ~> y) → (u'.idn ∙ f , u'.lin f) ＝ (f , crefl)
+--   lin'-coh : ∀ {y} (f : x ~> y) → (u'.idn ∙ f , u'.lin f) ≡ (f , crefl)
 --   lin'-coh f = counit-prop' (u'.idn ∙ f) _ _
 
---   unitl-comp : ∀ {y} (f : x ~> y) → u.idn ∙ f ＝ f
+--   unitl-comp : ∀ {y} (f : x ~> y) → u.idn ∙ f ≡ f
 --   unitl-comp f = ap fst (lin-coh f)
 
---   unitl-comp' : ∀ {y} (f : x ~> y) → u'.idn ∙ f ＝ f
+--   unitl-comp' : ∀ {y} (f : x ~> y) → u'.idn ∙ f ≡ f
 --   unitl-comp' f = ap fst (lin'-coh f)
 
 --   idem : u.idn ∙ u.idn => u.idn
@@ -831,10 +795,10 @@ lower-path α β = ap fst (2-prop α β)
 --     k = iso'.counit-equiv u.idn .center .fst
 
 --   -- u'.lin k gives exactly the assoc data needed
---   idn-path : u.idn ＝ u'.idn
+--   idn-path : u.idn ≡ u'.idn
 --   idn-path = cocart-idem-unique u.idn u'.idn u.iso u'.iso idem (u'.lin k)
 
---   idn-path' : u.idn ＝ u'.idn
+--   idn-path' : u.idn ≡ u'.idn
 --   idn-path' = cat (sym (unitl-comp u.idn)) (cat {!!} (unitl-comp u'.idn))
 
 --   _ : ∀ {y} (f : x ~> y) → {!!}
@@ -886,7 +850,7 @@ lower-path α β = ap fst (2-prop α β)
 --       j (i = i1) → lin-coh1 (~ j)
 --       j (j = i0) → crefl-path i
 
---   path : u ＝ u'
+--   path : u ≡ u'
 --   path i .has-unit.idn = idn-path i
 --   path i .has-unit.iso = iso-path i
 --   path i .has-unit.lin f = {!!} -- lin-path i
@@ -898,10 +862,10 @@ lower-path α β = ap fst (2-prop α β)
 --   module iso = cocartesian c.idn c.iso
 --   module iso' = cocartesian c'.idn c'.iso
 
---   thk-coh : ∀ {w} (f : w ~> x) → (f , crefl) ＝ (f ∙ c.idn , c.thk f)
+--   thk-coh : ∀ {w} (f : w ~> x) → (f , crefl) ≡ (f ∙ c.idn , c.thk f)
 --   thk-coh f = is-contr→is-prop (iso.unit-equiv (f ∙ c.idn)) _ _
 
---   unitr-comp : c.idn ∙ c.idn ＝ c.idn
+--   unitr-comp : c.idn ∙ c.idn ≡ c.idn
 --   unitr-comp = sym (ap fst (thk-coh c.idn))
 
 --   idem : c.idn ∙ c.idn => c.idn
@@ -910,7 +874,7 @@ lower-path α β = ap fst (2-prop α β)
 --   k' : x ~> x
 --   k' = iso'.unit-equiv c.idn .center .fst
 
---   idn-path : c.idn ＝ c'.idn
+--   idn-path : c.idn ≡ c'.idn
 --   idn-path = cocart-idem-unique' c.idn c'.idn c.iso c'.iso idem (c'.thk k')
 
 --   iso-path : PathP (λ i → is-isomorphism (idn-path i)) c.iso c'.iso
@@ -920,7 +884,7 @@ lower-path α β = ap fst (2-prop α β)
 --   thk-path = {!!} -- is-prop→PathP (λ i → implicit-Π-is-prop λ w → Π-is-prop λ f →
 --     --fiber-of-contr-is-prop (cocartesian.unit-equiv (idn-path i) (iso-path i) (f ∙ idn-path i))) c.thk c'.thk
 
---   path : c ＝ c'
+--   path : c ≡ c'
 --   path i .has-counit.idn = idn-path i
 --   path i .has-counit.iso = iso-path i
 --   path i .has-counit.thk = thk-path i
@@ -960,12 +924,12 @@ record is-eqv-graph {u v} (G : Graph u v) (D : is-displayed-graph v v G) : Type 
 
   to-path : ∀ {x y} {a : D.Ob x} {b b' : D.Ob y} {s s' : x ~> y}
           → a ≈[ s ] b → a ≈[ s' ] b'
-          → b ＝ b'
+          → b ≡ b'
   to-path α β = ap fst (prop (_ , _ , α) (_ , _ , β))
 
   to-path-over : ∀ {x y} {a : D.Ob x} {b b' : D.Ob y} {s s' : x ~> y}
           → a ≈[ s ] b → a ≈[ s' ] b'
-          → s ＝ s'
+          → s ≡ s'
   to-path-over α β = ap (λ z → fst (snd z)) (prop (_ , _ , α) (_ , _ , β))
 
   to-pathp : ∀ {x y} {a : D.Ob x} {b b' : D.Ob y} {s s' : x ~> y}
