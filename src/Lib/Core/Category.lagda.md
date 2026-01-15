@@ -20,20 +20,20 @@ have a unique composite up to the ambient notion of isomorphism. This
 definition asks us to give a notion homotopies between paths by
 providing a hom type for 2-cells whose total space of composites are
 contractible, whose center is given by the reflexivity at the
-composition of compatible `f`, `g`, namely:
-  is-contr (Σ s ∶ x ⟶ y , f ⨾ g => s) (where `_=>_` is a type of 2-cells)
+composition of compatible `f`, `g`, namely: is-contr (Σ s ∶ x ⟶ y , f
+⨾ g => s) (where `_=>_` is a type of 2-cells)
 
 This specific idea formed when I was studying Sterling's notes on
-virtual bicategories, which he was kind enough to send when I asked him
-about his formalization of Duploids. I began to realize that the
+virtual bicategories, which he was kind enough to send when I asked
+him about his formalization of Duploids. I began to realize that the
 framework I was developing from Kraus not only could fruitfully
 interpret Sterling's constructions, but that my additional work was
 approaching them from a different perspective and I could directly
 adapt from his definitions. During this time I also became interested
 in his Reflexive Graph Lenses paper, but I did not appreciate them
-fully until I got to a certain point in the development of this budding
-virtual graph theory. This module is in part an attempt to flesh out those
-connections.
+fully until I got to a certain point in the development of this
+budding virtual graph theory. This module is in part an attempt to
+flesh out those connections.
 
 Important to the concept of virtual graph underpinning this library's
 depiction of formal categories is the observation that unitality has
@@ -43,48 +43,53 @@ the correct definition of units for higher category is presented and
 justified by their semi-simplicial model and semi-segal types. Upon
 formalizing this notion in more general bicategorical type structure
 (with 1-cells and 2-cell types ranging over their shapes), I observed
-the contractibility of composite data (which is trivial when these 2-cells
-are in fact the ambient identity type) alongside the existence of canonical
-units allows us to conclude that coherent composition necessitates that 2-cells
-collapse to a groupoid structure. This happens for an unavoidable reason:
-as soon as unital 1-cells exist for each object in a higher category with
-the requisite unit laws, `f ⨾ g => s` enjoys an equivalence of types with
-the more general `h => s` because every `h` can be described as `h ∙ eqv` or
-`eqv ∙ h`, and these are homotopical to `h` up to the higher morphism
-structure given by the identity laws.
+the contractibility of composite data (which is trivial when these
+2-cells are in fact the ambient identity type) alongside the existence
+of canonical units allows us to conclude that coherent composition
+necessitates that 2-cells collapse to a groupoid structure. This
+happens for an unavoidable reason: as soon as unital 1-cells exist for
+each object in a higher category with the requisite unit laws, `f ⨾ g
+=> s` enjoys an equivalence of types with the more general `h => s`
+because every `h` can be described as `h ∙ eqv` or `eqv ∙ h`, and
+these are homotopical to `h` up to the higher morphism structure given
+by the identity laws.
 
 Given our contractibility condition for the unary identity system of
 composites, this circumstance can in retrospect be trivially
-anticipated by considering an equivalence of types:
-  Γ, x, y, z ⊢ Π f ∶ x ⟶ y , Π g ∶ y ⟶ z, Σ s ∶ x ⟶ z , f ⨾ g => s
-             ≃ Π h ∶ x ⟶ z , Σ s ∶ x ⟶ z , h => s
+anticipated by considering an equivalence of types: Γ, x, y, z ⊢ Π f ∶
+x ⟶ y , Π g ∶ y ⟶ z, Σ s ∶ x ⟶ z , f ⨾ g => s ≃ Π h ∶ x ⟶ z , Σ s ∶ x
+⟶ z , h => s
 
 for such 2-cells. This is only inhabitable once we have units, as then
-we can trivially construct the right hand of the equivalence from the left,
-and the conjectured equivalence follows because we know:
-  Γ, x, y, z ⊢ Π f ∶ x ⟶ y , Π g ∶ y ⟶ z, is-contr (Σ s ∶ x ⟶ z , f ⨾ g => s)
-             ≃ Π h ∶ x ⟶ z , is-contr (Σ s ∶ x ⟶ z , h => s)
+we can trivially construct the right hand of the equivalence from the
+left, and the conjectured equivalence follows because we know: Γ, x,
+y, z ⊢ Π f ∶ x ⟶ y , Π g ∶ y ⟶ z, is-contr (Σ s ∶ x ⟶ z , f ⨾ g => s)
+≃ Π h ∶ x ⟶ z , is-contr (Σ s ∶ x ⟶ z , h => s)
 
-the latter of which is, of course, contractiblity of singletons (so that we
-can add that it is equivalent to the native identity type, and is in particular
-an encoding of the infinity groupoid structure of the hom-type). Upon studying Sterling's reflexive graph lenses in more detail, I found that his
-framework was quite clarifying perspective on the constructions I was engaging in,
-and was well disposed to characterize this arrangement of circumstances, so I will
-explore that structure in this module
+the latter of which is, of course, contractiblity of singletons (so
+that we can add that it is equivalent to the native identity type, and
+is in particular an encoding of the infinity groupoid structure of the
+hom-type). Upon studying Sterling's reflexive graph lenses in more
+detail, I found that his framework was quite clarifying perspective on
+the constructions I was engaging in, and was well disposed to
+characterize this arrangement of circumstances, so I will explore that
+structure in this module
 
-To sum up: after units exist in 1-cell data, in one fell swoop we witness the collapse of
-2-cell structure such that the data specifying the coherence of categorical
-composition fully saturates the space of 2-cells, and directed morphisms
-become no longer possible to express. The core decision underpinning the
-perspective of virtual graph theory takes this characterization seriously,
-and entails a radical departure where we take the notion of isomorphism in
-general as primitive, formalizing all the constructions of our formal system
-in reference to the preservation of an ambient notion of isomorphism derived
-directly from our categorical data. Because we
-specify our definition of unit as a particular kind of isomorphism,
-this treatment is sufficient to ensure the classic description of Functors,
-Natural transformations, and so on, as we can systematically derive that the
-appropriate definitions preserve unitality if and only if they preserve isomorphisms.
+To sum up: after units exist in 1-cell data, in one fell swoop we
+witness the collapse of 2-cell structure such that the data specifying
+the coherence of categorical composition fully saturates the space of
+2-cells, and directed morphisms become no longer possible to
+express. The core decision underpinning the perspective of virtual
+graph theory takes this characterization seriously, and entails a
+radical departure where we take the notion of isomorphism in general
+as primitive, formalizing all the constructions of our formal system
+in reference to the preservation of an ambient notion of isomorphism
+derived directly from our categorical data. Because we specify our
+definition of unit as a particular kind of isomorphism, this treatment
+is sufficient to ensure the classic description of Functors, Natural
+transformations, and so on, as we can systematically derive that the
+appropriate definitions preserve unitality if and only if they
+preserve isomorphisms.
 
 ```
 {-# OPTIONS --safe --erased-cubical #-}
@@ -125,13 +130,8 @@ record Virtual {u} (Γ : Type u) : Typeω where
     hom2 : ∀ x {a b : obj x} → hom x a b → hom x a b → Type l₂
     cut : ∀ {x} {a b c : obj x} → hom x a b → hom x b c → hom x a c
 
-    -- the following establishes that composition is coherent with respect
-    -- the forward category as well as its opposite, having the same center
-    -- ceqv
     cut-unique : ∀ x {a b c : obj x} {f : hom x a b} {g : hom x b c}
                → is-prop (Σ s ∶ hom x a c , hom2 x (cut f g) s)
-    cocut-unique : ∀ x {a b c : obj x} {f : hom x a b} {g : hom x b c}
-                 → is-prop (Σ t ∶ hom x a c , hom2 x t (cut f g))
 
     -- 2-cell composition structure
     ceqv : ∀ {x} {a b c : obj x} {f : hom x a b} {g : hom x b c}
@@ -235,6 +235,10 @@ module _ {u} {Γ : Type u} ⦃ V : Virtual Γ ⦄ where
 
     --inhab-based-ids
 
+    cocut-unique : ∀ x {a b c : obj x} {f : hom x a b} {g : hom x b c}
+                 → is-prop (Σ t ∶ hom x a c , hom2 x t (cut f g))
+
+    cocut-unique = {!!}
     -- Based identity system for the other direction (cofan)
     cobased-ids : ∀ {x y z} {f : x ~> y} {g : y ~> z}
                 → is-based-identity-system (f ⨾ g) (_=> (f ⨾ g)) ceqv
@@ -242,11 +246,63 @@ module _ {u} {Γ : Type u} ⦃ V : Virtual Γ ⦄ where
     cobased-ids .to-path-over α = ap snd (cocut-unique Γ (_ , ceqv) (_ , α))
 
     loop : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s : x ~> z} → f ⨾ g => s → s => s
-    loop {s} p = transport (λ i → hom2 Γ (cast-path p i) s) p
+    loop {s} p = transport (λ i → cast-path p i => s) p
 
     lift-path : ∀ {x y z} {f : x ~> y} {g : y ~> z} {r s : x ~> z}
               → f ⨾ g => r → r ≡ s → r => s
-    lift-path {r} {s} α q = transport (λ i → hom2 Γ r (q i)) (loop α)
+    lift-path {r} {s} α q = transport (λ i → r => q i) (loop α)
+
+    comp-unique : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s s' : x ~> z}
+                → f ⨾ g => s → f ⨾ g => s' → s ≡ s'
+    comp-unique α β = sym (cast-path α) ∙ cast-path β
+
+    loop-contr : ∀ {x y z} {f : x ~> y} {g : y ~> z} {s : x ~> z} (α : f ⨾ g => s)
+               → is-contr (Σ s' ∶ (x ~> z) , Σ β ∶ f ⨾ g => s' , PathP (λ i → f ⨾ g => comp-unique α β i) α β)
+    loop-contr {f = f} {(g)} {(s)} α .center = s , α , loop-over (f ⨾ g =>_) (cast-path α) α
+    loop-contr {f = f} {(g)} {(s)} α .paths (s' , β , H) i = a0 i , a1 i , a2
+      where
+      a0 : s ≡ s'
+      a0 = comp-unique α β
+
+      a1 : PathP (λ i → f ⨾ g => a0 i) α β
+      a1 = H
+
+      a2 : PathP (λ j → f ⨾ g => comp-unique α (a1 i) j) α (a1 i)
+      a2 j = hcomp (∂ i ∨ ∂ j) λ where
+        k (i = i0) → loop-over (f ⨾ g =>_) (cast-path α) α j
+        k (i = i1) → H j
+        k (j = i0) → α
+        k (j = i1) → H i
+        k (k = i0) → transport (λ k → (f ⨾ g) => {!? ∙ ?!}) {!!} -- (loop-over (f ⨾ g =>_) (cast-path α) α j)
+          where
+          c = sym (cast-path α) ∙ cast-path α
+          -- path :
+          -- path = {!!}
+          k : {!!} ≡ {!!}
+          k = {!!}
+
+      -- t0 : cut f g , ceqv ≡ s , α
+      -- t0 = cut-unique Γ (f ⨾ g , ceqv) (s , α)
+
+      -- t1 : cut f g , ceqv ≡ s' , β
+      -- t1 = cut-unique Γ (f ⨾ g , ceqv) (s' , β)
+
+      -- p0 : s ≡ s
+      -- p0 = sym (ap fst t0) ∙ ap fst t0
+
+      -- p1 : s' ≡ s'
+      -- p1 = sym (ap fst t1) ∙ ap fst t1
+
+      -- c : (i : I) → PathP (λ j → f ⨾ g => comp-unique α (σ i) j) α (transport (λ j → f ⨾ g => cat.invl (ap fst t0) (~ j) {!~ i!}) α)
+      -- c i = transport-filler (λ j → f ⨾ g => comp-unique α (σ i) j) α
+
+      -- h0 : transport (λ i → (f ⨾ g) => p0 i) α , transport-filler (λ i → f ⨾ g => p0 i) α
+      --    ≡ α , loop-over (f ⨾ g =>_) (cast-path α) α
+      -- h0 = SinglP-contr α .paths (α , loop-over (f ⨾ g =>_) (cast-path α) α)
+
+      -- h1 : transport (λ i → (f ⨾ g) => p1 i) β , transport-filler (λ i → f ⨾ g => p1 i) β
+      --    ≡ β , loop-over (f ⨾ g =>_) (cast-path β) β
+      -- h1 = SinglP-contr β .paths (β , loop-over (f ⨾ g =>_) (cast-path β) β)
 
     -- over the composite space we have the embedding of a core groupoid which
     -- can be displayed from the ambient identity type
@@ -317,6 +373,12 @@ module _ {u} {Γ : Type u} ⦃ V : Virtual Γ ⦄ where
         divl : ∀ {k} (S : s => k) → is-contr (Σ G ∶ r => k , H ⊚ G ≡ S)
         divr : ∀ {h} (S : h => r) → is-contr (Σ F ∶ h => s , F ⊚ H ≡ S)
 
+    is-0-coherent : ∀ {x y} → {c d : x ~> y} → c => d → Type (l₁ ⊔ l₂)
+    is-0-coherent {x} {y} {c} {d} α =
+      is-prop (Σ β ∶ c => d , Path (Σ s ∶ (x ~> y) , c => s) (d , α) (d , β))
+
+
+-- is-prop (Σ G ∶ c => d , (d , F) ≡ (d , G))
     is-isomorphism-is-prop : ∀ {x y} (q : x ~> y) → is-prop (is-isomorphism q)
     is-isomorphism-is-prop q x y i .is-isomorphism.divl s = is-contr-is-prop (cofibroid q s) (x .is-isomorphism.divl s) (y .is-isomorphism.divl s) i
     is-isomorphism-is-prop q x y i .is-isomorphism.divr s = is-contr-is-prop (fibroid q s) (x .is-isomorphism.divr s) (y .is-isomorphism.divr s) i
@@ -338,9 +400,9 @@ module _ {u} {Γ : Type u} ⦃ V : Virtual Γ ⦄ where
                                (f ⨾ g , ceqv)
 
     divr→lcancel : ∀ {x y z} {f : x ~> y} {k₁ k₂ : y ~> z}
-                  → (∀ s → is-contr (fibroid f s))  -- f is right-divisible
-                  → f ⨾ k₁ => f ⨾ k₂
-                  → k₁ ≡ k₂
+                 → (∀ s → is-contr (fibroid f s))  -- f is right-divisible
+                 → f ⨾ k₁ => f ⨾ k₂
+                 → k₁ ≡ k₂
     divr→lcancel {f = f} {k₁} {k₂} f-div σ =
       let
         c = f-div (cut f k₂)
@@ -449,8 +511,6 @@ module _ {u} {Γ : Type u} ⦃ V : Virtual Γ ⦄ where
       module Ids = is-based-identity-system composite-ids
 
 
-
-
     record _~''_ {x y} (c d : x ~> y) : Type (l₁ ⊔ l₂) where
       field
         F : c => d
@@ -461,110 +521,16 @@ module _ {u} {Γ : Type u} ⦃ V : Virtual Γ ⦄ where
       eqv : d => d
       eqv = F-htpy .divl F .center .fst
 
-      unique : (G : c => d) → F ≡ G
-      unique G i = ap (snd ∘ fst) (is-contr-is-prop (Σ (λ H → Σ {!!})) {!!} {!!} i .paths (({!!} , F) , {!Singl-contr F!})) i where
-        singl : is-contr (Σ (λ H → H ≡ G))
-        singl .center = G , refl
-        singl .paths p = {!!}
-
       -- Derived reflexivity at c (from F-htpy)
       c-refl : c => c
       c-refl = F-htpy .divr F .center .fst
-
-    -- record _~_ {x y : ob Γ} (c d : x ~> y) : Type (l₀ ⊔ l₁ ⊔ l₂) where
-    --   field
-    --     mid : ob Γ
-    --     f : x ~> mid
-    --     g : mid ~> y
-    --     α : f ⨾ g => c
-    --     β : f ⨾ g => d
-
-    --   -- The contractible type both (c, α) and (d, β) inhabit
-    --   total : Σ s ∶ x ~> y , f ⨾ g => s
-    --   total = f ⨾ g , ceqv
-
-    --   -- Both points contract to the center
-    --   c-path : (f ⨾ g , ceqv) ≡ (c , α)
-    --   c-path = is-contr→is-prop cut-contr (f ⨾ g , ceqv) (c , α)
-
-    --   d-path : (f ⨾ g , ceqv) ≡ (d , β)
-    --   d-path = is-contr→is-prop cut-contr (f ⨾ g , ceqv) (d , β)
-
-    --   -- The derived path
-    --   path : c ≡ d
-    --   path = sym (ap fst c-path) ∙ ap fst d-path
-
-    --   -- The derived 2-cell via the identity system
-    --   F : c => d
-    --   F = transport (λ i → c => path i) (loop α)
-    --     -- Or more explicitly via transport:
-    --     -- transport (λ i → c => path i) (loop α)
-
-    --   -- Fiber propositionality
-    --   fiber-is-prop : is-prop (c => d)
-    --   fiber-is-prop F' G' = goal where
-    --     -- Transport both to f ⨾ g => d
-    --     F'' : f ⨾ g => d
-    --     F'' = wconcat α F'
-
-    --     G'' : f ⨾ g => d
-    --     G'' = wconcat α G'
-
-    --     -- Both equal β by cut-unique
-    --     F''≡β : F'' ≡ β
-    --     F''≡β = ap snd (is-contr→is-prop cut-contr (d , F'') (d , β))
-
-    --     G''≡β : G'' ≡ β
-    --     G''≡β = ap snd (is-contr→is-prop cut-contr (d , G'') (d , β))
-
-    --     -- wconcat α is an equivalence, so we can cancel
-    --     F''≡G'' : F'' ≡ G''
-    --     F''≡G'' = F''≡β ∙ sym G''≡β
-
-    --     goal : F' ≡ G'
-    --     goal = ?
-
-    -- ~-is-prop : {x y : ob Γ} {c d : x ~> y} → is-prop (c ~ d)
-    -- ~-is-prop {c = c} {d = d} r₁ r₂ = goal where
-    --   module r₁ = _~_ r₁
-    --   module r₂ = _~_ r₂
-
-    --   -- The key: both factorizations induce the same path c ≡ d
-    --   -- because all paths in a contractible type are equal
-
-    --   -- Step 1: Show c ≡ d is the same from both
-    --   path-unique : r₁.path ≡ r₂.path
-    --   path-unique = is-prop→is-set (is-contr→is-prop all-paths-contr) c d r₁.path r₂.path
-    --     where
-    --       -- Actually, we need a different approach.
-    --       -- The paths are equal because they're both "the" path from c to d
-    --       -- induced by living in contractible fibers.
-
-    --       -- Both r₁.path and r₂.path are constructed from cut-contr.
-    --       -- Since c and d are fixed, the path between them is determined.
-    --       all-paths-contr : is-contr (c ≡ d)
-    --       all-paths-contr = {!!}  -- follows from cut-contr structure
-
-    --   -- Alternative approach: directly construct the path between records
-
-    --   -- For any choice of (mid, f, g), the fiber (f ⨾ g => c) × (f ⨾ g => d) is a prop
-    --   fiber-prop : ∀ mid f g → is-prop ((f ⨾ g => c) × (f ⨾ g => d))
-    --   fiber-prop mid f g (α₁ , β₁) (α₂ , β₂) =
-    --     Σ-path (ap snd (is-contr→is-prop cut-contr (c , α₁) (c , α₂)))
-    --            (ap snd (is-contr→is-prop cut-contr (d , β₁) (d , β₂)))
-
-    --   -- Two factorizations are related if they give the same path c ≡ d
-    --   -- Since all factorizations give THE path (by contractibility), they're equivalent
-
-    --   goal : r₁ ≡ r₂
-    --   goal = {!!}
 
     record _~_ {x y} (c d : x ~> y) : Type (l₁ ⊔ l₂) where
       field
         F : c => d
         F-htpy : is-homotopy F
         F-total : is-prop (Σ s ∶ x ~> y , c => s)
-        L-fiber : is-prop (Σ G ∶ c => d , (d , F) ≡ (d , G))
+        L-fiber : is-0-coherent F
 
       unique : (G : c => d) → F ≡ G
       unique G = ap fst (L-fiber (F , refl) (G , F-total _ _))
@@ -572,51 +538,14 @@ module _ {u} {Γ : Type u} ⦃ V : Virtual Γ ⦄ where
       eqv : d => d
       eqv = F-htpy .is-homotopy.divl F .center .fst
 
-      R : is-contr (Σ r ∶ x ~> y , d => r)
-      R .center = let (β , _) = F-htpy .is-homotopy.divl F .center
-                  in (d , β)
-      R .paths (r , β) = goal where
-        Fβ : c => r
-        Fβ = vcut F β
-
-        -- F-total gives us: (d, F) ≡ (r, vcut F β)
-        total-path : (d , F) ≡ (r , Fβ)
-        total-path = F-total (d , F) (r , Fβ)
-
-        fst-path : d ≡ r
-        fst-path = ap fst total-path
-
-        snd-path : PathP (λ i → c => fst-path i) F Fβ
-        snd-path = ap snd total-path
-
-        γ-wit : vcut F eqv ≡ F
-        γ-wit = F-htpy .is-homotopy.divl F .center .snd
-
-        β-in-fiber : vcut F β ≡ Fβ
-        β-in-fiber = refl
-
-        β-from-divl-path : F-htpy .is-homotopy.divl Fβ .center .fst ≡ β
-        β-from-divl-path = ap fst (F-htpy .is-homotopy.divl Fβ .paths (β , refl))
-
-        divl-path : PathP (λ i → d => fst-path i) eqv (F-htpy .is-homotopy.divl Fβ .center .fst)
-        divl-path i = F-htpy .is-homotopy.divl (snd-path i) .center .fst
-
-        φ : PathP (λ i → d => fst-path i) eqv β
-        φ = transport (λ j → PathP (λ i → d => fst-path i) eqv (β-from-divl-path j)) divl-path
-
-        goal : (d , eqv) ≡ (r , β)
-        goal i = fst-path i , φ i
-
     ~-is-prop : ∀ {x y} {c d : x ~> y} → is-prop (c ~ d)
     ~-is-prop {c} {d} r₁ r₂ = goal where
       module r₁ = _~_ r₁
       module r₂ = _~_ r₂
 
-      -- Use r₁'s structure to show F₁ ≡ F₂
       F-path : r₁.F ≡ r₂.F
       F-path = r₁.unique r₂.F
 
-      -- The rest are props
       F-total-path : PathP (λ i → is-prop (Σ s ∶ _ ~> _ , c => s)) r₁.F-total r₂.F-total
       F-total-path = is-prop→PathP (λ i → is-prop-is-prop (Σ (hom2 Γ c))) r₁.F-total r₂.F-total
 
@@ -638,12 +567,39 @@ module _ {u} {Γ : Type u} ⦃ V : Virtual Γ ⦄ where
     ~-refl ._~_.F-total = cut-unique Γ
     ~-refl ._~_.F-htpy = ceqv-homotopy
     ~-refl {f} {g} ._~_.L-fiber (s0 , α) (s1 , β) i =
-      φ i , set (f ⨾ g , ceqv) (f ⨾ g , (φ i)) (λ j → (f ⨾ g) , {!ap snd (cut-unique Γ ? ?) j!}) {!!} i where
-        φ : s0 ≡ s1
-        φ = {!!}
-
+      φ i , set (f ⨾ g , ceqv) (f ⨾ g , (φ i)) (λ j → f ⨾ g , w0 i .snd) (ψ i) i where
         set : is-set (Σ λ s → (f ⨾ g) => s)
         set = is-prop→is-set (cut-unique Γ)
+
+        c0 = ceqv-divl s0 .center
+        c1 = ceqv-divl s1 .center
+        d0 = ceqv-divr s0 .center
+        d1 = ceqv-divr s1 .center
+        a0 = c0 .fst
+        a1 = c1 .fst
+        b0 = d0 .fst
+        b1 = d1 .fst
+
+        σ0 : vcut ceqv a0 ≡ s0
+        σ0 = ceqv-divl s0 .center .snd
+
+        σ1 : vcut (ceqv-divr s1 .center .fst) ceqv ≡ s1
+        σ1 = ceqv-divr s1 .center .snd
+
+        f0 : (σ : {!!}) → ceqv-divl s1 .center ≡ σ
+        f0 = ceqv-divl s1 .paths
+
+        φ : s0 ≡ s1
+        φ i = Singl-unique (s0 , σ0) (s1 , {!!}) i .fst
+
+        w0 : f ⨾ g , ceqv ≡ f ⨾ g , s0
+        w0 = {!!}
+
+        w1 : f ⨾ g , ceqv ≡ f ⨾ g , s1
+        w1 = {!!}
+
+        ψ : PathP (λ i → (f ⨾ g , ceqv ≡ f ⨾ g , φ i)) w0 w1
+        ψ = {!!}
 
     ~-identity-system : ∀ {x y z} {f : x ~> y} {g : y ~> z} {c : x ~> z}
                       → (α : f ⨾ g => c) → is-contr (Σ d ∶ x ~> z , d ~ c)
@@ -816,10 +772,6 @@ module _ {u v} {Γ : Type u} {Δ : Type v} ⦃ U : Virtual Γ ⦄ ⦃ V : Virtua
          → hom2 z e1 d1 → hom2 z e2 d2 → hom2 z (cut e1 e2) (cut d1 d2)
     hcut (α , α') (β , β') = Γ.hcut α β , Δ.hcut α' β'
 
-    cocut-unique : (x : Γ × Δ) {a b c : o x} {f : hom x a b} {g : hom x b c}
-                 → is-prop (Σ (λ t → hom2 x t (cut f g)))
-    cocut-unique z = is-prop-equiv Σ-×-swap (is-prop-× (Γ.cocut-unique (z .fst)) (Δ.cocut-unique (z .snd)))
-
     cut-unique : ∀ z {a b c : o z} {f : hom z a b} {g : hom z b c}
                  → is-prop (Σ (hom2 z (cut f g)))
     cut-unique z = is-prop-equiv Σ-×-swap (is-prop-× (Γ.cut-unique (z .fst)) (Δ.cut-unique (z .snd)))
@@ -851,7 +803,6 @@ module _ {u v} {Γ : Type u} {Δ : Type v} ⦃ U : Virtual Γ ⦄ ⦃ V : Virtua
     Virtual-Product .Virtual.hom = hom
     Virtual-Product .Virtual.hom2 = hom2
     Virtual-Product .Virtual.cut = cut
-    Virtual-Product .Virtual.cocut-unique = cocut-unique
     Virtual-Product .Virtual.cut-unique = cut-unique
     Virtual-Product .Virtual.ceqv = ceqv
     Virtual-Product .Virtual.vcut = vcut

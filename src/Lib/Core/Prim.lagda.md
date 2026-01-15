@@ -73,3 +73,18 @@ _∘_ : ∀ {u v w} {@0 A : Type u} {@0 B : A → Type v} {@0 C : ∀ a → B a 
 _∘_ g f = λ x → g {x} (f x)
 infixr 9 _∘_
 {-# INLINE _∘_ #-}
+
+module Unit where
+  open import Agda.Builtin.Unit public
+
+  ind : ∀ {u} (P : @0 ⊤ → Type u) (p : P tt) → (@0 x : ⊤) → P x
+  ind P p ._ = p
+
+  Unit : ∀ {u} → Type u
+  Unit {u} = Lift u ⊤
+
+open Unit using (Unit; ⊤; tt) public
+
+instance
+  Lift-Unit : ∀ {u} → Unit {u}
+  Lift-Unit .lower = tt

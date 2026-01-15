@@ -58,6 +58,11 @@ imp : I → I → I
 imp x y = ~ x ∨ y
 {-# INLINE imp #-}
 
+iota-notation : ∀ {u} {A : I → Type u} → (∀ i → A i) → (∀ i → A i)
+iota-notation f = f
+syntax iota-notation (λ i → b) = ι i , b
+
+
 private
   variable
     ℓ : I → Level

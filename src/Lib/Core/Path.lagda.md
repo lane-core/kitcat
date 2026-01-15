@@ -9,7 +9,6 @@ module Lib.Core.Path where
 open import Lib.Core.Prim
 open import Lib.Base
 open import Lib.Core.Type
-open import Lib.Core.Equal.Type
 open import Lib.Core.Base
 open import Lib.Core.Sub
 open import Lib.Core.Kan hiding (fill)

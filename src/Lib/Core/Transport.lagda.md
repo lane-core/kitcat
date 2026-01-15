@@ -33,8 +33,6 @@ is-contr→is-prop c x y i = outS do
     (i = i1) → y
 
 
-
-
 Singl-contr : ∀ {u} {A : Type u} (x : A) → is-contr (Σ y ∶ A , x ≡ y)
 Singl-contr x .center = x , refl
 Singl-contr x .paths (y , q) = λ i → (q i) , λ j → q (i ∧ j)
@@ -54,7 +52,7 @@ private module X where
 open X public renaming (primTransp to transp) using () public
 -- primHComp  : ∀ {ℓ} {A : Set ℓ} {φ : I} (u : ∀ i → Partial φ A) (a : A) → A
 ```
-Recall:
+Recall from the Base module:
 
 module ∂ where
   contract : {@0 ℓ : I → Level} (A : ∀ i → Type (ℓ i)) (i j : I) → Type (ℓ (i ∨ j))
@@ -285,6 +283,34 @@ is-prop→SquareP {B} bprop {a} p q r s i j =
     k (j = i0) → bprop i i0 (base i i0) (q i) k
     k (j = i1) → bprop i i1 (base i i1) (s i) k
     k (k = i0) → base i j
+
+SinglP-contr : ∀ {u} {A : I → Type u} (x : A i0)
+             → is-contr (Σ y ∶ A i1 , PathP A x y)
+SinglP-contr {A} x .center = coe01 A x , coe-filler A x
+SinglP-contr {A} x .paths (y , q) i = _ , λ j → fill A (∂ i) j λ where
+ j (i = i0) → coe0i A j x
+ j (j = i0) → x
+ j (i = i1) → q j
+
+TotalP : ∀ {u v} {A : Type u} {B : A → Type v} {x}
+       → (a : B x)
+       → is-contr (Σ y ∶ A , Σ q ∶ (x ≡ y) , Σ b ∶ B y , PathP (λ i → B (q i)) a b)
+TotalP {x} a .center = x , refl , a , refl
+TotalP a .paths (y , q , b , α) i = q i , (λ j → q (i ∧ j)) , α i , λ j → α (i ∧ j)
+
+loop-over : ∀ {u v} {A : Type u} (P : A → Type v)
+          → {x y : A} (q : x ≡ y) (b : P y)
+          → PathP (λ i → P ((sym q ∙ q) i)) b b
+loop-over P q b i = hcomp (∂ i) λ where
+  k (i = i0) → transport-refl b k
+  k (k = i0) → transport (λ j → P (cat.invl q (~ j) i)) b
+  k (i = i1) → transport-refl b k
+
+sym-loop : ∀ {u v} {A : Type u} (P : A → Type v) {x y}
+         → (q : x ≡ y) {a b : P y}
+         → PathP (λ i → P (_∙_ (sym q) q i)) a b
+         → a ≡ b
+sym-loop P q {a} {b} α = transport (λ i → PathP (λ j → P (cat.invl q i j)) a b) α
 
 is-prop→PathP-is-contr : ∀ {u} {A : I → Type u}
                        → ((i : I) → is-prop (A i))

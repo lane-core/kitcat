@@ -1,10 +1,11 @@
 ```agda
 
-{-# OPTIONS --safe --cubical-compatible #-}
+{-# OPTIONS --safe --erased-cubical #-}
 
 module Lib.Core.Type where
 
 open import Lib.Core.Prim
+open import Lib.Core.Num public
 
 data _⊎_ {u v} (A : Type u) (B : Type v) : Type (u ⊔ v) where
   inl : A → A ⊎ B
@@ -39,17 +40,6 @@ Not = ¬_
 
 ¬¬_ : ∀ {u} → Type u → Type u
 ¬¬_ A = ¬ (¬ A)
-
-module Unit where
-  open import Agda.Builtin.Unit public
-
-  ind : ∀ {u} (P : @0 ⊤ → Type u) (p : P tt) → (@0 x : ⊤) → P x
-  ind P p ._ = p
-
-  Unit : ∀ {u} → Type u
-  Unit {u} = Lift u ⊤
-
-open Unit using (Unit; ⊤; tt) public
 
 ```
 For the Sigma type from Agda.Builtin we'll use TypeTopology's shortened
@@ -144,91 +134,6 @@ open import Agda.Builtin.Strict public
   renaming (primForce to force; primForceLemma to force-lemma)
 
 import Agda.Builtin.Equality; module Id = Agda.Builtin.Equality
-
-module Nat where
-  open import Agda.Builtin.Nat public
-    using (Nat)
-    renaming ( zero to Zero
-             ; suc to Suc
-             ; _+_ to add
-             ; _*_ to mul
-             ; _-_ to sub
-             ; _==_ to Eq )
-    hiding (module Nat)
-
-  data _<_ (m : Nat) : Nat → Type where
-    Base : m < Suc m
-    Step : ∀ {n} → m < n → m < Suc n
-
-open Nat public using (Nat)
-
-pattern Z = Nat.Zero
-pattern S n = Nat.Suc n
-
-open import Agda.Builtin.FromNat renaming (Number to FromNat) public
-
-module Int where
-  open import Agda.Builtin.Int public hiding (module Int)
-  open Agda.Builtin.Int.Int public
-
-  module add where
-    pos-negsuc : Nat → Nat → Int
-    pos-negsuc Z n = negsuc n
-    pos-negsuc (S m) Z = pos m
-    pos-negsuc (S m) (S n) = pos-negsuc m n
-    {-# INLINE pos-negsuc #-}
-
-  zero : Int
-  zero = pos Z
-
-  negate : Int → Int
-  negate (pos Z) = pos Z
-  negate (pos (S n)) = negsuc n
-  negate (negsuc n) = pos (S n)
-  {-# INLINE negate #-}
-
-  add : Int → Int → Int
-  add (pos m) (pos n) = pos (Nat.add m n)
-  add (pos m) (negsuc n) = add.pos-negsuc m n
-  add (negsuc m) (pos n) = add.pos-negsuc n m
-  add (negsuc m) (negsuc n) = negsuc (S (Nat.add m n))
-  {-# INLINE add #-}
-
-  sub : Int → Int → Int
-  sub m = λ n → add m (negate n)
-
-  module mul where
-    pos-negsuc : Nat → Nat → Int
-    pos-negsuc Z n = zero
-    pos-negsuc (S m) n = negsuc (Nat.add m (Nat.add n (Nat.mul m n)))
-    {-# INLINE pos-negsuc #-}
-
-  mul : Int → Int → Int
-  mul (pos m) (pos n) = pos (Nat.mul m n)
-  mul (pos m) (negsuc n) = mul.pos-negsuc m n
-  mul (negsuc m) (pos n) = mul.pos-negsuc n m
-  mul (negsuc m) (negsuc n) = pos (S (Nat.add m (Nat.add n (Nat.mul m n))))
-  {-# INLINE mul #-}
-
-  to-bool : Int → Bool
-  to-bool (pos Z) = ff
-  to-bool (pos (S n)) = tt
-  to-bool (negsuc n) = tt
-  {-# INLINE to-bool #-}
-
-  to-nat : Int → Nat
-  to-nat (pos n) = n
-  to-nat (negsuc n) = S n
-  {-# INLINE to-nat #-}
-
-  abs : Int → Int
-  abs m = pos (to-nat m)
-  {-# INLINE abs #-}
-
-open Int public using (Int; pos; negsuc)
-
-open import Agda.Builtin.FromNeg public
-  renaming (Negative to FromNeg)
 
 import Agda.Builtin.String; module String = Agda.Builtin.String
   renaming ( primStringUncons to uncons
