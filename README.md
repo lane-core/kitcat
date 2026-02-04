@@ -1,25 +1,48 @@
-# Kitcat: A univalent programming library for Cubical Agda
+# Kitcat
 
-Kitcat is an experimental library for [Cubical Agda](https://agda.readthedocs.io/en/latest/index.html) centered on general purpose programming, whose underpinnings lie in a theory of **virtual categorical structures** formalized in univalent foundations, which guides the overall design and implementation of the library. This is an active research project intended as a vehicle for exploring applied univalent mathematics while pinning down useful abstractions intended to be useful to Agda hackers of all stripes.
+An experiment in univalent programming and open source mathematics conducted in
+Agda.
 
-> **WIP** — The API is not yet stable. Expect breaking changes.
+Kitcat is an experimental univalent mathematics and programming library written
+in [Cubical Agda](https://agda.readthedocs.io/en/latest/index.html) intended to
+be an ergonomic, modular, and scalable library to be used for formalized
+mathematics, proof theory research, as well as ordinary functional programming.
 
-## Scope
+> **WIP** — API is unstable. Expect breaking changes.
 
-Kitcat is not a formalization library in the style of agda-categories or 1lab. Its focus is on providing an opinionated foundation for programming with categorical abstractions, with an emphasis on usability.
+## Contents
 
-The library aims to provide ergonomic interfaces for both programming and formalization: functors, natural transformations, limits, adjunctions, monads — built on a modular virtual category theory framework intended to serve as a cohesive API throughout. Quality of life features and metaprogramming facilities are planned where they make sense.
+The `Core` namespace provides cubical foundations (paths, transport,
+equivalences, h-levels, Kan operations, univalence), standard data types, and
+typeclass traits. `Cat` builds a virtual category theory framework — magmoids,
+unitality, associativity, coherence, monads, and CwFs. `Data` and `HData`
+supply concrete and higher inductive types. `Lib` contains extended
+developments: cubical and semi-simplicial sets, Segal types, and modular group
+theory.
 
-Research branches may appear in alternative tags. Thin-cloning recommended.
+Kitcat will be host to investigations at the intersection of higher catgegory
+theory, homotopy type theory, rewriting theory, combinatorics, and proof
+theory. The library is intended to be a testbed for new ideas in these areas,
+as well as a reference for formalized mathematics and an ergonomic environment
+for functional programming.
 
 ## Foundations
 
-The library explores a presentation of univalent type theory and higher category theory formalization drawing on Capriotti–Kraus's prior work formalizing [Univalent higher categories](https://arxiv.org/abs/1707.03693) and [∞-categorical models of HoTT](https://arxiv.org/abs/2009.01883), [Petrakis's univalent typoids](https://arxiv.org/abs/2205.06651), and Sterling's [virtual bicategory theory](https://www.jonmsterling.com/005B) and [reflexive graph lenses](https://arxiv.org/abs/2303.10986).
+The category theory framework is built on a confluence of ideas from:
 
-The core abstraction is the _virtual graph_: a graph with 2-cells satisfying a propositional contractibility condition on composites, which generalizes but is trivially satisfied by the native ∞-groupoid structure of types. Research is ongoing, but early results seem promising that this provides a suitable setting for synthetic higher category theory.
+- [Capriotti-Kraus](https://arxiv.org/abs/1707.03693)
+- [Chen](https://arxiv.org/abs/2503.05790)
+- [Petrakis](https://arxiv.org/abs/2205.06651) and
+- Sterling's [virtual bicategory theory](https://www.jonmsterling.com/005B) &
+  ([reflexive graph lenses](https://arxiv.org/abs/2303.10986))
+- among other references, including ideas from virtual double category theory
+  and (obviously) homotopy type theory
 
-## Related Work
+## Related work
 
-- [1lab](https://1lab.dev/) — Formalised mathematics as explorable reference
-- [agda-unimath](https://unimath.github.io/agda-unimath/) — Systematic univalent foundations at scale
-- [agda-categories](https://github.com/agda/agda-categories) — Mature category theory for the Agda ecosystem
+- [1lab](https://1lab.dev/): Formalised mathematics as explorable reference,
+  whom this library is much indebted to
+- [agda-unimath](https://unimath.github.io/agda-unimath/)
+  Univalent foundations at scale
+- [agda-categories](https://github.com/agda/agda-categories)
+  Category theory library for Agda
