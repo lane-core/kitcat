@@ -236,58 +236,6 @@ module pfil {A : I → Type} where
   -- rwsk p α= {!!}
 
 ```
-
-Ordinary Path Composition
-
-```agda
-module cat {A : I → Type u} {x : A i0} {y z : A i1} (p : x ≡ y ∶ A) (q : y ≡ z) where
-  composite : x ≡ z ∶ A
-  composite = pcom refl p q
-
-  fill : HCell refl p q composite
-  fill = pfil refl p q
-
-  rfill : SquareP (λ i j → A (i ∨ ~ j)) (sym p) q refl composite
-  rfill i j = hcom (∂ i ∨ ~ j) (s i j) where
-    s : (i j : I) → Sys (∂ i ∨ ~ j) (A (i ∨ ~ j))
-    s i j k (j = i0) = q (i ∧ k)
-    s i j k (i = i0) = p (~ j)
-    s i j k (k = i0) = p (i ∨ ~ j)
-    s i j k (i = i1) = q k
-
-  bfill : SquareP (λ i j → A (i ∨ j)) p composite refl q
-  bfill i j = hcom (∂ i ∨ j) (s i j) where
-    s : (i j : I) → Sys (∂ i ∨ j) (A (i ∨ j))
-    s i j k (i = i0) = p j
-    s i j k (i = i1) = q k
-    s i j k (j = i1) = q (i ∧ k)
-    s i j k (k = i0) = p (i ∨ j)
-
-
-open cat public using () renaming (composite to infixr 9 _∙_)
-
-```
-## Groupoid Laws
-```agda
-
-module _ {A : Type u} where
-  eqvr : {x y : A} (p : x ≡ y) → p ∙ refl ≡ p
-  eqvr p i j = cat.fill p refl j (~ i)
-
-  eqvl : {x y : A} (p : x ≡ y) → refl ∙ p ≡ p
-  eqvl p i j = cat.rfill refl p j (~ i)
-
-  invl : {x y : A} (p : x ≡ y) → sym p ∙ p ≡ refl
-  invl p i j = hcom (∂ j ∨ i) (λ k _ → p (~ j ∨ k))
-
-  invr : {x y : A} (p : x ≡ y) → p ∙ sym p ≡ refl
-  invr p = invl (sym p)
-
-  assoc : {w x y z : A} (p : w ≡ x) (q : x ≡ y) (r : y ≡ z)
-        → p ∙ (q ∙ r) ≡ (p ∙ q) ∙ r
-  assoc p q r k = transpose (cat.fill p q) k ∙ transpose (cat.rfill q r) (~ k)
-
-```
 ## Connection
 ```agda
 
@@ -302,23 +250,158 @@ conn {x} {y} {z} p q i j = hcom (∂ i ∨ ∂ j) sys
     sys k (i = i1) = q j
 {-# DISPLAY hcom _ (conn.sys p q i j) = conn p q i j #-}
 
+
+
+```
+
+Ordinary Path Composition
+
+```agda
+module cat where
+  module _  {A : I → Type u} {x : A i0} {y z : A i1} (p : x ≡ y ∶ A) (q : y ≡ z) where
+    composite : x ≡ z ∶ A
+    composite = pcom refl p q
+
+    fill : HCell refl p q composite
+    fill = pfil refl p q
+
+    rfill : SquareP (λ i j → A (i ∨ ~ j)) (sym p) q refl composite
+    rfill i j = hcom (∂ i ∨ ~ j) (s i j) where
+      s : (i j : I) → Sys (∂ i ∨ ~ j) (A (i ∨ ~ j))
+      s i j k (j = i0) = q (i ∧ k)
+      s i j k (i = i0) = p (~ j)
+      s i j k (k = i0) = p (i ∨ ~ j)
+      s i j k (i = i1) = q k
+
+    bfill : SquareP (λ i j → A (i ∨ j)) p composite refl q
+    bfill i j = hcom (∂ i ∨ j) (s i j) where
+      s : (i j : I) → Sys (∂ i ∨ j) (A (i ∨ j))
+      s i j k (i = i0) = p j
+      s i j k (i = i1) = q k
+      s i j k (j = i1) = q (i ∧ k)
+      s i j k (k = i0) = p (i ∨ j)
+
+  private
+    _∙_ = composite; infixr 9 _∙_
+
+  module _ {A : Type u} {w x y z : A} (p : w ≡ x) (q : x ≡ y) (r : y ≡ z) where
+    lcoh : Square (sym p) q r (p ∙ q ∙ r)
+    lcoh i j = hcom (∂ i ∨ ~ j) λ where
+      k (i = i0) → p (~ j)
+      k (i = i1) → fill q r k j
+      k (j = i0) → q (i ∧ k)
+      k (k = i0) → p (i ∨ ~ j)
+
+    rcoh : Square (sym p) q r ((p ∙ q) ∙ r)
+    rcoh i j = hcom (∂ i ∨ ~ j) λ where
+      k (i = i0) → p (~ j)
+      k (i = i1) → r (j ∧ k)
+      k (j = i0) → q i
+      k (k = i0) → rfill p q i j
+
+open cat public using () renaming (composite to infixr 9 _∙_)
+
+```
+## Groupoid Laws
+```agda
+
+module Path {A : Type u} where
+  unitl : {x y : A} (p : x ≡ y) → refl ∙ p ≡ p
+  unitl p i j = cat.rfill refl p j (~ i)
+
+  unitr : {x y : A} (p : x ≡ y) → p ∙ refl ≡ p
+  unitr p i j = cat.fill p refl j (~ i)
+
+  invl : {x y : A} (p : x ≡ y) → sym p ∙ p ≡ refl
+  invl p i j = hcom (∂ j ∨ i) (λ k _ → p (~ j ∨ k))
+
+  invr : {x y : A} (p : x ≡ y) → p ∙ sym p ≡ refl
+  invr p = invl (sym p)
+
+  assoc : {w x y z : A} (p : w ≡ x) (q : x ≡ y) (r : y ≡ z)
+        → p ∙ (q ∙ r) ≡ (p ∙ q) ∙ r
+  assoc p q r = ap fst comp
+    module assoc where
+    private
+      comp = HComposite.unique (sym p) q r
+        ((p ∙ (q ∙ r)) , cat.lcoh p q r)
+        ((p ∙ q) ∙ r , cat.rcoh p q r)
+
+    fill : SquareP (λ i j → q j ≡ comp i .fst j) (cat.lcoh p q r) refl (cat.rcoh p q r) refl
+    fill = ap snd comp
+
+  idem : ∀ {u} {A : Type u} (x : A) →  refl ∙ refl ≡ refl {x = x}
+  idem x = ap fst comp
+    module idem where
+    private
+      comp = HComposite.unique (refl {x = x}) refl refl
+        (refl ∙ refl , cat.fill (refl {x = x}) refl)
+        (refl , refl)
+
+    fill : SquareP (λ i j → x ≡ comp i .fst j) (cat.fill (λ _ → x) (λ _ → x)) refl refl refl
+    fill = ap snd comp
+
+  open cat
+  hsqueeze : {x y : A} {p q : x ≡ y} → p ∙ refl ≡ refl ∙ q → p ≡ q
+  hsqueeze {p} {q} h = pcom (unitr p) h (unitl q)
+
+  vsqueeze : {x y : A} {p q : x ≡ y} → refl ∙ p ≡ q ∙ refl → p ≡ q
+  vsqueeze {p} {q} h = pcom (unitl p) h (unitr q)
+
+  paste-refl : {w x y z : A}
+         → (p : w ≡ x) (q : w ≡ y) (r : y ≡ z) (s : x ≡ z) (c : x ≡ y)
+         → (H : Square p refl q c)
+         → (K : Square s c r refl)
+         → p ∙ s ≡ q ∙ r
+  paste-refl {w} {x} {y} {z} p q r s c H K i j = hcom (∂ j ∨ ~ i) λ where
+    k (j = i0) → w
+    k (i = i0) → cat.fill p s j k
+    k (j = i1) → K i k
+    k (k = i0) → H i j
+
+  lwhisker : {x y z : A} (p : x ≡ y) {q r : y ≡ z} → q ≡ r → p ∙ q ≡ p ∙ r
+  lwhisker p = ap (p ∙_)
+
+  rwhisker : {x y z : A} {p q : x ≡ y} (r : y ≡ z) → p ≡ q → p ∙ r ≡ q ∙ r
+  rwhisker r = ap (_∙ r)
+
+  loop-refl : {x y : A} (p : x ≡ y) (q : y ≡ y)
+            → Square p refl p q → q ≡ refl
+  loop-refl p q sq i j = hcom (∂ i ∨ ∂ j) λ where
+    k (i = i0) → conn p q j k
+    k (i = i1) → p (j ∨ k)
+    k (j = i0) → p k
+    k (j = i1) → q (i ∨ k)
+    k (k = i0) → sq i j
+
+  commutes : {w x y z : A}
+           → (p : w ≡ x) (q : x ≡ z) (r : w ≡ y) (s : y ≡ z)
+           → Square p r s q → p ∙ q ≡ r ∙ s
+  commutes {w} p q r s sq i j = hcom (∂ j ∨ ~ i) λ where
+    k (j = i0) → p (~ i ∧ ~ k)
+    k (j = i1) → s (~ i ∨ k)
+    k (i = i0) → rfill p q j k
+    k (k = i0) → sq j (~ i)
+
+cone : {x y z : A} (q : y ≡ z) (r : x ≡ z)
+     → Square q (q ∙ sym r) r (λ _ → z)
+cone q r i j = hcom (∂ i ∨ j) λ where
+  k (i = i0) → q (j ∧ k)
+  k (i = i1) → r (j ∨ ~ k)
+  k (j = i1) → q (i ∨ k)
+  k (k = i0) → q i
+
+cocone : {x y z : A} (p : x ≡ y) (q : x ≡ z)
+    → Square p (λ _ → x) q (sym p ∙ q)
+cocone {x} p q i j = hcom (∂ i ∨ ~ j) λ where
+  k (i = i0) → p j
+  k (j = i0) → x
+  k (i = i1) → q (j ∧ k)
+  k (k = i0) → p (~ i ∧ j)
+
 ```
 ## Triangles
 ```agda
-
-Square : {A : Type u} {w x y z : A}
-       → x ≡ w
-       → x ≡ y
-       → y ≡ z
-       → w ≡ z
-       → Type u
-Square p q r s = PathP (∂.square _≡_ q s) p r
-
-Triangle
-  : ∀ {ℓ} {A : Type ℓ} {x y z : A}
-  → (p : x ≡ y) (q : y ≡ z) (r : x ≡ z)
-  → Type ℓ
-Triangle p q r = Square refl p q r
 
 module Triangle {ℓ} {A : Type ℓ} {x y z : A}
   (p : x ≡ y) (q : y ≡ z) (r : x ≡ z)

@@ -167,7 +167,7 @@ fiber-comp f g c = iso→equiv fwd bwd sec retr
     bwd ((b , q) , (a , r)) = a , ap g r ∙ q
 
     sec : (x : fiber (g ∘ f) c) → bwd (fwd x) ≡ x
-    sec (a , p) i = a , eqvl p i
+    sec (a , p) i = a , unitl p i
 
     retr : (y : Σ (b , _) ∶ fiber g c , fiber f b) → fwd (bwd y) ≡ y
     retr ((b , q) , (a , r)) i = (r i , lemma i) , (a , λ j → r (i ∧ j))

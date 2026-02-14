@@ -23,33 +23,19 @@ private
     u v : Level
     A : I → Type u
 
-idp : {A : Type u} {x : A} → x ≡ x
-idp {x = x} = λ _ → x
-
-dsym : {x : A i0} {y : A i1} → x ≡ y ∶ A → y ≡ x ∶ (λ i → A (~ i))
-dsym q i = q (~ i)
-
 hpcom : {A : Type u} {x y z : A} {p q : x ≡ y} {r s : y ≡ z}
-      → p ≡ q → r ≡ s → _∙_ p r ≡ _∙_ q s
+      → p ≡ q → r ≡ s → p ∙ r ≡ q ∙ s
 hpcom α β i = _∙_ (α i) (β i)
-
-cong2 : ∀ {u v w} {A : Type u} {B : Type v} {C : Type w}
-    → (f : A → B → C)
-    → {a₁ a₂ : A} {b₁ b₂ : B}
-    → a₁ ≡ a₂
-    → b₁ ≡ b₂
-    → f a₁ b₁ ≡ f a₂ b₂
-cong2 f {a₁} {a₂} {b₁} {b₂} p q = (ap (λ a → f a b₁) p) ∙ (ap (λ b → f a₂ b) q)
 
 erefl : ∀ {u} {A : Type u} (x : A) → x ≡ x
 erefl x = refl {x = x}
 
-Singl : ∀ {u} {A : Type u} → A → Type u
-Singl {A = A} x = Σ (λ a → (x ≡ a))
-{-# INLINE Singl #-}
+Sing : ∀ {u} {A : Type u} → A → Type u
+Sing {A = A} x = Σ (λ a → (x ≡ a))
+{-# INLINE Sing #-}
 
 ×-to-path : ∀ {u} {A : Type u} → {w x y z : A} → w ≡ y → x ≡ z → (w , x) ≡ (y , z)
-×-to-path = cong2 _,_
+×-to-path = ap2s _,_
 
 Ω : ∀ {u} → Type* u → Type u
 Ω (_ , a) = a ≡ a
@@ -76,75 +62,13 @@ infix 4 _≢_
 _≢_ : {A : Type u} → A → A → Type u
 x ≢ y = ¬ (x ≡ y)
 
-idtofun : ∀ {u} {A B : Type u} → A ≡ B → A → B
-idtofun = subst (λ x → x)
+-- lhs : {A : Type u} {x y : A} (p : x ≡ y) → p ≡ refl ∶ ∂.square _≡_ p refl
+-- lhs p i j = p (i ∨ j)
+-- {-# INLINE lhs #-}
 
-ap0 : {@0 A : Type u} {@0 B : A → Type v} (f : ∀ (@0 x) → B x)
-    → {@0 x y : A} (@0 p : x ≡ y)
-    → PathP (λ i → B (p i)) (f x) (f y)
-ap0 f p i = f (p i)
-
-apd : {A : I → Type u} {B : ∀ i → A i → Type v}
-    → (f : ∀ i (a : A i) → B i a)
-    → {x : A i0} {y : A i1} (p : PathP A x y)
-    → PathP (λ i → B i (p i)) (f i0 x) (f i1 y)
-apd f p i = f i (p i)
-
-
-lhs : {A : Type u} {x y : A} (p : x ≡ y) → p ≡ refl ∶ ∂.square _≡_ p refl
-lhs p i j = p (i ∨ j)
-{-# INLINE lhs #-}
-
-rhs : {A : Type u} {x y : A} (p : x ≡ y) → refl ≡ p ∶ ∂.square _≡_ refl p
-rhs p i j = p (i ∧ j)
-{-# INLINE rhs #-}
-
-module Path {A : Type u} where
-  open cat
-  hsqueeze : {x y : A} {p q : x ≡ y} → p ∙ refl ≡ refl ∙ q → p ≡ q
-  hsqueeze {p} {q} h = pcom (eqvr p) h (eqvl q)
-
-  vsqueeze : {x y : A} {p q : x ≡ y} → refl ∙ p ≡ q ∙ refl → p ≡ q
-  vsqueeze {p} {q} h = pcom (eqvl p) h (eqvr q)
-
-  paste-refl : {w x y z : A}
-         → (p : w ≡ x) (q : w ≡ y) (r : y ≡ z) (s : x ≡ z) (c : x ≡ y)
-         → (H : Square p refl q c)
-         → (K : Square s c r refl)
-         → p ∙ s ≡ q ∙ r
-  paste-refl {w} {x} {y} {z} p q r s c H K i j = hcom (∂ j ∨ ~ i) λ where
-    k (j = i0) → w
-    k (i = i0) → cat.fill p s j k
-    k (j = i1) → K i k
-    k (k = i0) → H i j
-
-  lwhisker : {x y z : A} (p : x ≡ y) {q r : y ≡ z} → q ≡ r → p ∙ q ≡ p ∙ r
-  lwhisker p = ap (p ∙_)
-
-  rwhisker : {x y z : A} {p q : x ≡ y} (r : y ≡ z) → p ≡ q → p ∙ r ≡ q ∙ r
-  rwhisker r = ap (_∙ r)
-
-  loop-refl : {x y : A} (p : x ≡ y) (q : y ≡ y)
-            → Square p refl p q → q ≡ refl
-  loop-refl p q sq i j = hcom (∂ i ∨ ∂ j) λ where
-    k (i = i0) → conn p q j k
-    k (i = i1) → p (j ∨ k)
-    k (j = i0) → p k
-    k (j = i1) → q (i ∨ k)
-    k (k = i0) → sq i j
-
-  commutes : {w x y z : A}
-           → (p : w ≡ x) (q : x ≡ z) (r : w ≡ y) (s : y ≡ z)
-           → Square p r s q → p ∙ q ≡ r ∙ s
-  commutes {w} p q r s sq i j = hcom (∂ j ∨ ~ i) λ where
-    k (j = i0) → p (~ i ∧ ~ k)
-    k (j = i1) → s (~ i ∨ k)
-    k (i = i0) → rfill p q j k
-    k (k = i0) → sq j (~ i)
-
-path-idem : ∀ {u} {A : Type u} (x : A) → refl ∙ refl ≡ refl {x = x}
-path-idem x i = HComposite.unique (refl {x = x}) refl refl
-  (refl ∙ refl , λ j k → cat.fill (refl {x = x}) refl j k) (refl , refl) i .fst
+-- rhs : {A : Type u} {x y : A} (p : x ≡ y) → refl ≡ p ∶ ∂.square _≡_ refl p
+-- rhs p i j = p (i ∧ j)
+-- {-# INLINE rhs #-}
 
 Ext : ∀ {u} (A : I → Type u) (x : A i0) → Type u
 Ext A x = Σ y ∶ A i1 , PathP A x y
@@ -166,19 +90,19 @@ module HComposite₄ {u} {A : Type u} {v w x y z : A} (p : v ≡ w) (q : w ≡ x
   alt₄ = p ∙ ((q ∙ r) ∙ s)
 
   a→1 : final ≡ alt₁
-  a→1 = assoc p q (r ∙ s)
+  a→1 = Path.assoc p q (r ∙ s)
 
   a1→2 : alt₁ ≡ alt₂
-  a1→2 = assoc (p ∙ q) r s
+  a1→2 = Path.assoc (p ∙ q) r s
 
   a→4 : final ≡ alt₄
-  a→4 = ap (p ∙_) (assoc q r s)
+  a→4 = ap (p ∙_) (Path.assoc q r s)
 
   a4→3 : alt₄ ≡ alt₃
-  a4→3 = assoc p (q ∙ r) s
+  a4→3 = Path.assoc p (q ∙ r) s
 
   a3→2 : alt₃ ≡ alt₂
-  a3→2 = ap (_∙ s) (assoc p q r)
+  a3→2 = ap (_∙ s) (Path.assoc p q r)
 
   -- Pentagon LHS: final → alt₁ → alt₂
   pent-lhs : final ≡ alt₂

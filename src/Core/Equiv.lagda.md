@@ -215,6 +215,10 @@ equiv .snd = id-equiv
 esym : ∀ {u v} {A : Type u} {B : Type v} → A ≃ B → B ≃ A
 esym e = iso→equiv E.inv E.fwd E.counit E.unit where module E = Equiv e
 
+sym-equiv : ∀ {u v} {A : Type u} {B : Type v} {f : A → B}
+          → (e : is-equiv f) → is-equiv (eqvtoinv (f , e))
+sym-equiv {f} e = esym (f , e) .snd
+
 _∙e_
   : ∀ {u v w} {A : Type u} {B : Type v} {C : Type w}
   → A ≃ B → B ≃ C → A ≃ C
@@ -235,6 +239,12 @@ _∙e_ {A = A} {B} {C} e f = iso→equiv fwd bwd sec retr where
   retr c = ap F.fwd (E.counit (F.inv c)) ∙ F.counit c
 
 infixr 9 _∙e_
+
+comp-equiv
+  : ∀ {u v w} {A : Type u} {B : Type v} {C : Type w} {f : A → B} {g : B → C}
+  → is-equiv f → is-equiv g → is-equiv (g ∘ f)
+comp-equiv {f} {g} e d = ((f , e) ∙e (g , d)) .snd
+
 
 Σ-×-swap
   : ∀ {u v w z} {A : Type u} {B : Type v} {P : A → Type w} {Q : B → Type z}
@@ -338,14 +348,14 @@ path-equiv-r {x = x} {y} {z} p = iso→equiv fwd bwd sec retr
     bwd q = q ∙ sym p
 
     sec : (q : x ≡ y) → bwd (fwd q) ≡ q
-    sec q = pcom (assoc q p (sym p)) (ap (q ∙_) (invr p)) (eqvr q)
+    sec q = pcom (Path.assoc q p (sym p)) (ap (q ∙_) (Path.invr p)) (Path.unitr q)
 
     retr : (q : x ≡ z) → fwd (bwd q) ≡ q
-    retr q = pcom (assoc q (sym p) p) (ap (q ∙_) (invl p)) (eqvr q)
+    retr q = pcom (Path.assoc q (sym p) p) (ap (q ∙_) (Path.invl p)) (Path.unitr q)
 
 -- Symmetry as equivalence
-sym-equiv : ∀ {u} {A : Type u} {x y : A} → (x ≡ y) ≃ (y ≡ x)
-sym-equiv = iso→equiv sym sym (λ _ → refl) (λ _ → refl)
+path-sym-equiv : ∀ {u} {A : Type u} {x y : A} → (x ≡ y) ≃ (y ≡ x)
+path-sym-equiv = iso→equiv sym sym (λ _ → refl) (λ _ → refl)
 
 -- Section: right inverse
 has-section : ∀ {u v} {A : Type u} {B : Type v} → (A → B) → Type (u ⊔ v)
@@ -514,14 +524,14 @@ is-equiv-is-prop : ∀ {u v} {A : Type u} {B : Type v} (f : A → B)
 is-equiv-is-prop f e1 e2 i .eqv-fibers y =
   is-contr-is-prop _ (e1 .eqv-fibers y) (e2 .eqv-fibers y) i
 
-∙e-eqvl : ∀ {u v} {A : Type u} {B : Type v} (e : A ≃ B) → equiv ∙e e ≡ e
-∙e-eqvl e i .fst = e .fst
-∙e-eqvl e i .snd = is-prop→PathP (λ i → is-equiv-is-prop (e .fst))
+∙e-unitl : ∀ {u v} {A : Type u} {B : Type v} (e : A ≃ B) → equiv ∙e e ≡ e
+∙e-unitl e i .fst = e .fst
+∙e-unitl e i .snd = is-prop→PathP (λ i → is-equiv-is-prop (e .fst))
                                   ((equiv ∙e e) .snd) (e .snd) i
 
-∙e-eqvr : ∀ {u v} {A : Type u} {B : Type v} (e : A ≃ B) → e ∙e equiv ≡ e
-∙e-eqvr e i .fst = e .fst
-∙e-eqvr e i .snd = is-prop→PathP (λ i → is-equiv-is-prop (e .fst))
+∙e-unitr : ∀ {u v} {A : Type u} {B : Type v} (e : A ≃ B) → e ∙e equiv ≡ e
+∙e-unitr e i .fst = e .fst
+∙e-unitr e i .snd = is-prop→PathP (λ i → is-equiv-is-prop (e .fst))
                                   ((e ∙e equiv) .snd) (e .snd) i
 
 -- The equivalence between notions

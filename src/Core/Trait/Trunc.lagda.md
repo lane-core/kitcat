@@ -84,7 +84,7 @@ retract→is-hlevel (S (S n)) f g r hl x y =
 
     retract-proof : is-left-inverse fwd (ap g)
     retract-proof q = J (λ y' q' → sym (r x) ∙ ap f (ap g q') ∙ r y' ≡ q')
-      (ap (sym (r x) ∙_) (eqvl (r x)) ∙ invl (r x)) q
+      (ap (sym (r x) ∙_) (Path.unitl (r x)) ∙ (Path.invl (r x))) q
 
 Path-is-hlevel : {x y : A} → is-hlevel (S n) A → is-hlevel n (x ≡ y)
 Path-is-hlevel {n = Z} p = prop-inhabited→is-contr (is-prop→is-set p _ _) (p _ _)

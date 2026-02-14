@@ -98,7 +98,7 @@ module _ {u} {A : Type u} {x y z : A} (p : x ≡ y) (q : y ≡ z) where
 subst-path-left : ∀ {u} {A : Type u} {a b c : A} (p : a ≡ b) (q : a ≡ c)
                 → subst (_≡ c) p q ≡ sym p ∙ q
 subst-path-left {c = c} p q = J (λ b' p' → subst (_≡ c) p' q ≡ sym p' ∙ q)
-                                (transport-refl q ∙ sym (eqvl q))
+                                (transport-refl q ∙ sym (Path.unitl q))
                                 p
 
 ```

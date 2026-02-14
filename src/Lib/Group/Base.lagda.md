@@ -82,8 +82,8 @@ module Grp-inst (G : Grp u) where
     Monoid-Grp : Monoid C
     Monoid-Grp .Monoid.Semigroup-Monoid = Semigroup-Grp
     Monoid-Grp .mempty = e G
-    Monoid-Grp .meqvl = idl G
-    Monoid-Grp .meqvr = idr G
+    Monoid-Grp .munitl = idl G
+    Monoid-Grp .munitr = idr G
 
     Group-Grp : Group C
     Group-Grp .Group.Monoid-Group = Monoid-Grp

@@ -105,10 +105,10 @@ module ModeTransition {v w x y z : A}
   (p : v ≡ w) (q : w ≡ x) (r : x ≡ y) (s : y ≡ z) where
 
   lhs : p ∙ (q ∙ (r ∙ s)) ≡ ((p ∙ q) ∙ r) ∙ s
-  lhs = assoc p q (r ∙ s) ∙ assoc (p ∙ q) r s
+  lhs = Path.assoc p q (r ∙ s) ∙ Path.assoc (p ∙ q) r s
 
   rhs : p ∙ (q ∙ (r ∙ s)) ≡ ((p ∙ q) ∙ r) ∙ s
-  rhs = (λ j → p ∙ assoc q r s j) ∙ assoc p (q ∙ r) s ∙ (λ j → assoc p q r j ∙ s)
+  rhs = (λ j → p ∙ Path.assoc q r s j) ∙ Path.assoc p (q ∙ r) s ∙ (λ j → Path.assoc p q r j ∙ s)
 
 pentagon-lhs : {v w x y z : A} (p : v ≡ w) (q : w ≡ x) (r : x ≡ y) (s : y ≡ z)
              → p ∙ (q ∙ (r ∙ s)) ≡ ((p ∙ q) ∙ r) ∙ s
@@ -121,22 +121,6 @@ pentagon-rhs p q r s = ModeTransition.rhs p q r s
 ```
 ## Square Manipulation
 ```agda
-
-cone : {x y z : A} (q : y ≡ z) (r : x ≡ z)
-     → Square q (q ∙ sym r) r (λ _ → z)
-cone q r i j = hcom (∂ i ∨ j) λ where
-  k (i = i0) → q (j ∧ k)
-  k (i = i1) → r (j ∨ ~ k)
-  k (j = i1) → q (i ∨ k)
-  k (k = i0) → q i
-
-fan : {x y z : A} (p : x ≡ y) (q : x ≡ z)
-    → Square p (λ _ → x) q (sym p ∙ q)
-fan {x} p q i j = hcom (∂ i ∨ ~ j) λ where
-  k (i = i0) → p j
-  k (j = i0) → x
-  k (i = i1) → q (j ∧ k)
-  k (k = i0) → p (~ i ∧ j)
 
 lpush : {w x y z : A}
       → (p : x ≡ w) (q : x ≡ y) (r : y ≡ z) (s : w ≡ z)
@@ -213,13 +197,13 @@ loop-over : ∀ {u v} {A : Type u} (P : A → Type v)
           → PathP (λ i → P ((sym q ∙ q) i)) b b
 loop-over P q b i = hcom (∂ i) λ where
   k (i = i0) → transport-refl b k
-  k (k = i0) → transport (λ j → P (invl q (~ j) i)) b
+  k (k = i0) → transport (λ j → P (Path.invl q (~ j) i)) b
   k (i = i1) → transport-refl b k
 
 sym-loop : ∀ {u v} {A : Type u} (P : A → Type v) {x y : A}
          → (q : x ≡ y) {a b : P y}
          → PathP (λ i → P ((sym q ∙ q) i)) a b
          → a ≡ b
-sym-loop P q {a} {b} α = transport (λ i → PathP (λ j → P (invl q i j)) a b) α
+sym-loop P q {a} {b} α = transport (λ i → PathP (λ j → P (Path.invl q i j)) a b) α
 
 ```

@@ -19,8 +19,8 @@ private variable
 
 A monoid extends a semigroup with an identity element and its laws. The `@0`
 annotation makes the identity laws erased at runtime, while still requiring
-them when constructing instances. Uses noun-adjective naming: `meqvl` for
-left identity (`mempty <> x ≡ x`) and `meqvr` for right identity.
+them when constructing instances. Uses noun-adjective naming: `munitl` for
+left identity (`mempty <> x ≡ x`) and `munitr` for right identity.
 
 ```agda
 
@@ -29,8 +29,8 @@ record Monoid {u} (A : Type u) : Type u where
   field
     ⦃ Semigroup-Monoid ⦄ : Semigroup A
     mempty : A
-    @0 meqvl : (x : A) → mempty <> x ≡ x
-    @0 meqvr : (x : A) → x <> mempty ≡ x
+    @0 munitl : (x : A) → mempty <> x ≡ x
+    @0 munitr : (x : A) → x <> mempty ≡ x
 
 open Monoid ⦃ ... ⦄ public hiding (Semigroup-Monoid)
 {-# INLINE Monoid.constructor #-}

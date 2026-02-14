@@ -225,7 +225,7 @@ transport-∙ {A} {B} {C} p q a =
   where
   -- Base case: p = refl, so we need transport (refl ∙ q) a ≡ transport q (transport refl a)
   base : (q' : A ≡ C) → transport (refl ∙ q') a ≡ transport q' (transport refl a)
-  base q' = ap (λ r → transport r a) (eqvl q') ∙ sym (ap (λ x → transport q' x) (transport-refl a))
+  base q' = ap (λ r → transport r a) (unitl q') ∙ sym (ap (λ x → transport q' x) (transport-refl a))
 
 -- ua respects equivalence composition
 -- Credit: Adapted from 1lab's proof
@@ -249,13 +249,13 @@ ua-∙e {A} {B} {C} e f = sym (ap ua eqv-composite-path) ∙ ua-η (ua e ∙ ua 
 -- ua respects symmetry/inverse
 ua-esym : (e : A ≃ B) → ua (esym e) ≡ sym (ua e)
 ua-esym {A} {B} e =
-  ua (esym e)                       ≡⟨ sym (eqvr (ua (esym e))) ⟩
+  ua (esym e)                       ≡⟨ sym (unitr (ua (esym e))) ⟩
   ua (esym e) ∙ refl                ≡⟨ ap (ua (esym e) ∙_) (sym (invr (ua e))) ⟩
   ua (esym e) ∙ (ua e ∙ sym (ua e)) ≡⟨ assoc (ua (esym e)) (ua e) (sym (ua e)) ⟩
   (ua (esym e) ∙ ua e) ∙ sym (ua e) ≡⟨ ap (_∙ sym (ua e)) (sym (ua-∙e (esym e) e)) ⟩
   ua (esym e ∙e e) ∙ sym (ua e)     ≡⟨ ap (λ x → ua x ∙ sym (ua e)) esym-invr ⟩
   ua equiv ∙ sym (ua e)             ≡⟨ ap (_∙ sym (ua e)) ua-equiv ⟩
-  refl ∙ sym (ua e)                 ≡⟨ eqvl (sym (ua e)) ⟩
+  refl ∙ sym (ua e)                 ≡⟨ unitl (sym (ua e)) ⟩
   sym (ua e) ∎
   where
   -- esym e ∙e e ≡ equiv

@@ -31,14 +31,14 @@ module map where
 ```agda
 
 module _<><_ where
-  eqvr : ∀ {u} {A : Type u} (xs : SnocList A)
+  unitr : ∀ {u} {A : Type u} (xs : SnocList A)
        -> xs <>< [] ≡ xs
-  eqvr xs = refl
+  unitr xs = refl
 
-  eqvl : ∀ {u} {A : Type u} (xs : SnocList A)
+  unitl : ∀ {u} {A : Type u} (xs : SnocList A)
        -> [] <>< xs ≡ xs
-  eqvl []        = refl
-  eqvl (xs ∶< x) = ap (_∶< x) (eqvl xs)
+  unitl []        = refl
+  unitl (xs ∶< x) = ap (_∶< x) (unitl xs)
 
   assoc : ∀ {u} {A : Type u} (xs ys zs : SnocList A)
         -> xs <>< (ys <>< zs) ≡ (xs <>< ys) <>< zs

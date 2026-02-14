@@ -148,13 +148,36 @@ ap : ∀ {u v} {@0 A : Type u} {@0 B : A → Type v}
 ap f p i = f (p i)
 {-# INLINE ap #-}
 
+ap-era : ∀ {u v} {@0 A : Type u} {@0 B : A → Type v} (f : ∀ (@0 x) → B x)
+    → {x y : A} (@0 p : x ≡ y)
+    → PathP (λ i → B (p i)) (f x) (f y)
+ap-era f p i = f (p i)
+{-# INLINE ap-era #-}
+
+apd : ∀ {u v} {@0 A : I → Type u} {@0 B : ∀ i → A i → Type v}
+    → (f : ∀ i (a : A i) → B i a)
+    → {x : A i0} {y : A i1} (p : PathP A x y)
+    → PathP (λ i → B i (p i)) (f i0 x) (f i1 y)
+apd f p i = f i (p i)
+{-# INLINE apd #-}
+
 ap2 : ∀ {u v w} {@0 A : Type u} {@0 B : A → Type v} {@0 C : ∀ x → B x → Type w}
   → (f : ∀ x a → C x a)
   → {x y : A} (p : x ≡ y)
-  → {a : B x} {b : B y} (q : PathP (λ i → B (p i)) a b)
+  → {a : B x} {b : B y}
+  → (q : PathP (λ i → B (p i)) a b)
   → PathP (λ i → C (p i) (q i)) (f x a) (f y b)
 ap2 f p q i = f (p i) (q i)
 {-# INLINE ap2 #-}
+
+ap2s : ∀ {u v w} {@0 A : Type u} {@0 B : Type v} {@0 C : Type w}
+    → (f : A → B → C)
+    → {a₁ a₂ : A} {b₁ b₂ : B}
+    → a₁ ≡ a₂
+    → b₁ ≡ b₂
+    → f a₁ b₁ ≡ f a₂ b₂
+ap2s f {a₁} {a₂} {b₁} {b₂} p q i = f (p i) (q i)
+{-# INLINE ap2s #-}
 
 fiber : ∀ {u v} {A : Type u} {B : Type v} → (A → B) → B → Type (u ⊔ v)
 fiber f y = Σ (λ x → f x ≡ y)
@@ -199,16 +222,29 @@ SquareP : (A : I → I → Type u)
         → Type u
 SquareP A p q r s = PathP (λ i → PathP (λ j → A i j) (q i) (s i)) p r
 
+Square : {A : Type u} {w x y z : A}
+       → x ≡ w
+       → x ≡ y
+       → y ≡ z
+       → w ≡ z
+       → Type u
+Square p q r s = PathP (∂.square _≡_ q s) p r
+
+Triangle
+  : ∀ {ℓ} {A : Type ℓ} {x y z : A}
+  → (p : x ≡ y) (q : y ≡ z) (r : x ≡ z)
+  → Type ℓ
+Triangle p q r = Square refl p q r
+
 _~ᵢ_ : ∀ {u} {A : I → Type u} → (∀ i → A i) → (∀ i → A i) → Type u
 f ~ᵢ g = ∀ i → f i ≡ g i
 
-infixr 40 _∘ᵢ_
-_∘ᵢ_ : ∀ {u} {v : I → Level} {A : I → Type u} {B : ∀ i → A i → Type (v i)}
+_∘i_ : ∀ {u} {v : I → Level} {A : I → Type u} {B : ∀ i → A i → Type (v i)}
      → (g : ∀ i (a : A i) → B i a)
      → (f : ∀ i → A i)
      → ∀ i → B i (f i)
-_∘ᵢ_ g f = λ i → g i (f i)
-
+_∘i_ g f = λ i → g i (f i)
+infixr 40 _∘i_
 
 module _ {ℓ} {A : Type ℓ} {a00 a01 a10 a11 : A}
   {p : a00 ≡ a01} {q : a00 ≡ a10} {r : a10 ≡ a11} {s : a01 ≡ a11}
@@ -255,20 +291,23 @@ _~_ : ∀ {u v} {A : Type u} {B : A → Type v}
 f ~ g = (x : _) → f x ≡ g x
 infix 3 _~_
 
-refl-htpy : ∀ {u v} {A : Type u} {B : A → Type v} {f : (x : A) → B x} → f ~ f
-refl-htpy _ = refl
-{-# INLINE refl-htpy #-}
-
 funext : ∀ {u v} {@0 A : Type u} {@0 B : A → Type v} {f g : (x : A) → B x}
        → ((x : A) → f x ≡ g x) → f ≡ g
 funext p i x = p x i
 {-# INLINE funext #-}
 
-funexti : ∀ {u} {@0 A : I → Type u} {@0 f g : (i : I) → A i}
+funexti : ∀ {u} {@0 A : I → Type u} {f g : (i : I) → A i}
         → ((i : I) → f i ≡ g i) → f ≡ g
 funexti p i j = p j i
+{-# INLINE funexti #-}
 
-happly : ∀ {u v} {@0 A : Type u} {@0 B : A → Type v} {@0 f g : (x : A) → B x}
+happly : ∀ {u v} {@0 A : Type u} {@0 B : A → Type v} {f g : (x : A) → B x}
        → f ≡ g → (x : A) → f x ≡ g x
 happly p x i = p i x
+{-# INLINE happly #-}
 
+hrefl : ∀ {u v} {A : Type u} {B : A → Type v} {f : (x : A) → B x} → f ~ f
+hrefl _ = refl
+{-# INLINE hrefl #-}
+
+```

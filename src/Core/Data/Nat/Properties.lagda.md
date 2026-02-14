@@ -8,7 +8,7 @@ module Core.Data.Nat.Properties where
 
 open import Core.Base
 open import Core.Type
-open import Core.Kan hiding (assoc)
+open import Core.Kan
 open import Core.Transport
 open import Core.Data.Dec
 open Dec
