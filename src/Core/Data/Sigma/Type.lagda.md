@@ -11,7 +11,7 @@ open import Core.Type
 open import Agda.Builtin.Sigma public
   renaming ( Σ to Sigma
            ; _,_ to infixr 4 _,_ )
-  using (fst; snd; module Σ)
+  using (fst; snd)
 
 Σ : ∀ {ℓ ℓ'} {A : Type ℓ} → (A → Type ℓ') → Type (ℓ ⊔ ℓ')
 Σ {A = A} B = Sigma A B

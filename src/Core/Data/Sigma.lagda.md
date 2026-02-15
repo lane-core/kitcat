@@ -6,7 +6,7 @@ Dependent pairs: type and operations.
 
 module Core.Data.Sigma where
 
-open import Core.Data.Sigma.Type public hiding (module Σ)
+open import Core.Data.Sigma.Type public
 
 module Σ where
   open import Core.Data.Sigma.Base public
