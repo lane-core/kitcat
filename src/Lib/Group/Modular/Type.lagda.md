@@ -1,6 +1,5 @@
 The modular group PSL(2,Z) as a mutual inductive type.
 
-Adapted from TypeTopology, `Groups.ModularGroup.Type` (Todd Waugh Ambridge).
 The modular group is the quotient of SL(2,Z) by its center {+I, -I}.
 This module defines its elements via mutual inductive types representing
 S-edges and R-edges in the Cayley graph, together with pattern synonyms

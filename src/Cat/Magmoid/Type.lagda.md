@@ -15,6 +15,17 @@ module Cat.Magmoid.Type where
 
 open import Core.Type
 
+record magmoid o h : Type₊ (o ⊔ h) where
+  no-eta-equality
+  field
+    ob : Type o
+    hom : ob → ob → Type h
+    _⨾_ : ∀ {a b c} → hom a b → hom b c → hom a c
+  infixr 40 _⨾_
+
+{-# INLINE magmoid.constructor #-}
+
+
 record Magmoids : Typeω where
   constructor str
   field

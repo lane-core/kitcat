@@ -1,7 +1,6 @@
 Multiplication for the modular group PSL(2,Z).
 
-Adapted from TypeTopology, `Groups.ModularGroup.Multiplication`
-(Todd Waugh Ambridge). Defines the group operation via generator
+Defines the group operation via generator
 iteration, proves compatibility with s and r, right identity, and
 associativity.
 

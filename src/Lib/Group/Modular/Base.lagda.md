@@ -1,6 +1,5 @@
 The generators s and r of the modular group, and derived operations.
 
-Adapted from TypeTopology, `Groups.ModularGroup.Base` (Todd Waugh Ambridge).
 The generator s is the involution and r is the order-3 rotation. These
 are defined by pattern matching on the mutual inductive structure of
 PSL2Z elements.

@@ -1,7 +1,6 @@
 Twist automorphism for the modular group PSL(2,Z).
 
-Adapted from TypeTopology, `Groups.ModularGroup.Twist`
-(Todd Waugh Ambridge). Defines the twist automorphism that swaps
+Defines the twist automorphism that swaps
 r and r-squared, proves it is an involution, a group homomorphism,
 and characterizes it as generator iteration.
 

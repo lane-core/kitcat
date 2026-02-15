@@ -1,7 +1,6 @@
 The twist automorphism of PSL(2,Z) is not inner.
 
-Adapted from TypeTopology, `Groups.ModularGroup.OuterAutomorphisms`
-(Todd Waugh Ambridge). We prove that there is no element g of PSL(2,Z)
+We prove that there is no element g of PSL(2,Z)
 such that conjugation by g equals the twist automorphism. This shows
 that Out(PSL(2,Z)) is nontrivial (isomorphic to Z/2).
 

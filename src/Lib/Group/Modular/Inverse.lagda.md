@@ -1,7 +1,6 @@
 Inverse for the modular group PSL(2,Z).
 
-Adapted from TypeTopology, `Groups.ModularGroup.Inverse`
-(Todd Waugh Ambridge). Defines the group inverse via mutual recursion
+Defines the group inverse via mutual recursion
 on edges, proves left and right inverse laws, involution of inv,
 generator interaction, and the anti-homomorphism property.
 

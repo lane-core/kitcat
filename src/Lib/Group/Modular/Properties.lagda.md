@@ -1,6 +1,5 @@
 Properties of the modular group generators.
 
-Adapted from TypeTopology, `Groups.ModularGroup.Properties` (Todd Waugh Ambridge).
 This module establishes involution and order-3 properties of the generators,
 left-cancellation, injectivity of constructors, discreteness, and sethood.
 

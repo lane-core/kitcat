@@ -1,6 +1,5 @@
 The center of PSL(2,Z) is trivial.
 
-Adapted from TypeTopology, `Groups.ModularGroup` (Todd Waugh Ambridge).
 We show that the only element of PSL(2,Z) commuting with every other
 element is the identity E.
 

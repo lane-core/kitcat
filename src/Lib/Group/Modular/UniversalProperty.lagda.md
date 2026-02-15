@@ -1,7 +1,6 @@
 Universal property of the modular group PSL(2,Z).
 
-Adapted from TypeTopology, `Groups.ModularGroup.UniversalProperty`
-(Todd Waugh Ambridge). PSL(2,Z) is the initial object among groups
+PSL(2,Z) is the initial object among groups
 with distinguished elements s and r satisfying s^2 = 1 and r^3 = 1.
 
 ```agda

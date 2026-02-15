@@ -1,7 +1,6 @@
 Commutator subgroup of the modular group PSL(2,Z).
 
-Adapted from TypeTopology, `Groups.ModularGroup.CommutatorSubgroup`
-(Todd Waugh Ambridge). Defines the commutator bracket, the
+Defines the commutator bracket, the
 commutator subgroup as the kernel of the abelianization map, and
 proves that every commutator lies in this kernel.
 

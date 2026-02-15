@@ -1,7 +1,6 @@
 Transposition automorphism for the modular group PSL(2,Z).
 
-Adapted from TypeTopology, `Groups.ModularGroup.Transposition`
-(Todd Waugh Ambridge). Defines the transposition automorphism that
+Defines the transposition automorphism that
 reverses multiplication order, proves it is an involution, and
 an anti-homomorphism: `(x · y) ᵀ ≡ (y ᵀ) · (x ᵀ)`.
 

@@ -1,7 +1,6 @@
 Induction principles for the modular group PSL(2,Z).
 
-Adapted from TypeTopology, `Groups.ModularGroup.Induction`
-(Todd Waugh Ambridge). Mutual induction on S-edges and R-edges,
+Mutual induction on S-edges and R-edges,
 plus general induction and recursion on PSL2Z, an initiality theorem,
 and an eta-expansion uniqueness principle.
 

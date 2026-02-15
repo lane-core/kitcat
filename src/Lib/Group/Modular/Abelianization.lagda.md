@@ -1,7 +1,6 @@
 Abelianization of the modular group PSL(2,Z).
 
-Adapted from TypeTopology, `Groups.ModularGroup.Abelianization`
-(Todd Waugh Ambridge). This module defines the abelianization map
+This module defines the abelianization map
 `ab : PSL2Z → Bool × 𝟛` and proves it is a surjective homomorphism
 with respect to the group structures on PSL2Z and the product of
 cyclic groups Z/2 × Z/3.
