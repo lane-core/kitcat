@@ -38,14 +38,14 @@ path
   → (a : A) (b : B) → inl a ≡ inr b
 path a b = Pushout.glue (a , b)
 
-elim
+ind
   : {A : Type ℓ} {B : Type ℓ'} {P : A ⋆ B → Type ℓ''}
   → (l : (a : A) → P (inl a))
   → (r : (b : B) → P (inr b))
   → (p : (a : A) (b : B)
     → PathP (λ i → P (path a b i)) (l a) (r b))
   → (x : A ⋆ B) → P x
-elim l r p = Base.elim _ l r (λ { (a , b) → p a b })
+ind l r p = Base.ind _ l r (λ { (a , b) → p a b })
 
 rec
   : {A : Type ℓ} {B : Type ℓ'} {X : Type ℓ''}

@@ -32,13 +32,13 @@ south = inr tt
 merid : {A : Type ℓ} → A → north {A = A} ≡ south
 merid a = glue a
 
-elim
+ind
   : {A : Type ℓ} {P : Susp A → Type ℓ'}
   → (n : P north)
   → (s : P south)
   → (m : (a : A) → PathP (λ i → P (merid a i)) n s)
   → (x : Susp A) → P x
-elim n s m = Base.elim _ (λ _ → n) (λ _ → s) m
+ind n s m = Base.ind _ (λ _ → n) (λ _ → s) m
 
 rec
   : {A : Type ℓ} {X : Type ℓ'}
