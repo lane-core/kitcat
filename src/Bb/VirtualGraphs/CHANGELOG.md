@@ -6,6 +6,39 @@ entry names the checker run that says so.
 
 ---
 
+## 2026-08-08 — the candidate line regrouped by telescope
+
+**Three modules where there were two, `verified`.** `Recognition` and
+`Mediation` each carried declarations at two different telescopes, and
+the file boundary fell across the middle rather than between them.
+`Recognition`'s `candidate` and `clause` need `ob`, `hom`, `reflect`,
+and a candidate; its `at-framing` needed both half-twist families, the
+embedding condition, and both cuts. `Mediation` held one-hand
+declarations and both-hand ones side by side.
+
+The three tiers are now three modules. `Recognition` keeps the bare
+carrier: `candidate`, `clause`, `selects`, `pinned`. It imports
+`Type` and `Framing` alone, where it used to pull `Embedding`,
+`Tower`, and `Mediation` as well. All four external consumers of this
+line read `candidate` and `clause`, so the group they reach for no
+longer drags the tower in behind it.
+
+`Canonical` is new and takes one hand: `invertible⁺` and
+`invertible⁻`, renamed off `mediation⁺` and `mediation⁻`, holding
+invertibility in a hand, two-out-of-three, and the Kraus
+canonicalization. `Mediation` keeps the both-hand telescope and gains
+`at-framing`, so the judgment-level clauses and their edge-level
+reading now sit in one file with the bridge between them.
+
+61, 54, and 136 code lines. `just check-tree src/Bb/VirtualGraphs`:
+56 of 56.
+
+Noted, not acted on: `canonical` and `eqv-2-out-of-3` have no consumer
+outside `Canonical`. `Mediation` re-exports them and nothing reads
+them. They are carried as the port of Kraus §5.2.
+
+---
+
 ## 2026-08-08 — the diagonal, and one statement per statement
 
 **Twenty-one modules in `Degenerate`, eleven in the mainline,

@@ -1,18 +1,19 @@
-Mediation over a candidate pair of endo-edges, and canonicalization
-in the positive hand.
-
-`Tower` withholds the mixed word whose junctions run positive then
-negative, so its two bracketings need not agree. A candidate pair
-mediates at such a word when a word in the pair, cut in front of one
-bracketing, gives the other. Two triples of half-twists carry the
-statement here. The self-referential form reads the same two
+Mediation over a candidate pair, and the framing read among the
+candidates. `Tower` withholds the mixed word whose junctions run
+positive then negative, so its two bracketings need not agree. A
+candidate pair mediates at such a word when a word in the pair, cut in
+front of one bracketing, gives the other. Two triples of half-twists
+carry the statement. The self-referential form reads the same two
 corrections at the triples the pair builds out of itself, so its
 clauses name no half-twist family.
 
-An endo-edge is an equivalence in a hand when both translations by it
-in that hand are equivalences of types. From an equivalence in the
-positive hand, canonicalization returns a right unit of that cut,
-again an equivalence.
+Read at the pair the framing itself supplies, those clauses are the
+judgment-level clauses `Recognition` states, collapsed onto the
+reflection of an edge word. The embedding condition cancels `reflect`,
+so the two readings carry each other.
+
+The telescope is both half-twist families, the embedding condition,
+and both cuts.
 
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
@@ -23,115 +24,15 @@ open import Core.Type
 open import Core.Base
 open import Core.Data.Sigma
 open import Core.Kan using (_∙_; is-contr→is-prop)
-open import Core.Transport.J using (subst)
 open import Core.HLevel.Base using (Π-is-prop; is-prop-×)
-open import Core.Equiv.Base using (_≃_; is-equiv; module Equiv)
-open import Core.Equiv.Properties
-  using (comp-equiv; sym-equiv; is-equiv-is-prop; equiv-lc; equiv-rc)
+open import Core.Equiv.Properties using (is-equiv-is-prop)
 
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
-```
-
-## Equivalences in the positive hand
-
-An endo-edge at `x` is an equivalence in the positive hand when both
-of its translations there are equivalences of types. One translation
-cuts it after an edge into `x`, at every source. The other cuts it
-before an edge out of `x`, at every target. One equivalence per
-object stands in each family. `is-equiv` is a proposition, so both
-families are.
-
-Three edges meet at a positive cut, and two of them decide the third.
-Where the trailing factor and the whole cut are equivalences in this
-hand, so is the leading factor. Each half moves the associator across
-a translation and cancels the trailing factor's own translation
-against it.
-
-```agda
-module mediation⁺ {o h} (G : virtual-graph o h) (open virtual-graph G)
-  (rx : (x : ob) → hom x x)
-  (S : reflect-is-embedding G) (C⁺ : framing⁻.is-composable⁺ G rx) where
-
-  open tower⁺ G rx S C⁺ public
-
-  is-eqv⁺ : ∀ {x} → hom x x → Type (o ⊔ h)
-  is-eqv⁺ {x} e = ((w : ob) → is-equiv λ (f : hom w x) → f ⨾⁺ e)
-                × ((y : ob) → is-equiv λ (g : hom x y) → e ⨾⁺ g)
-
-  eqv-2-out-of-3 : ∀ {x} (f g : hom x x)
-                 → is-eqv⁺ g → is-eqv⁺ (f ⨾⁺ g) → is-eqv⁺ f
-  eqv-2-out-of-3 {x} f g (gp , gq) (cp , cq) = post , pre
-    where
-      post : (w : ob) → is-equiv λ (u : hom w x) → u ⨾⁺ f
-      post w =
-        equiv-lc (λ u → u ⨾⁺ f) (λ u → u ⨾⁺ g) (gp w)
-          (subst is-equiv (funext λ u → sym (assoc⁺ u f g)) (cp w))
-
-      pre : (y : ob) → is-equiv λ (u : hom x y) → f ⨾⁺ u
-      pre y =
-        equiv-rc (λ u → g ⨾⁺ u) (λ u → f ⨾⁺ u) (gq y)
-          (subst is-equiv (funext λ u → assoc⁺ f g u) (cq y))
-```
-
-Canonicalization at such an edge: `canon` is the edge that the
-translation after `e` sends to `e`. It cuts onto `e` without moving
-it. It is a right unit of the positive cut at every edge into the
-object, and 2-out-of-3 returns it as an equivalence in this hand
-again.
-
-The construction is Kraus, *Internal ∞-Categorical Models of
-Dependent Type Theory*, §5.2 (`resources/kraus-infty-cwf/notes.tex`
-l.869-889), and its companion formalization's `module I`
-(`resources/kraus-infty-cwf/Identities.agda:298-339`). `canon` is his
-`I`, `canon-cut` his `e⋄I`, `canon-unitr` his `l-ntrl`, and
-`canon-is-eqv` the second half of his `I-is-idpt+eqv`.
-`eqv-2-out-of-3` is his lemma of that name (`Identities.agda:238-290`)
-and `is-eqv⁺` is his `is-eqv` (`Identities.agda:111-113`) read in one
-hand. Kraus credits `I` to Capriotti and Kraus (POPL 2018,
-`resources/capriotti-kraus-semi-segal`) and to work of Harpaz and
-Lurie. He composes applicatively and this library diagrammatically,
-so his left neutrality reads here as right neutrality of the positive
-cut.
-
-```agda
-  module canonical {x : ob} (e : hom x x) (p : is-eqv⁺ e) where
-    post : (w : ob) → hom w x ≃ hom w x
-    post w = (λ f → f ⨾⁺ e) , p .fst w
-
-    canon : hom x x
-    canon = Equiv.inv (post x) e
-
-    canon-cut : canon ⨾⁺ e ≡ e
-    canon-cut = Equiv.counit (post x) e
-
-    canon-unitr : ∀ {w} (f : hom w x) → f ⨾⁺ canon ≡ f
-    canon-unitr {w} f =
-        sym (Equiv.unit (post w) (f ⨾⁺ canon))
-      ∙ ap (Equiv.inv (post w)) (assoc⁺ f canon e ∙ ap (f ⨾⁺_) canon-cut)
-      ∙ Equiv.unit (post w) f
-
-    canon-is-eqv : is-eqv⁺ canon
-    canon-is-eqv =
-      eqv-2-out-of-3 canon e p (subst (is-eqv⁺ {x}) (sym canon-cut) p)
-```
-
-## Equivalences in the negative hand
-
-The mirror reads both translations through the negative cut.
-
-```agda
-module mediation⁻ {o h} (G : virtual-graph o h) (open virtual-graph G)
-  (corx : (x : ob) → hom x x)
-  (S : reflect-is-embedding G) (C⁻ : framing⁺.is-composable⁻ G corx) where
-
-  open tower⁻ G corx S C⁻ public
-
-  is-eqv⁻ : ∀ {x} → hom x x → Type (o ⊔ h)
-  is-eqv⁻ {x} e = ((w : ob) → is-equiv λ (f : hom w x) → f ⨾⁻ e)
-                × ((y : ob) → is-equiv λ (g : hom x y) → e ⨾⁻ g)
+open import Bb.VirtualGraphs.Canonical
+open import Bb.VirtualGraphs.Recognition
 ```
 
 ## The two clauses
@@ -159,8 +60,8 @@ module mediation {o h} (G : virtual-graph o h) (open virtual-graph G)
   (C⁻ : framing⁺.is-composable⁻ G corx) where
 
   open tower G rx corx S C⁺ C⁻ public
-  open mediation⁺ G rx S C⁺ public using (is-eqv⁺; eqv-2-out-of-3; module canonical)
-  open mediation⁻ G corx S C⁻ public using (is-eqv⁻)
+  open invertible⁺ G rx S C⁺ public using (is-eqv⁺; eqv-2-out-of-3; module canonical)
+  open invertible⁻ G corx S C⁻ public using (is-eqv⁻)
 
   pair : ob → Type h
   pair x = hom x x × hom x x
@@ -247,4 +148,112 @@ module self {o h} (G : virtual-graph o h) (open virtual-graph G)
 
   framed-is-prop : (∀ x → is-contr (framed x)) → is-prop (∀ x → framed x)
   framed-is-prop c = Π-is-prop λ x → is-contr→is-prop (c x)
+```
+
+## The clauses at a framing
+
+A framing supplies one candidate among the others. There each
+judgment-level composite is that hand's cut read through `reflect`,
+by the representation law of the cut and nothing else.
+
+```agda
+module at-framing {o h} (G : virtual-graph o h) (open virtual-graph G)
+  (rx corx : (x : ob) → hom x x)
+  (S : reflect-is-embedding G)
+  (C⁺ : framing⁻.is-composable⁺ G rx)
+  (C⁻ : framing⁺.is-composable⁻ G corx) where
+
+  open tower G rx corx S C⁺ C⁻ public
+
+  tf : candidate.frame G
+  tf = rx , corx
+
+  open clause G tf public
+
+  w⁺ : ∀ {x y z} (f : hom x y) (g : hom y z) → (⟦ f ⟧ ⊛⁺ ⟦ g ⟧) ≡ ⟦ f ⨾⁺ g ⟧
+  w⁺ f g = sym (reflect-⨾⁺ f g)
+
+  w⁻ : ∀ {x y z} (f : hom x y) (g : hom y z) → (⟦ f ⟧ ⊛⁻ ⟦ g ⟧) ≡ ⟦ f ⨾⁻ g ⟧
+  w⁻ f g = sym (reflect-⨾⁻ f g)
+```
+
+The two clauses read at this candidate are the two edge-level
+equations `Mediation` states over an arbitrary candidate pair, read
+at the pair the framing itself supplies.
+
+```agda
+  private module M = mediation G rx corx S C⁺ C⁻
+
+  pair : (x : ob) → M.pair x
+  pair x = rx x , corx x
+
+  lead₁ : (x : ob) → hom x x
+  lead₁ x = M.corr₁ (pair x)
+
+  law₀ law₁ : (x : ob) → Type h
+  law₀ x = M.clause₀ x (pair x)
+  law₁ x = M.clause₁ x (pair x)
+```
+
+Each side of each clause collapses onto the reflection of its edge
+word. The collapse walks the word from the inside out, one
+representation law per junction.
+
+```agda
+  left₀ : (x : ob)
+        → (pos x ⊛⁺ (neg x ⊛⁻ pos x))
+        ≡ ⟦ corx x ⨾⁺ (rx x ⨾⁻ corx x) ⟧
+  left₀ x = ap (pos x ⊛⁺_) (w⁻ (rx x) (corx x))
+          ∙ w⁺ (corx x) (rx x ⨾⁻ corx x)
+
+  right₀ : (x : ob)
+         → (corr₀ x ⊛⁺ ((pos x ⊛⁺ neg x) ⊛⁻ pos x))
+         ≡ ⟦ corx x ⨾⁺ ((corx x ⨾⁺ rx x) ⨾⁻ corx x) ⟧
+  right₀ x =
+      ap (pos x ⊛⁺_)
+         ( ap (_⊛⁻ pos x) (w⁺ (corx x) (rx x))
+         ∙ w⁻ (corx x ⨾⁺ rx x) (corx x) )
+    ∙ w⁺ (corx x) ((corx x ⨾⁺ rx x) ⨾⁻ corx x)
+
+  left₁ : (x : ob)
+        → (neg x ⊛⁺ (pos x ⊛⁻ pos x))
+        ≡ ⟦ rx x ⨾⁺ (corx x ⨾⁻ corx x) ⟧
+  left₁ x = ap (neg x ⊛⁺_) (w⁻ (corx x) (corx x))
+          ∙ w⁺ (rx x) (corx x ⨾⁻ corx x)
+
+  mid₁ : (x : ob) → corr₁ x ≡ ⟦ lead₁ x ⟧
+  mid₁ x =
+      ap (neg x ⊛⁺_)
+         ( ap (pos x ⊛⁺_) (w⁻ (corx x) (corx x))
+         ∙ w⁺ (corx x) (corx x ⨾⁻ corx x) )
+    ∙ w⁺ (rx x) (corx x ⨾⁺ (corx x ⨾⁻ corx x))
+
+  tail₁ : (x : ob)
+        → ((neg x ⊛⁺ pos x) ⊛⁻ pos x)
+        ≡ ⟦ (rx x ⨾⁺ corx x) ⨾⁻ corx x ⟧
+  tail₁ x = ap (_⊛⁻ pos x) (w⁺ (rx x) (corx x))
+          ∙ w⁻ (rx x ⨾⁺ corx x) (corx x)
+
+  right₁ : (x : ob)
+         → (corr₁ x ⊛⁺ ((neg x ⊛⁺ pos x) ⊛⁻ pos x))
+         ≡ ⟦ lead₁ x ⨾⁺ ((rx x ⨾⁺ corx x) ⨾⁻ corx x) ⟧
+  right₁ x = (λ i → mid₁ x i ⊛⁺ tail₁ x i)
+           ∙ w⁺ (lead₁ x) ((rx x ⨾⁺ corx x) ⨾⁻ corx x)
+```
+
+The embedding condition cancels `reflect`, so at this candidate the
+clause and its edge-level equation carry each other.
+
+```agda
+  to₀ : (x : ob) → law₀ x → clause₀ x
+  to₀ x e = left₀ x ∙ ap reflect e ∙ sym (right₀ x)
+
+  to₁ : (x : ob) → law₁ x → clause₁ x
+  to₁ x e = left₁ x ∙ ap reflect e ∙ sym (right₁ x)
+
+  from₀ : (x : ob) → clause₀ x → law₀ x
+  from₀ x e = lc (sym (left₀ x) ∙ e ∙ right₀ x)
+
+  from₁ : (x : ob) → clause₁ x → law₁ x
+  from₁ x e = lc (sym (left₁ x) ∙ e ∙ right₁ x)
 ```

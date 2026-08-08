@@ -42,6 +42,7 @@ open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
 open import Bb.VirtualGraphs.Recognition
+open import Bb.VirtualGraphs.Mediation using (module at-framing)
 open import Bb.VirtualGraphs.Degenerate.Shape
 open import Bb.VirtualGraphs.Degenerate.Gluing
 open import Bb.VirtualGraphs.Word.Carrier

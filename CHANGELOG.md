@@ -23,6 +23,39 @@ it in one step when needed.
 
 ---
 
+## 2026-08-08 — Bb.VirtualGraphs: the candidate line by telescope
+
+**Slug:** vgds-redundancy. Follow-on to the entry below.
+`Recognition` and `Mediation` each held declarations at two different
+telescopes, with the file boundary running across the middle rather
+than between them. `Recognition`'s `candidate` and `clause` need
+`ob`, `hom`, `reflect`, and a candidate; its `at-framing` needed both
+half-twist families, the embedding condition, and both cuts.
+
+Three tiers, three modules. `Recognition` keeps the bare carrier and
+now imports `Type` and `Framing` alone, having pulled `Embedding`,
+`Tower`, and `Mediation` before. Every external consumer of this line
+reads `candidate` or `clause`, so the group they reach for stopped
+dragging the tower behind it. `Canonical` is new, taking one hand:
+`invertible⁺`/`invertible⁻`, holding invertibility in a hand,
+two-out-of-three, and the Kraus canonicalization. `Mediation` keeps
+the both-hand telescope and takes in `at-framing`, so the
+judgment-level clauses and their edge-level reading sit in one file
+with the bridge between them.
+
+61, 54, and 136 code lines. `just check-tree src/Bb/VirtualGraphs`:
+56 of 56. `just check Bb.index`: green.
+
+Correction to the entry below: it says the `Word` and `Circle` models
+"read one and not the other". That holds for `Circle`, whose two
+models are independent. It does not hold for `Word`, where
+`Word/Census` imports `Word/Mediation` and `Word/Recognition` imports
+`Word/Census`. The `Word` split is a three-stage chain, so it is not
+evidence about the theory pair either way, and merging the two `Word`
+models would close an import cycle rather than overrun a budget.
+
+---
+
 ## 2026-08-08 — Bb.VirtualGraphs: the diagonal is a degeneracy
 
 **Slug:** vgds-redundancy. A redundancy and organization survey of the

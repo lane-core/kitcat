@@ -199,6 +199,7 @@ import Bb.VirtualGraphs.Bool.Heap
 import Bb.VirtualGraphs.Bool.Klein
 import Bb.VirtualGraphs.Bool.Readers
 import Bb.VirtualGraphs.Bool.Sleeve
+import Bb.VirtualGraphs.Canonical
 import Bb.VirtualGraphs.Circle.Mediation
 import Bb.VirtualGraphs.Circle.Model
 import Bb.VirtualGraphs.Circle.Natural

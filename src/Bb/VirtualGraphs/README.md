@@ -16,7 +16,7 @@ hypotheses; `virtual-graph` is the only record in the tree. The
 hypothesis groups and the catalog behind the layout live in
 `outputs/.plans/virtual-graphs-vendor.md`.
 
-Ten theory modules beside `Type`, in dependency order, then the
+Eleven theory modules beside `Type`, in dependency order, then the
 degenerate stratum, then the models.
 `Embedding` holds representability, the embedding condition, the
 carrier opposite, the centred pair (a representability witness split
@@ -50,16 +50,21 @@ naturality the two actions coincide, so one component of neutrality
 delivers the pair. Each action's preimage of one family leaves the
 inverse of the other, so the two hands extract the two inverse
 half-twists, crossed.
-`Recognition` holds the candidate-relative kit: a candidate framing,
-the two action maps anchored at it, candidate readback, and the
-judgment-level cuts with the two clauses they spell, read back
-against a carrier framing as two edge-level equations. Every
+Three modules carry the candidate line, grouped by what each one
+needs. `Recognition` needs the bare carrier: a candidate framing, the
+two action maps anchored at it, candidate readback, and the
+judgment-level cuts with the two clauses they spell. Every
 half-twist-shaped datum there is bound by a quantifier, instead of
-read from the carrier. `Mediation` holds the mediation clauses over a
-candidate pair, the self-referential form that names no half-twist
-directly, and Kraus canonicalization ported to one hand. `Recognition`
-reads its two clauses at the pair the framing supplies, so the two
-modules state one set of clauses between them.
+read from the carrier, and no cut, composition, or embedding
+condition is in scope. `Canonical` needs one half-twist family, the
+embedding condition, and that hand's cut: invertibility in a hand,
+two-out-of-three, and Kraus canonicalization, which returns a unit of
+that cut from an equivalence. `Mediation` needs both families and both
+cuts: the mediation clauses over a candidate pair, the
+self-referential form that names no half-twist directly, and the
+reading at the pair the framing itself supplies, where the embedding
+condition cancels `reflect` and the judgment-level and edge-level
+clauses carry each other.
 `Graph` reads the framing in reflexive-graph language: fan calculus,
 lenses, the two-sided base, and the cut as a fibration.
 
