@@ -52,7 +52,7 @@ bare carrier plus explicit framing/interchange parameters).
 | `rx` field, `var`, `covar`, `axiom`, `eval` (:92–105) | Split into `twist⁻`/`twist⁺` parameters: `Bb.VirtualGraphs.Framing` `framing⁻.var`:47–48, `framing⁺.covar`:99–100, `framing.axiom`/`eval`:139–144. `Aligned` instantiates both twists to one `rx` (`open framing G rx rx`, Aligned.lagda.md:64) |
 | `readback` field (:107–108) | `readback-of`, `Bb.VirtualGraphs.Framing`:153–154, taken as parameter `R` in `Aligned` |
 | `coact-π`, `coact`, `act-π`, `act` (:114–124) | `Framing`'s `framing⁻.coact-π`/`coact`:50–54, `framing⁺.act-π`/`act`:102–106 |
-| `composite⁺`, `composite⁻`, `cut⁺`, `cut⁻` fields, `_⨾⁺_`, `_⨾⁻_`, `reflect-⨾⁺`, `reflect-⨾⁻` (:135–159) | `composite⁺`/`composite⁻` in `Framing`'s `framing⁻`/`framing⁺` (via `inj⁺`/`inj⁻`); `_⨾⁺_`, `_⨾⁻_`, `reflect-⨾⁺`, `reflect-⨾⁻` in `Bb.VirtualGraphs.Interchange`'s `framed-interchange`:64–76 (cut fields become parameters `cc⁺`, `cc⁻`) |
+| `composite⁺`, `composite⁻`, `cut⁺`, `cut⁻` fields, `_⨾⁺_`, `_⨾⁻_`, `reflect-⨾⁺`, `reflect-⨾⁻` (:135–159) | `composite⁺`/`composite⁻` in `Framing`'s `framing⁻`/`framing⁺` (via `inj⁺`/`inj⁻`); `_⨾⁺_`, `_⨾⁻_`, `reflect-⨾⁺`, `reflect-⨾⁻` in `Bb.VirtualGraphs.Degenerate.Interchange`'s `framed-interchange`:64–76 (cut fields become parameters `cc⁺`, `cc⁻`) |
 | `unital`, `is-unital` (:173–177) | `Bb.VirtualGraphs.Aligned`:106–110, verbatim |
 | `unit` field, `idn`, `idn-neutral`, `idn-idem⁻` (:179–189) | `Aligned`'s `pinned` module:118–125 (`unit` becomes a module parameter instead of a record field) |
 
@@ -66,7 +66,7 @@ content loss.
 
 **Verdict: FULLY VENDORED.**
 
-All 33 lemmas in the `hcat` module map to `Bb.VirtualGraphs.Interchange`'s
+All 33 lemmas in the `hcat` module map to `Bb.VirtualGraphs.Degenerate.Interchange`'s
 `framed-interchange` module (re-exported `public` by `Aligned.lagda.md:72`,
 with `unitr⁺`/`unitl⁻` renamed to `unitr⁺rx`/`unitl⁻rx` on that same
 line, matching Base's own names) or directly into `Aligned`'s `pinned`

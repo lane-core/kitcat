@@ -23,6 +23,456 @@ it in one step when needed.
 
 ---
 
+## 2026-08-08 — Bb.VirtualGraphs: the diagonal is a degeneracy
+
+**Slug:** vgds-redundancy. A redundancy and organization survey of the
+55-module tree, recorded at
+`notes/2026-08-08-vgds-redundancy-analysis.md`, then executed.
+
+The finding that drove it: `Engine` was `Framing` read at the
+diagonal `rx = corx = idn` and restated term for term, with the two
+composites crossed. `dict` restated `Graph.graphs`, and `lens`'s
+two-sided block restated `Graph.two-sided`. Setting the two
+half-twist families equal is itself a degeneracy, so the criterion for
+`Degenerate` widened to cover any degenerating construction, and the
+five single-family modules moved: `Engine` to `Degenerate.Chosen`,
+`Lens` merged into `Degenerate.Lens`, `Stable`, `Displaced`, and
+`Curried` whole. `Chosen` now takes its vocabulary from
+`framing G idn idn` and states the sign crossing once.
+
+Also: readback reduced from four names to one (`framing.readback-of`);
+the swap of arguments lifted from `Engine` and `Stable` into
+`Embedding`, where it reads no half-twist; `Naturality` cut from
+`Tower`, which fell 319 to 221 code lines; one absorption lemma in
+`Degenerate.Absorb` replacing five hand-written copies, four with
+identical proof terms; `Recognition`'s two laws defined as
+`Mediation`'s clauses at the framing's own candidate pair;
+`Degenerate.UnitShape`'s path-groupoid section moved into
+`Groupoid.Path`, the last theory-module import of a model.
+
+Eleven theory modules, twenty-one under `Degenerate`, twenty-three
+models. Every theory module is inside the 300-line budget.
+`just check-tree src/Bb/VirtualGraphs`: 55 of 55. `just check
+Bb.index`: green. `just lint changed`: clean.
+
+Not done: `Recognition` and `Mediation` stayed separate. Each has
+model counterparts under `Word` and `Circle` that read one and not the
+other, and merging the theory pair would leave four models named for a
+module that no longer exists. The tree still carries 33 `refl`-only
+proofs, 9 of them in `Graph`. The rule against them at
+`docs/guidelines/definitions-and-proofs.md:63` is scoped to `Core`
+additions, which is why an archive tree accumulated them.
+
+---
+
+## 2026-08-06 — spike: the symmetric readback resists both forks
+
+**Slug:** full-readback. An Opus subagent ran the brief at
+`outputs/.plans/full-readback.md` and appended its results there.
+Five modules under `src/Test/NewDs/`, prefix `SpikeFullReadback`.
+The lead re-ran `gtimeout 300 just check` on all five (exit 0,
+2026-08-06) and read `Pinned` and `Product` in full, `Cut`,
+`Quaternion`, and `Parity` at their key claims. No postulates, no
+open goals: `verified`.
+
+- Fork A (COUNTERMODEL, finite rung, H = `θnat` + `θ-neutral` +
+  diagonal cut): the junction of the family with itself is
+  represented by the triple rotation at `DH` (`cut-DH`), the double
+  left preimage returns it (`flank-DH`, via the involution), and
+  `law-A` moves the group unit. `no-law-A` at
+  `SpikeFullReadbackCut.lagda.md:139`. The brief's hand-trace held
+  in full.
+- Fork B (COUNTERMODEL, finite rung): all three ladder rungs
+  refuted, including B3, which the brief left open. One witness
+  carries the ladder at `DH`: the flip family with the flip pair as
+  flanks satisfies both anchors, the preimage clause, and the
+  idempotence clause, and the law inverts a rotation.
+  `no-derivation-B1/B2/B3` at
+  `SpikeFullReadbackPinned.lagda.md:144,155,168`. The flip
+  witness has a trivial double, so `SpikeFullReadbackProduct`
+  removes the degeneracy: at the cyclic-times-dihedral carrier the
+  family's square is central and not the unit (`double-not-unit`)
+  and the full clause set still fails the law
+  (`no-derivation-B3-P` at `:151`). Q₈ stands as a second B2
+  witness that the idempotence clause excludes (`no-idem-Q`).
+- Satisfiability: at the rotation family the pair of two double
+  rotations satisfies all four clauses and the law
+  (`law-B-double`), so the clause set is consistent with the law
+  and does not pin the pair.
+- Parity (SHADOW, cyclic rung): `reach` closes the generator under
+  reflection, left-sandwich preimage, and junction
+  representatives; `reach-odd` is the invariant; `no-reach-double`
+  and `no-reach-unit` follow. The triple grade is reachable by two
+  routes, checking the amendment's claim that the cut denotes the
+  triple half-twist.
+
+Diagnosis, standing: singular clauses through `reflect` constrain
+the flank pair only up to a self-inverse edge commuting with the
+family, while the law demands an edge central against every edge —
+a quantifier gap. Even the law itself pins the pair only up to the
+central moduli (the unit pair satisfies it wherever a unit exists).
+Within the single-family apparatus the symmetric readback is
+positable but neither derivable nor pinnable.
+
+Next step: a design decision. The routes left are quantified
+clauses (the law as its own axiom, `θnat`-shaped), or the
+two-family framing where the primitive readback lives. Spike-zero
+disposition now covers nineteen `SpikeThetaNat*` /
+`SpikeTwistNeutral*` / `SpikeFullReadback*` modules.
+
+## 2026-08-06 — withdrawn: the Selinger comparison report
+
+Lane judged `outputs/selinger-self-dual-virtual-graphs-comparison.md`
+bad and directed its removal. The file and its `.provenance.md`
+sidecar are deleted. Both were uncommitted. The comparison entry
+below (same date) records a delivery that no longer exists. Do not
+cite the report or its strict-self-duality dictionary. The research
+intermediates under `outputs/.drafts/` remain as raw material. Answer
+Selinger questions from the primary source at
+`resources/selinger-self-dual/SelingerSelfDual.pdftext`.
+
+## 2026-08-06 — spike: a preimage extracts, a half-twist sandwich law does not follow
+
+**Slug:** twist-neutral (ladder continuation, recorded in the
+brief's Results as a third addendum). Context: reading readback
+against Selinger's note, the faithful decoration orientation (the
+term leg carries the inverse, per (1.2) and §5 of the note) turns
+the flattened readback sandwich into the naturality square of the
+decorating family — Lane caught an orientation error in the first
+derivation, which had put the forward map on both legs. Lane then
+posed the design question: drop readback as a primitive, keep the
+framing on the twist, extract denoted twist and untwist edges from
+the `θ-neutral` equivalences, and ask whether the readback-shaped
+law over the extracted pair follows.
+
+Two new modules, lead-written inline, each green on the first
+attempt (`gtimeout 300 just check`, exit 0): `verified`.
+
+- `SpikeTwistNeutralExtract` (GENERAL): over any carrier,
+  `θ-neutral` extracts the untwist as `Equiv.inv` of the diagonal
+  left sandwich map at the twist, with counit
+  `θ-left (untwist x) ≡ t x`. Under `θnat` both hands extract the
+  same edge (`untwist-agree`). The candidate law `θ-readback`:
+  `reflect f ((x , untwist x) , (y , t y)) ≡ f`.
+- `SpikeTwistNeutralDihedral` (COUNTERMODEL, finite rung, H∅ +
+  `θnat` + `θ-neutral`): the dihedral carrier — eight-element
+  group over `Z4 × Z2`, multiplication sandwich, rotation family —
+  satisfies `θnat` (double rotation central) and `θ-neutral`
+  (sandwich maps are involutions), the counit pins the untwist to
+  the inverse rotation, and conjugating the flip moves it.
+  `no-θ-readback` quantifies over every level-zero carrier.
+
+Reading: `θ-readback` is naturality of the single family where
+`θnat` is naturality of its double; the witness separates them by
+an element with central square that is not itself central. This
+matches the note's layering: the twist is natural by definition,
+the half-twist is exactly the family that is not.
+
+Correction, same day (Lane): the spiked `θ-readback` is NOT the
+proposed law. The proposal is symmetric — extract the twist as a
+denoted edge too (the double half-twist as one morphism, its
+inverse as the untwist) and eval `f` between the extracted pair.
+The spiked law flanks `f` with the extracted preimage and the
+primitive family, a half-twist-grade statement, so the dihedral
+verdict scopes to that law only. The intended law is unspiked; at
+the dihedral carrier it holds (double rotation central). Hand-level
+notes in the brief's correction addendum, amended same day: a
+parity invariant blocks extracting either even-grade flank at plain
+group models — and the cut does not break it, since `composite⁺`
+routes through the family junction, so the cut of `(t , t)` denotes
+the triple half-twist, grade 3. At plain sandwiches the intended
+law is conjugation by the full twist, so the conjecture there is
+derivability, not independence — but its flanks are not reachable
+by extraction, only positable.
+
+Next step: the two-fork spike, dispatched at Lane's direction
+(brief at `outputs/.plans/full-readback.md`). Fork A: extraction —
+`T` from the cut of `(t , t)`, `U` its double left-preimage, test
+the law that pair actually supports. Fork B: posited flanks `T`,
+`U` with pinning equations through `reflect`, a clause ladder with
+countermodel hunts at each rung. Then the standing twist-neutral
+items (circle decision, consequence structure, spike-zero
+disposition — now fourteen modules).
+
+## 2026-08-06 — spike: neutrality of the full twist at the ternary layer
+
+**Slug:** twist-neutral. An Opus subagent ran the brief at
+`outputs/.plans/twist-neutral.md`, and the results are appended
+there. The condition `θ-neutral t`: both sandwich maps of `θnat`
+(`θ-left`, `θ-right`) are equivalences. This is the `is-neutral`
+shape of `Bb.UnitalMagmoids.Base`, with the full twist formed by
+slot occupancy. Five new modules under `src/Test/NewDs/`, prefix
+`SpikeTwistNeutral`. The lead re-ran
+`gtimeout 300 just check Test.NewDs.<Module>` on all five (exit 0,
+2026-08-06) and read `SpikeTwistNeutral`, `SpikeTwistNeutralWord`,
+and `SpikeTwistNeutralCycle` in full. No postulates, no open goals:
+`verified`.
+
+The run's register: a refutation names the hypothesis theory `H` it
+separates the law from, and no verdict speaks to the modeled object.
+
+- Stage A (GENERAL): the statement, `θ-neutral-is-prop` (the
+  condition is a proposition, so it imposes no truncation), and the
+  halving lemmas: under `θnat` either component carries the other,
+  so one `is-equiv` gives the pair.
+- Stage B (COUNTERMODEL, rung Bool, H∅): refuted at `BF` with
+  `const-true`, both components. An instrument check only.
+- Stage C, the headline (COUNTERMODEL, rung Nat, H-BW): all four
+  maps refuted at `BW`. Up to the unit laws they are `comp τ̂ ·`,
+  `comp · τ̂`, `comp δ̂ ·`, and `φW`. Two fail by an unreachable
+  value (`Lτ` misses `ε̂`, `Rε` misses `τ̂`) and two by a
+  descriptor collision (`Rτ` forgets offset zero, `δ̂` merges
+  offsets zero and one). The components do not separate at `τ̂`, so
+  the halving corollary is unavailable. Two hand-traces in the
+  brief were wrong and the modules correct them: `ε̂` is `comp`'s
+  unit and `τ̂` the unit translation, so `R` at `τ̂` is the shift,
+  not the identity, and the fiber of `Lτ` over `τ̂` is inhabited,
+  so the refutation runs through the fiber over `ε̂`.
+- Stage D: the Klein carrier satisfies `θ-neutral` at every family
+  (`⊕-invol` makes each sandwich map its own inverse), and
+  `both-KM` pairs it with `θnat-KM`: a carrier with nontrivial
+  twists satisfying `θnat × θ-neutral` (SHADOW, rung Klein
+  four-group). The four-reader constants and the projection carrier
+  refute `θ-neutral` while satisfying `θnat` (COUNTERMODEL, rung
+  Bool, H∅): `θnat` does not derive `θ-neutral`.
+- Stage E (COUNTERMODEL, rung Three, H∅): a three-cycle family on
+  endofunctions of a three-element type satisfies `θ-neutral` and
+  fails `θnat` at a transposition. With Stage D this closes the
+  independence square over H∅: neither condition derives the other.
+
+Addenda, same day, both recorded in the brief's Results: the
+hypothesis ladder under `θnat` extends two rungs without closing.
+With the cycle family in both framing slots, the Stage E carrier
+satisfies `is-composable⁺` and `is-composable⁻` on the nose (each
+junction composite is represented with a `refl` fiber path), and it
+satisfies `reflect-is-embedding` (`Three` is discrete, so the homs
+are sets and the injective reflection embeds). So neither
+H∅ + composability + `θ-neutral` nor
+H∅ + embedding + composability + `θ-neutral` derives `θnat`.
+`no-derivation` at
+`src/Test/NewDs/SpikeTwistNeutralComposable.lagda.md:47` and
+`no-derivation-embedding` at
+`src/Test/NewDs/SpikeTwistNeutralEmbedding.lagda.md:82`, each with
+a green `gtimeout 300 just check` run (exit 0): `verified`. Also
+citable from existing modules: readback alone does not derive
+`θnat`, since `BW` satisfies readback and fails `θnat`. Open:
+readback with `θ-neutral`, undecided by every carrier on hand (the
+cycle carrier fails readback, `BW` fails `θ-neutral`).
+
+Next step: the readback rung of the ladder, then the object-facing
+question, untouched by design: the circle decision (trivial
+positive, with the informative modulus on the `--cubical` island)
+and the package's consequence structure (`θnat × θ-neutral` as the
+natural-automorphism rendering). The spike-zero disposition of the
+fourteen `SpikeThetaNat*`/`SpikeTwistNeutral*` modules is pending.
+
+## 2026-08-06 — spike: full-twist naturality at the ternary layer
+
+**Slug:** theta-nat. An Opus subagent ran the brief at
+`outputs/.plans/theta-nat.md` and appended its results there. The
+predicate `θnat`: for an endo-family `t`, one `reflect` application
+per side, the twist in two of the three slots
+(`reflect (t x) ((x , t x) , (y , f)) ≡ reflect (t y) ((x , f) , (y , t y))`).
+Five new modules under `src/Test/NewDs/`: `SpikeThetaNat`,
+`SpikeThetaNatBool`, `SpikeThetaNatWord`, `SpikeThetaNatCuts`,
+`SpikeThetaNatModels`. The lead re-ran
+`gtimeout 300 just check Test.NewDs.<Module>` on all five (exit 0,
+2026-08-06) and re-read every statement. No postulates, no open
+goals: `verified`.
+
+- Stage A: the statement compiles at the bare carrier, no theory
+  module imported. The mirrored variant is the pointwise `sym`
+  (GENERAL).
+- Stage B: refuted at the plain-composition Bool carrier, so the
+  predicate is at risk (COUNTERMODEL, rung Bool).
+- Stage C, the headline: refuted at `BW` for both twists
+  (`no-θnat-τ`, `no-θnat-ε`, one denotation value each). At `τ̂` the
+  predicate says every descriptor commutes with the shift, and only
+  the pure translations do. The expectation that the free point
+  satisfies it was wrong (COUNTERMODEL, rung Nat).
+- Stage D: the expected separation witness does not exist. The law
+  `τ̂ ⨾⁻ f ≡ f ⨾⁻ τ̂` holds at `BW` (`far-τ⁻`). Each side of `θnat`
+  there is a derived composite up to a unit law: with `τ̂` the
+  predicate is `⨾⁺`-centrality of `τ̂`, with `ε̂` it is the `⨾⁻` far
+  law at `ε̂`, and both fail. So at `BW` the primitive law adds no
+  strength over the derived layer. It selects the cross-hand laws,
+  the ones that fail there, while the own-hand far law holds
+  (SHADOW + COUNTERMODEL, rung Nat).
+- Stage E: the Klein carrier satisfies `θnat` at every family (the
+  twist slots gather to `t ⊕ σ t`, which commutes in an abelian
+  group). The projection carrier satisfies it by `refl`, degenerate.
+  The four-reader carrier refutes it at `π₁` (its own twist) and
+  `π₂`, and satisfies it at the constant edges
+  (SHADOW / COUNTERMODEL, rung Bool). The circle stage was out of
+  scope per the brief.
+
+Next step: decide the companion condition at `BW` and the
+four-reader (both `reflect`-sandwich maps are equivalences, the
+`is-neutral` shape of `Bb.UnitalMagmoids.Base` at the ternary
+layer). Whether `BW` separates it from `θnat` is open in both
+directions: the sandwich words may or may not act invertibly on
+descriptors. The spike-zero disposition of the five modules is
+pending.
+
+## 2026-08-06 — retire the vendored Test.Spike* files
+
+**Slug:** spike-retirement. Thirteen of the fourteen `Test/Spike*`
+files vendored into `Bb.VirtualGraphs` over the 2026-08-05/06
+sessions still sat in `src/Test/`, untracked. Each still imported
+`Cat.Logic` or `Bb.WeakDeductiveSystem` as its concrete model.
+`src/Test/CLAUDE.md`'s spike-zero policy calls for removal once
+content is preserved elsewhere, so all thirteen are gone:
+`SpikeCandidateGenerator`, `SpikeEdgeCoherence`, `SpikeFramedShape`,
+`SpikeGluingCharacteristic`, `SpikeGradeSelector`,
+`SpikeMediationWild`, `SpikeNaturalModuli`, `SpikeNaturalTier`,
+`SpikeNaturalTruncation`, `SpikeNeutralReadback`, `SpikeNeutralTier`,
+`SpikeSelfMediation`, `SpikeTwistMediation`. `SpikeMorphismInitial`
+stays; it was never vendored. `Bb.VirtualGraphs`'s own
+`CHANGELOG.md`/`HISTORY.md` already record each destination, so the
+policy's "name where" duty was already met.
+
+`gtimeout 300 just check-tree src/Test`: `verified`, 17 modules.
+
+The deletion drops `Cat.Logic`'s import-dependents to zero anywhere
+in the tree, not just `Test/`. It stays live regardless.
+`docs/roadmap.md` cites it as the deductive-system program's current
+carrier, not archive scaffolding, so an empty dependent count does
+not make it a retirement candidate. `Bb.WeakDeductiveSystem` is a
+different case: `outputs/virtual-graphs-surface-weakdeductivesystem.md`
+already audited all sixteen of its modules against `Bb.VirtualGraphs`
+and found every one **FULLY VENDORED** or **COVERED BY OVERLAP** with
+`Cat.Logic`. Its only remaining reference is now `Bb/index.lagda.md`'s
+own aggregator import. It is a genuine third retirement candidate,
+alongside `Bb.OneTwist`/`Bb.VgCategoryShape`. `src/Bb/TODO.md` is
+updated to record it. Execution of all three stays pending, on
+Lane's separate go-ahead.
+
+## 2026-08-06 — comparison: Bb.VirtualGraphs vs Selinger self-dual
+
+**Slug:** selinger-self-dual-virtual-graphs. Source-comparison run
+of the tree against the vetted `resources/selinger-self-dual/`
+digests, three passes (lead spine read, models survey, blank-slate
+independent map), verifier-checked (PASS, 6 anchor fixes, 0
+unresolved). Output: `outputs/selinger-self-dual-virtual-graphs-comparison.md`
+with sidecar.
+
+Graded verdict on the implicit-description thesis. As
+instantiation: refuted, `verified` at anchor level (no tensor, no
+dual object, no `h_A`; fourteen of nineteen digest subjects
+ABSENT). As shared questions and proof strategies: confirmed, with
+one on-the-nose equation (twist naturality vs `nat±-law`) and a
+ranked ANALOG cluster (Word.Census `ω̂` vs Theorem 3.6,
+Presentation round-trip vs Theorem 4.1, Circle non-canonicity vs
+Example 3.9). As occupying §5's open design space one level down:
+plausible, recorded as labeled interpretation (`inferred`), not a
+checked correspondence. The collapse theorems in
+`Interchange.tortile` mark the compact-closed boundary under that
+reading.
+
+`Displaced.lagda.md` appeared untracked in the tree mid-run from a
+writer outside this run and was left untouched.
+
+Next: discussion with Lane on the report; if the thesis is to
+become a theorem, the open question is a tensor-bearing extension
+of the carrier (delooping or argument-level pairing) and whether
+the interchange gap then yields the §1.3 forced braiding.
+
+
+
+**Slug:** deps-tool. New `bin/deps`, `bin/deps-congruence`, and
+`just` recipes for both. All query results below `verified` by
+hand-checks against sources.
+
+`extract` typechecks the scope through a transient generated
+umbrella (`src/DepsUmbrella.agda`, now gitignored) and parses the
+Agda HTML backend's per-token anchors into a graph of single
+definitions at `_build/deps/graph.json`. Queries: `deps`, `rdeps`
+(direct, `--depth`, `-t`), `why` (shortest chain), `ls`, `dump`
+(tsv, json, dot, `--modules` aggregation). Names resolve by
+qualified name, unique suffix, module, or path. Queries warn when
+sources changed after extraction.
+
+The graph pierces re-exports and renamings: uses of a name resolve
+to its definition site, so module-grain rollups report the true
+providers, not the written imports. Nested structure (fields,
+constructors, where-locals) carries parent chains. Layout emulation
+attributes each use site to its enclosing definition. Extraction is
+deterministic (byte-identical across runs, `verified`).
+
+The graph also records the public re-export map (schema 2): every
+`open ... public` statement with its `using`, `hiding`, and
+`renaming` detail, name-precise, with nested-module facades
+attributed to their file. Renaming aliases no longer nest inside
+each other in qualified names (`Core.Type._⊔_`, not
+`Core.Type.Type._⊔_`), and renaming blocks no longer emit spurious
+edges.
+
+`bin/deps-congruence` is the progressive-disclosure report over the
+cache. Neither tool holds organizational claims: `extract` has no
+default exclusions, and the report's strata ranks, exemptions, and
+sanctioned floors arrive as invocation flags. The
+`just deps-congruence` recipe states the repository's current
+claims, as the `stats` recipe already does for its filters. Check A: strata-order
+violations, currently 0, `verified`. Check B: under-disclosure,
+reach-down through the cheapest public access point, facade-aware.
+Check C: over-disclosure, a public floor shallower than every
+consumer's common subtree. `--virtual-root PREFIX` blesses a prefix
+as a sanctioned floor. `Core.Rx` is exempt (`--exempt Core.Rx`
+in the recipe): it is refactor scaffolding, so it is neither a
+subject of the report nor evidence for other placements. With `--virtual-root Core.Data` the B
+residue is `Core.Equiv.Base` (`_≃_`, `iso→equiv`),
+`Core.HLevel.Base.nType.∣_∣`, `Core.Transport.J.subst`, and
+`Lib.Relation.Unary` (`Pred`, `∀[_]`): definitions with no shallow
+public access that consumers across their namespace reach into. C
+flags the `Core.Data.List` and `Core.Data.Maybe` facades for
+re-exporting `Properties` and `Impl` lemmas whose only consumers
+live under `Impl` (slack 1). These are measurements, not placement
+verdicts.
+
+Current library snapshot: 362 modules, 9666 definitions, 60074
+edges, 0 unresolved references, 324 public re-export statements. Six broken leaf modules excluded
+(`Data.Thin.{Category,Cover,Properties,Separated}` known debt, and
+`Core.Coherence.Paths`, `Core.Path.Coherence`, the latter with a
+scope error on `Core.Transport.Base.total-contr-unique`). Two facts
+the tool surfaced in passing, both `verified` by reading the
+source: `Cat.Logic.Base` imports `Core.Transport.Base
+using (is-prop→PathP)` without using it, and
+`Core.Groupoid.emb-equiv.retr` is a dead where-local.
+
+Next: judge the B residue (bless floors with `--virtual-root`, add
+facades, or move definitions) and the C facade rows. The excluded
+modules rejoin the graph when their debt clears.
+
+## 2026-08-04 — Bb.VirtualGraphs phase 2: the committed-source consolidation landed
+
+**Slug:** virtual-graphs-vendor. Survey extended, twenty-nine
+theorem and model modules of Agda landed, all `verified`.
+
+Part 1: the plan's catalog extended to the four uncovered archive
+trees (`Bb.WeakDeductiveSystem` core and Gist,
+`Bb.NaiveVirtualGraph`, `Bb.OneTwist`, `Bb.VgCategoryShape`) —
+§4.10–§4.14, two new hypothesis groups O (one-twist extraction) and
+V (aligned chosen edge), three new duplicate clusters D18–D20. Full
+row detail in `outputs/.drafts/virtual-graphs-vendor-survey-*.md`.
+
+Part 2: `Bb.VirtualGraphs` grew from one module to thirty, committed
+sources only (`Cat.Logic.*` entire plus the four archive trees;
+`Test.*`-sourced rows deferred, including hypothesis groups E and F
+and the `Monoid`/`Bool.Endo`/`Bool.Sleeve` and word/circle spike
+models). Fifteen theory modules (`Stability` through `UnitShape`,
+groups A/B/C/D/D′/P/X/H/O/V) and fourteen model modules (word,
+circle island, Bool, path groupoid, abelian group). `verified`:
+`gtimeout 300 just check <Mod>` exit 0 per module as it landed;
+`just check-tree src/Bb` — 128 modules green; `just check Bb.index`
+exit 0; no postulates, no `TERMINATING`, `virtual-graph` the only
+record in the tree; `just lint changed` clean. No lemma omitted
+anywhere. Source ↔ module mapping in
+`src/Bb/VirtualGraphs/CHANGELOG.md`.
+
+Next: a later pass vendors the `Test.*`-sourced rows once those
+spikes are committed, and the remaining `Bb.NaiveVirtualGraph`
+chosen-edge rows beyond `UnitShape` (plan §4.12 lists them).
+
 ## 2026-08-04 — Bb.VirtualGraphs opened: carrier landed, consolidation surveyed
 
 **Slug:** virtual-graphs-vendor. Phase 1 of the virtual-graph

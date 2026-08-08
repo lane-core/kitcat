@@ -12,7 +12,7 @@ recognized pair earns one unit law per hand.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Shape where
+module Bb.VirtualGraphs.Degenerate.Shape where
 
 open import Core.Type
 open import Core.Base
@@ -28,6 +28,7 @@ open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
+open import Bb.VirtualGraphs.Degenerate.Tower
 open import Bb.VirtualGraphs.Recognition
 ```
 
@@ -180,8 +181,8 @@ they make one type.
       → is-contr (is-representable G
           (framing⁺.composite⁻ G (corx-of (frame-of R)) f g)) )
 
-  is-deductive-system : Type (o ⊔ h)
-  is-deductive-system = reflect-is-embedding G × (Σ R ∶ is-framed , cuts R)
+  is-deductive-system-depreciated : Type (o ⊔ h)
+  is-deductive-system-depreciated = reflect-is-embedding G × (Σ R ∶ is-framed , cuts R)
 ```
 
 The cuts are contractibility conditions and the embedding condition
@@ -196,7 +197,7 @@ component is.
     ( Πi-is-prop λ _ → Πi-is-prop λ _ → Πi-is-prop λ _ →
       Π-is-prop λ _ → Π-is-prop λ _ → is-contr-is-prop _ )
 
-  deductive-prop : is-prop is-framed → is-prop is-deductive-system
+  deductive-prop : is-prop is-framed → is-prop is-deductive-system-depreciated
   deductive-prop W = is-prop-× (reflect-is-embedding-is-prop G) σ-prop
     where
       σ-prop : is-prop (Σ R ∶ is-framed , cuts R)

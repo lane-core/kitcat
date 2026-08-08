@@ -8,7 +8,7 @@ tier; the positive family is a definition.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Extraction where
+module Bb.VirtualGraphs.Degenerate.Extraction where
 
 open import Core.Type
 open import Core.Base
@@ -19,6 +19,7 @@ open import Core.Transport.J using (subst)
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
 ```
 
@@ -27,7 +28,7 @@ open import Bb.VirtualGraphs.Tower
 ```agda
 module extraction {o h} (G : virtual-graph o h) (open virtual-graph G)
   (rx : (x : ob) → hom x x)
-  (U⁻ : framing⁻.is-absorbing⁻ G rx) where
+  (U⁻ : absorbing⁻.is-absorbing⁻ G rx) where
 
   open framing⁻ G rx public
 
@@ -38,6 +39,7 @@ module extraction {o h} (G : virtual-graph o h) (open virtual-graph G)
   cancel⁻ x = U⁻ x .center .snd
 
   open framing⁺ G corx public
+  open absorbing⁺ G corx public
 ```
 
 The coterm-side absorption comes with the extraction, with no
@@ -45,7 +47,7 @@ readback and no second half-twist posited.
 
 ```agda
   absorb⁻ : ∀ {x} (k : coterm x) → coact (corx x) k ≡ k
-  absorb⁻ {x} k i = k .fst , cancel⁻ x i k
+  absorb⁻ = from-cancel.absorb⁻ G rx corx corx cancel⁻
 ```
 
 ## What comes free over the positive hand
@@ -86,7 +88,7 @@ field.
     centre-cancel⁺ x = U⁺ x .center .snd
 
     absorb⁺ : ∀ {x} (t : term x) → act (centre⁺ x) t ≡ t
-    absorb⁺ {x} t i = t .fst , centre-cancel⁺ x i t
+    absorb⁺ = from-cancel.absorb⁺ G rx corx centre⁺ centre-cancel⁺
 
     composite-centre⁺ : ∀ {x y} (g : hom x y)
                       → composite⁻ (centre⁺ x) g ≡ reflect g

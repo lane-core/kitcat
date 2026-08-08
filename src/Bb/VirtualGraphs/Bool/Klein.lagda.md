@@ -34,7 +34,7 @@ open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
-open import Bb.VirtualGraphs.Extraction
+open import Bb.VirtualGraphs.Degenerate.Extraction
 ```
 
 ## The group and the cycle

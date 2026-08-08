@@ -53,6 +53,7 @@ open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
 open import Bb.VirtualGraphs.Mediation
 open import Bb.VirtualGraphs.Recognition
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Word.Carrier
 open import Bb.VirtualGraphs.Word.Model
 open import Bb.VirtualGraphs.Word.Mediation
@@ -66,7 +67,9 @@ open self BW (λ _ → τ̂) (λ _ → ε̂) BW-embedding BW-comp⁺ BW-comp⁻
         ; selfclause₀; selfclause₁; selfmediates₂; framed; framed-is-prop )
 
 open candidate BW
-  using (frame; var; covar; coact-π; act-π; inv⁻; inv⁺; inv; rb)
+  using (frame; var; covar; coact-π; act-π; rb)
+open candidate-absorbing BW
+  using (inv⁻; inv⁺; inv)
 ```
 
 ## Separating two descriptors

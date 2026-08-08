@@ -11,7 +11,7 @@ chosen family absorbs under `act-π⁻` directly.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.CrossedUnit where
+module Bb.VirtualGraphs.Degenerate.CrossedUnit where
 
 open import Core.Type
 open import Core.Base
@@ -21,7 +21,7 @@ open import Core.Transport.J using (subst)
 
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding using (is-representable)
-open import Bb.VirtualGraphs.Engine
+open import Bb.VirtualGraphs.Degenerate.Chosen
 ```
 
 ## The coterm hand's filler

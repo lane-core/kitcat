@@ -6,6 +6,188 @@ entry names the checker run that says so.
 
 ---
 
+## 2026-08-08 — the diagonal, and one statement per statement
+
+**Twenty-one modules in `Degenerate`, eleven in the mainline,
+`verified`.** The criterion widened to cover any degenerating
+construction, which admits a fourth hypothesis: setting the two
+half-twist families equal. Five modules read a single family filling
+both argument slots and so moved. `Engine` became
+`Degenerate.Chosen`, `Lens` merged into `Degenerate.Lens`, and
+`Stable`, `Displaced`, and `Curried` moved whole. Five `Degenerate`
+modules that already sat downstream of the chosen-edge vocabulary
+stopped reaching across the namespace boundary to find it.
+
+`Chosen`'s vocabulary is now the framing at the diagonal rather than
+a second copy of it. `var`, `covar`, `eval`, `act`, `coact`, `act-π`,
+and `coact-π` come from `framing G idn idn`. The two composites come
+from `framing⁻`/`framing⁺` with the signs crossed, which is where the
+crossing between the two `⁻`/`⁺` registers is now stated, once.
+`dict` keeps `graph` and the two hands and drops ten dictionary
+entries proved by `refl`, none of which had a user in this tree.
+`Lens`'s injections come from the framing the same way, and its
+two-sided base, `bipush`, and judgment family from `Graph.two-sided`.
+
+Readback had four names for one type. `framing.readback-of` is the
+survivor. `lens.readback` went, `Stable.readback` and
+`Degenerate.Reflexive.readback` and `Degenerate.Engine`'s
+`stability.readback` now read through it, and `candidate.rb` is
+defined by it.
+
+`Embedding` gained the swap of arguments: `swap-arg`, its inverse,
+`swap-judgment` with its inverse and equivalence, `ap-swap`, and
+`rep-op`. These read no half-twist and carried a vestigial `idn`
+parameter they never used. They had been stated once in `Engine` and
+again in `Stable`. `Engine`'s involution block went with them, its
+three remaining lemmas being `refl` with no user.
+
+`Naturality` is new, cut from `Tower`'s last section. `Framing` keeps
+the two tiers, which read the framing alone. The transfer between the
+tier form, the judgment form, and the flank equation needs the tower,
+so it could not live beside the statements it transfers. `Tower` fell
+from 319 code lines to 221, which puts every theory module inside the
+300-line budget.
+
+`Degenerate.Absorb` gained `from-cancel`. The passage from a
+cancellation to the absorption of a whole argument half had been
+written out five times, four of them with an identical proof term, in
+`Cancellation`, `Display`, `Neutral`, `Extraction`, and
+`Degenerate.Tower`. It takes the family as a parameter, since
+`Extraction` absorbs at a tier's projected centre rather than at a
+half-twist.
+
+`Recognition`'s `law₀` and `law₁` are `Mediation`'s `clause₀` and
+`clause₁` read at the candidate pair the framing supplies, and are now
+defined that way. The two modules stayed separate: each has a model
+counterpart under `Word`, `Circle`, or both, and merging the theory
+pair would leave those four models named for modules that no longer
+exist.
+
+`Degenerate.UnitShape` no longer imports `Groupoid.Path`. Its
+`self-path` module was a path-groupoid computation, and it moved into
+that model as `unit-clause⁺`/`unit-clause⁻`, renamed off `collapse⁺`
+and `collapse⁻`, which `Tower` already uses for different lemmas.
+`Degenerate.Interchange`'s crossed unit laws became `unitl⁺-rx` and
+`unitr⁻-corx`; `unitl⁺` named one statement there and a different one
+in `Cancellation`.
+
+`just check-tree src/Bb/VirtualGraphs`: 55 of 55. `just check
+Bb.index`: green.
+
+---
+
+## 2026-08-08 — the `Degenerate` namespace
+
+**Seventeen modules in a new namespace, `verified`.** A
+module belongs in `Degenerate` when its telescope supplies a unit, an
+absorption tier, or a readback of the half-twists, or when it derives
+one of those from something weaker. Each of those hypotheses makes the
+twist act as the identity, which collapses the two hands to a single
+composition. The tree states the general case, so the cases that admit
+the collapse are segregated rather than left beside it.
+
+Moved whole: `Cancellation`, `CrossedUnit`, `Diagonal`, `Display`,
+`Extraction`, `Gluing`, `Interchange`, `Neutral`, `Presentation`,
+`Readback`, `Reflexive`, `Shape`, `UnitShape`. `CrossedUnit` and
+`UnitShape` qualify entire. Every declaration in `CrossedUnit` sits
+inside a submodule taking the tier, and in `UnitShape` the datum is
+the absorption equation itself, `self` states the tier in
+self-standing form, and `self-path` reads it at the path groupoid.
+
+`Interchange` moved whole rather than split. Its only non-degenerate
+declaration was `cuts-agree`, the predicate that the two hands agree,
+which is the collapse condition `Diagonal` already names as such.
+
+`Degenerate.Absorb` is new. It holds `is-absorbing⁻`/`is-absorbing⁺`
+with their propositionality, extracted from `framing⁻`/`framing⁺`;
+`op-absorbing⁻`/`op-absorbing⁺`, extracted from `Framing`'s `duality`;
+the same tier anchored at a candidate framing with its two fiber-point
+lemmas and `self-read`, extracted from `Recognition`'s `candidate`;
+and `absorb`/`obstruction`, extracted from `UnitShape`.
+`framing.readback-of` stays in `Framing`. It describes a general
+predicate, so the type name is not itself a degeneracy. Terms of it at
+the half-twists are, which is why `self-read` crossed over.
+
+`Tower`, `Lens`, and `Engine` split. `Degenerate.Tower` takes
+`Tower`'s last hundred lines: `absorption`, which takes the twist
+cells pinned to the second projection and returns both absorptions,
+and `unital`, which returns one near unit law per hand from them.
+`Degenerate.Lens` takes everything from `unital` onward, about three
+quarters of the file; the axiom-free vocabulary stays. `Lens`'s
+leading module was anonymous and is now named `lens`, so the
+extracted half can open it. `Degenerate.Engine` takes `engine` and
+everything under it, and the two unital hands of the dictionary.
+
+`Engine`'s `hand⁺` changed shape rather than only moving. It bundled
+`contr⁺` and `absorb⁺` in one telescope, while `hand⁻` separated them
+into `hand⁻ (contr⁻)` and a nested `unital (absorb⁻)`. Extracting
+`hand⁺` whole would have carried the positive hand's composition out
+of the mainline while the negative's stayed, so `hand⁺` now mirrors
+`hand⁻`, and `reflect-⨾` for the positive hand is new. Nothing
+depended on either.
+
+`Shape`'s `is-deductive-system` and `Gluing`'s
+`is-coherent-deductive-system` are now
+`is-deductive-system-depreciated` and
+`is-coherent-deductive-system-depreciated`. Both define recognition
+with the two absorption fibers as conjuncts, so a recognized pair
+makes the twist trivial, and neither definition earns the shorter
+name. The unrelated records of that name in `Bb.WeakDeductiveSystem`
+and `Cat.Logic` are untouched.
+
+Fourteen theory modules stay beside `Type`, and no mainline module
+imports `Degenerate`. Every mainline file is clean at the module
+level, not only at the import level. `Pentagon` takes a half-twist family, the
+embedding condition, and one composability hypothesis per hand, and
+nothing else. `Twist` holds naturality and neutrality, which are
+statements about slot occupancy and collapse nothing.
+
+`Displaced` reaches `Lens`'s `inj⁻`/`inj⁺` through `open lens` now.
+The `outputs/virtual-graphs-surface-*` reports were repointed at the
+new paths.
+
+`just check-tree src/Bb`: 153 of 153 modules typecheck.
+`just lint changed`: clean.
+
+## 2026-08-07 — `Twist`, the ternary-layer twist
+
+**One new module, `verified`.** The twist at the primitive ternary
+layer, over the two half-twist families `rx` and `corx`. The carrier
+holds no field beyond reflection. Two of the three slots of one
+reflection hold one half-twist each, one of each sign, so their
+junction, the twist, acts on the third without ever being named as
+an edge. Landed:
+
+- `θ-left`/`θ-right`, the two actions, read off `Framing`'s `cell⁺`
+  and `cell⁻`. Each cell already carries one half-twist of each sign,
+  so each is the twist acting on a single edge. The left action holds
+  the edge in the coterm flank, the right in the term flank.
+- `θ-nat`, the naturality predicate, with its mirror `θ-nat'` and the
+  two conversions. It reads `rx ⨾ corx ⨾ f ≡ f ⨾ rx ⨾ corx`, so the
+  twist is central, and the mirror is the pointwise symmetry.
+- `θ-neutral` asking each action to be an equivalence, and
+  `θ-neutral-is-prop`. Neutrality is property and not structure.
+- `θ-halves`, `θ-nat→neutral-left`/`θ-nat→neutral-right`, and
+  `θ-nat→neutral`. Under naturality the two actions are one map, so a
+  single component delivers the pair.
+- `θ-left≃`/`θ-right≃`, `corx-inv`/`rx-inv` with their counits. An
+  action carries one half-twist of each sign, so the preimage of one
+  family cancels that family and leaves the inverse of the other. The
+  two hands cross, matching `Framing`'s crossing of the framing and
+  composition registers.
+
+`θnat` is spelled `θ-nat` here, matching the tree's kebab-case
+convention inside modules. `θ` names the twist alone. The extracted
+preimages carry the half-twist names, so `θ` never stands for a half
+of anything.
+
+The model modules and the readback clause ladder from the same spike
+line stay in `Test/` for now.
+
+`gtimeout 300 just check Bb.VirtualGraphs.Twist`: exit 0.
+`just check-tree src/Bb`: 149 of 149 modules typecheck.
+`just lint changed`: clean.
+
 ## 2026-08-06 — `twist` renamed to `half-twist`, tree-wide
 
 **Naming only, no statement changed, `verified`.** Every `twist` in

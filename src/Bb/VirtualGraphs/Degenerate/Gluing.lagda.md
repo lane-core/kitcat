@@ -12,7 +12,7 @@ fragment repeats the framing's own sandwich.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Gluing where
+module Bb.VirtualGraphs.Degenerate.Gluing where
 
 open import Core.Type
 open import Core.Base
@@ -21,7 +21,7 @@ open import Core.Kan using (_∙_)
 
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
-open import Bb.VirtualGraphs.Shape
+open import Bb.VirtualGraphs.Degenerate.Shape
 ```
 
 ## The grammar
@@ -182,7 +182,7 @@ rather than a clause inside it.
   coherent : is-framed → Type (o ⊔ h)
   coherent R = rbᶠ (frame-of R)
 
-  is-coherent-deductive-system : Type (o ⊔ h)
-  is-coherent-deductive-system =
+  is-coherent-deductive-system-depreciated : Type (o ⊔ h)
+  is-coherent-deductive-system-depreciated =
     reflect-is-embedding G × (Σ R ∶ is-framed , cuts R × coherent R)
 ```

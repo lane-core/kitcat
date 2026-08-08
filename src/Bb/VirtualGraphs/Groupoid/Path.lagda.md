@@ -36,8 +36,11 @@ open import Core.Groupoid.Virtual using (module yon-unbiased)
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
-open import Bb.VirtualGraphs.Extraction
+open import Bb.VirtualGraphs.Naturality
+open import Bb.VirtualGraphs.Degenerate.Tower
+open import Bb.VirtualGraphs.Degenerate.Extraction
 ```
 
 ## The carrier
@@ -59,6 +62,8 @@ module path {u} {A : Type u} (t⁺ t⁻ : (x : A) → x ≡ x) where
 
   open virtual-graph PG using (term; coterm; judgment)
   open framing PG t⁻ t⁺
+  open absorbing⁻ PG t⁻
+  open absorbing⁺ PG t⁺
 
   term-contr : ∀ x → is-contr (term x)
   term-contr x .center = x , refl
@@ -173,6 +178,30 @@ consulted.
     sym (rx-centre x) ∙ ap fst (cell-fiber⁺ x .paths (e , w))
 ```
 
+Terms and coterms here are based path spaces, so a clause quantified
+over one is a family over a contractible domain and collapses to its
+value at the centre. Each self-referential unit clause therefore
+reduces to one equation: the ternary composite of the edge with
+itself against the trivial flank is trivial.
+
+```agda
+  unit-clause⁺ : ∀ x (e : x ≡ x)
+            → ((t : term x) → virtual-graph.reflect PG e (t , (x , e)) ≡ t .snd)
+            ≃ (emb e x refl x e ≡ refl)
+  unit-clause⁺ x e =
+    Π-contr-dom
+      {B = λ t → virtual-graph.reflect PG e (t , (x , e)) ≡ t .snd}
+      (term-contr x)
+
+  unit-clause⁻ : ∀ x (e : x ≡ x)
+            → ((γ : coterm x) → virtual-graph.reflect PG e ((x , e) , γ) ≡ γ .snd)
+            ≃ (emb e x e x refl ≡ refl)
+  unit-clause⁻ x e =
+    Π-contr-dom
+      {B = λ γ → virtual-graph.reflect PG e ((x , e) , γ) ≡ γ .snd}
+      (coterm-contr x)
+```
+
 ## One equation
 
 The two cancellation hypotheses are the same equation read on the
@@ -256,7 +285,7 @@ module one-half-twist {u} {A : Type u} (t⁻ : (x : A) → x ≡ x) where
   open path t⁻ t⁻ using
     (PG; coact-π-equiv; reflect-equiv; slot-swap≃; coterm-contr; recentre)
 
-  U⁻ : framing⁻.is-absorbing⁻ PG t⁻
+  U⁻ : absorbing⁻.is-absorbing⁻ PG t⁻
   U⁻ x = eqv-fibers (coact-π-equiv x) snd
 
   open extraction PG t⁻ U⁻
@@ -296,7 +325,7 @@ module naturality {u} {A : Type u} (θ : (x : A) → x ≡ x) where
 
   open path {A = A} (λ _ → refl) θ public
   open virtual-graph PG public using (ob; hom; judgment; reflect)
-  open tower PG θ (λ _ → refl) PG-embedding PG-composable⁺ PG-composable⁻ public
+  open transfer PG θ (λ _ → refl) PG-embedding PG-composable⁺ PG-composable⁻ public
   open framing PG θ (λ _ → refl) public
     using (axiom; eval; readback-of; own⁻; own⁺;
            is-natural⁻; is-natural⁺; is-naturalᴶ⁻; is-naturalᴶ⁺)

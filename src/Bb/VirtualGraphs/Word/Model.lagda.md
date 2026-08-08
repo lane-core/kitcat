@@ -37,6 +37,7 @@ open import Core.HLevel.Base using (Π-is-hlevel)
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
 open import Bb.VirtualGraphs.Word.Carrier
 
@@ -188,13 +189,13 @@ q⁻ e pe = sym (sym (sandwich e) ∙ happly pe (tt , ε̂))
 q⁺ : (e : W) → act-π {tt} {tt} e ≡ snd → τ̂ ≡ e
 q⁺ e pe = sym (sym (sandwich e) ∙ happly pe (tt , τ̂))
 
-BW-absorbing⁻ : framing⁻.is-absorbing⁻ BW (λ _ → τ̂)
+BW-absorbing⁻ : absorbing⁻.is-absorbing⁻ BW (λ _ → τ̂)
 BW-absorbing⁻ x .center = ε̂ , coactε
 BW-absorbing⁻ x .paths (e , pe) i =
   q⁻ e pe i
   , is-prop→PathP (λ j → Π⁻-set (coact-π (q⁻ e pe j)) snd) coactε pe i
 
-BW-absorbing⁺ : framing⁺.is-absorbing⁺ BW (λ _ → ε̂)
+BW-absorbing⁺ : absorbing⁺.is-absorbing⁺ BW (λ _ → ε̂)
 BW-absorbing⁺ x .center = τ̂ , actτ
 BW-absorbing⁺ x .paths (e , pe) i =
   q⁺ e pe i

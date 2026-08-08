@@ -7,7 +7,7 @@ their union together with the constructions that read both.
 A `⁻`/`⁺` suffix is read in one of three registers, and they do not
 agree with one another. `corx`, `rx` name the half-twist families:
 `rx` fills `var`, `corx` fills `covar`. The framing register —
-`cell`, `is-absorbing`, `fiber` — is indexed by the argument side
+`cell` and `fiber` — is indexed by the argument side
 the construction lives on: `⁻` is the coterm side, built through
 `coact`, and `⁺` the term side, built through `act`. The composition
 register — `composite`, `inj`, `is-composable` — is the polarity of
@@ -37,8 +37,8 @@ open import Bb.VirtualGraphs.Embedding
 ## The negative family
 
 `var` closes the term half. Holding it at its axiom leaves the
-coterm-side action, so the coaction, the coterm-side absorption
-tier, and the positive composite all read `rx` and nothing else.
+coterm-side action, so the coaction and the positive composite both
+read `rx` and nothing else.
 
 ```agda
 module framing⁻ {o h} (G : virtual-graph o h) (open virtual-graph G)
@@ -52,19 +52,6 @@ module framing⁻ {o h} (G : virtual-graph o h) (open virtual-graph G)
 
   coact : ∀ {x y} → hom x y → coterm y → coterm x
   coact f γ = γ .fst , coact-π f γ
-```
-
-The tier: the fiber of the coterm-side action map over the second
-projection, asked to be contractible. Its centre is the uniquely
-determined edge acting as the identity on the coterm family — a
-right inverse of `rx`, read through the argument.
-
-```agda
-  is-absorbing⁻ : Type (o ⊔ h)
-  is-absorbing⁻ = ∀ x → is-contr (fiber (coact-π {x} {x}) snd)
-
-  is-absorbing⁻-is-prop : is-prop is-absorbing⁻
-  is-absorbing⁻-is-prop = Π-is-prop λ _ → is-contr-is-prop _
 ```
 
 A positive cut keeps its first factor reflected and absorbs the
@@ -90,7 +77,7 @@ second into the coterm, so it reads `rx` alone.
 ## The positive family
 
 The mirror: `covar` closes the coterm half, and the term-side
-action, its tier, and the negative composite read `corx` alone.
+action and the negative composite read `corx` alone.
 
 ```agda
 module framing⁺ {o h} (G : virtual-graph o h) (open virtual-graph G)
@@ -104,12 +91,6 @@ module framing⁺ {o h} (G : virtual-graph o h) (open virtual-graph G)
 
   act : ∀ {x y} → hom x y → term x → term y
   act f t = t .fst , act-π f t
-
-  is-absorbing⁺ : Type (o ⊔ h)
-  is-absorbing⁺ = ∀ x → is-contr (fiber (act-π {x} {x}) snd)
-
-  is-absorbing⁺-is-prop : is-prop is-absorbing⁺
-  is-absorbing⁺-is-prop = Π-is-prop λ _ → is-contr-is-prop _
 
   inj⁻ : ∀ {x y z} → hom x y → judgment y z → judgment x z
   inj⁻ p β γ = β (act p (γ .fst) , γ .snd)
@@ -281,14 +262,6 @@ module duality {o h} (G : virtual-graph o h) (open virtual-graph G)
           → framing.eval (opⱽ G) corx rx (virtual-graph.reflect (opⱽ G) f)
           ≡ framing.eval G rx corx (reflect f)
   op-eval f = refl
-
-  op-absorbing⁻ : framing⁻.is-absorbing⁻ (opⱽ G) corx
-                 ≡ framing⁺.is-absorbing⁺ G corx
-  op-absorbing⁻ = refl
-
-  op-absorbing⁺ : framing⁺.is-absorbing⁺ (opⱽ G) rx
-                 ≡ framing⁻.is-absorbing⁻ G rx
-  op-absorbing⁺ = refl
 
   op-readback : framing.readback-of G rx corx
               → framing.readback-of (opⱽ G) corx rx

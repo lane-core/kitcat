@@ -32,6 +32,7 @@ open Circle
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding using (is-representable; reflect-is-embedding)
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 ```
 
 ## The carrier
@@ -54,6 +55,8 @@ module circle where
   model .virtual-graph.reflect = rf
 
   open framing model (λ _ → base) (λ _ → base)
+  open absorbing⁻ model (λ _ → base)
+  open absorbing⁺ model (λ _ → base)
 
   R : readback-of
   R f = mult-unit-r f

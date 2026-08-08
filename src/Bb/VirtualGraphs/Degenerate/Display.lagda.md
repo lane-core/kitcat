@@ -9,7 +9,7 @@ head-rewriting witness the lift.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Display where
+module Bb.VirtualGraphs.Degenerate.Display where
 
 open import Core.Type
 open import Core.Base
@@ -27,6 +27,7 @@ open import Core.Rx.Fibration
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
 open import Bb.VirtualGraphs.Graph
 ```
@@ -45,11 +46,13 @@ module framed {o h} (G : virtual-graph o h) (open virtual-graph G)
   open two-sided G rx corx
   open families G rx corx
 
+  open from-cancel G rx corx using () renaming (absorb⁻ to abs⁻; absorb⁺ to abs⁺)
+
   absorb⁻ : ∀ {y} (k : coterm y) → coact (corx y) k ≡ k
-  absorb⁻ {y} k i = k .fst , cancel⁻ y i k
+  absorb⁻ = abs⁻ corx cancel⁻
 
   absorb⁺ : ∀ {x} (t : term x) → act (rx x) t ≡ t
-  absorb⁺ {x} t i = t .fst , cancel⁺ x i t
+  absorb⁺ = abs⁺ rx cancel⁺
 ```
 
 The term action pushes forward and its cancellation points back at

@@ -9,15 +9,16 @@ vocabulary are its projections, exactly as the base ones are
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Displaced where
+module Bb.VirtualGraphs.Degenerate.Displaced where
 
 open import Core.Type
 open import Core.Base
 open import Core.Data.Sigma
 
 open import Bb.VirtualGraphs.Type
-open import Bb.VirtualGraphs.Engine
-open import Bb.VirtualGraphs.Lens using (inj⁻; inj⁺)
+open import Bb.VirtualGraphs.Degenerate.Chosen
+open import Bb.VirtualGraphs.Degenerate.Lens using (module lens)
+open lens using (inj⁻; inj⁺)
 ```
 
 ## The record
@@ -88,7 +89,7 @@ exactly as the base one follows from `reflect`.
 
 ## What the record is not
 
-`Bb.VirtualGraphs.Lens`'s displays are indexed by base objects, and
+`Bb.VirtualGraphs.Degenerate.Lens`'s displays are indexed by base objects, and
 their vertices *are* judgments. `judgment[_]` is indexed by a base
 judgment together with a displayed object over each endpoint, and its
 elements are displayed conclusions over the base ones — a different

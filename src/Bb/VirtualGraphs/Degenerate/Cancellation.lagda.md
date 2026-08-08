@@ -13,7 +13,7 @@ equivalent.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Cancellation where
+module Bb.VirtualGraphs.Degenerate.Cancellation where
 
 open import Core.Type
 open import Core.Base
@@ -25,8 +25,9 @@ open import Core.Transport.J using (subst)
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
-open import Bb.VirtualGraphs.Readback
+open import Bb.VirtualGraphs.Degenerate.Readback
 open import Bb.VirtualGraphs.Polarity
 ```
 
@@ -39,8 +40,8 @@ half-twist's coterm or term.
 module cancellation {o h} (G : virtual-graph o h) (open virtual-graph G)
   (rx corx : (x : ob) → hom x x)
   (R : framing.readback-of G rx corx)
-  (T⁻ : framing⁻.is-absorbing⁻ G rx)
-  (T⁺ : framing⁺.is-absorbing⁺ G corx) where
+  (T⁻ : absorbing⁻.is-absorbing⁻ G rx)
+  (T⁺ : absorbing⁺.is-absorbing⁺ G corx) where
 
   open framing G rx corx
 
@@ -62,11 +63,13 @@ module cancellation {o h} (G : virtual-graph o h) (open virtual-graph G)
   cancel⁺ x =
     subst (λ e → act-π e ≡ snd) (centre⁺-rx x) (T⁺ x .center .snd)
 
+  open from-cancel G rx corx using () renaming (absorb⁻ to abs⁻; absorb⁺ to abs⁺)
+
   absorb⁻ : ∀ {y} (k : coterm y) → coact (corx y) k ≡ k
-  absorb⁻ {y} k i = k .fst , cancel⁻ y i k
+  absorb⁻ = abs⁻ corx cancel⁻
 
   absorb⁺ : ∀ {x} (t : term x) → act (rx x) t ≡ t
-  absorb⁺ {x} t i = t .fst , cancel⁺ x i t
+  absorb⁺ = abs⁺ rx cancel⁺
 ```
 
 ## The far unit laws
@@ -79,8 +82,8 @@ module far {o h} (G : virtual-graph o h) (open virtual-graph G)
   (C⁺ : framing⁻.is-composable⁺ G rx)
   (C⁻ : framing⁺.is-composable⁻ G corx)
   (R : framing.readback-of G rx corx)
-  (T⁻ : framing⁻.is-absorbing⁻ G rx)
-  (T⁺ : framing⁺.is-absorbing⁺ G corx) where
+  (T⁻ : absorbing⁻.is-absorbing⁻ G rx)
+  (T⁺ : absorbing⁺.is-absorbing⁺ G corx) where
 
   open cancellation G rx corx R T⁻ T⁺ public
   open hand⁺ G rx corx C⁺ R public
@@ -109,8 +112,8 @@ module at-strength {o h} (G : virtual-graph o h) (open virtual-graph G)
   (cc⁻ : ∀ {x y z} (f : hom x y) (g : hom y z)
        → is-contr (is-representable G (framing⁺.composite⁻ G corx f g)))
   (R : framing.readback-of G rx corx)
-  (T⁻ : framing⁻.is-absorbing⁻ G rx)
-  (T⁺ : framing⁺.is-absorbing⁺ G corx) where
+  (T⁻ : absorbing⁻.is-absorbing⁻ G rx)
+  (T⁺ : absorbing⁺.is-absorbing⁺ G corx) where
 
   C⁺ : framing⁻.is-composable⁺ G rx
   C⁺ f g = cc⁺ f g .center
@@ -150,8 +153,8 @@ module collapse {o h} (G : virtual-graph o h) (open virtual-graph G)
   (C⁺ : framing⁻.is-composable⁺ G rx)
   (C⁻ : framing⁺.is-composable⁻ G corx)
   (R : framing.readback-of G rx corx)
-  (T⁻ : framing⁻.is-absorbing⁻ G rx)
-  (T⁺ : framing⁺.is-absorbing⁺ G corx) where
+  (T⁻ : absorbing⁻.is-absorbing⁻ G rx)
+  (T⁺ : absorbing⁺.is-absorbing⁺ G corx) where
 
   open polarity G rx corx S C⁺ C⁻ public hiding (cut⁻-cross; cut⁺-cross)
   private

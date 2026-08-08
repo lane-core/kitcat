@@ -8,7 +8,7 @@ no second cut; the residue module names what readback does not reach.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Readback where
+module Bb.VirtualGraphs.Degenerate.Readback where
 
 open import Core.Type
 open import Core.Base
@@ -23,6 +23,7 @@ open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
+open import Bb.VirtualGraphs.Naturality
 ```
 
 ## The positive hand
@@ -167,7 +168,7 @@ module readback-tower {o h} (G : virtual-graph o h) (open virtual-graph G)
   (C⁻ : framing⁺.is-composable⁻ G corx)
   (R : framing.readback-of G rx corx) where
 
-  open tower G rx corx S C⁺ C⁻ public
+  open transfer G rx corx S C⁺ C⁻ public
   open framing G rx corx using (is-naturalᴶ⁻; is-naturalᴶ⁺)
 
   ⨾⁺-is-coact = hand⁺.⨾⁺-is-coact G rx corx C⁺ R

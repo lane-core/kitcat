@@ -25,15 +25,17 @@ open import Core.Equiv.Base
 open import Core.Equiv.Properties using (_∙e_; Π-contr-dom)
 open import Core.Groupoid.Virtual using (module yon-unbiased)
 
+open import Bb.VirtualGraphs.Framing using (module framing)
 open import Bb.VirtualGraphs.Type
-open import Bb.VirtualGraphs.Engine
+open import Bb.VirtualGraphs.Degenerate.Chosen
 open import Bb.VirtualGraphs.Embedding using (is-representable)
 
-import Bb.VirtualGraphs.UnitShape as UnitShape
-import Bb.VirtualGraphs.CrossedUnit as CrossedUnit
-import Bb.VirtualGraphs.Reflexive as Reflexive
-import Bb.VirtualGraphs.Stable as Stable
-import Bb.VirtualGraphs.Curried as Curried
+import Bb.VirtualGraphs.Degenerate.Absorb as Absorb
+import Bb.VirtualGraphs.Degenerate.UnitShape as UnitShape
+import Bb.VirtualGraphs.Degenerate.CrossedUnit as CrossedUnit
+import Bb.VirtualGraphs.Degenerate.Reflexive as Reflexive
+import Bb.VirtualGraphs.Degenerate.Stable as Stable
+import Bb.VirtualGraphs.Degenerate.Curried as Curried
 ```
 
 ## Shared path algebra
@@ -136,14 +138,14 @@ module doubling {u} (A : Type u) where
   rx : (x : A) → x ≡ x
   rx x = refl
 
-  pg-absorbs : UnitShape.absorb.absorbs PG rx
+  pg-absorbs : Absorb.absorb.absorbs PG rx
   pg-absorbs = funext λ x → funext λ γ → pcom.ideml (γ .snd)
 
-  restrict : UnitShape.absorb.flank PG rx → (x : A) → x ≡ x
+  restrict : Absorb.absorb.flank PG rx → (x : A) → x ≡ x
   restrict f x = f x (x , refl)
 
   dbl : ((x : A) → x ≡ x) → (x : A) → x ≡ x
-  dbl i = restrict (UnitShape.absorb.held PG rx i)
+  dbl i = restrict (Absorb.absorb.held PG rx i)
 
   double : (i : (x : A) → x ≡ x) (x : A) → dbl i x ≡ i x ∙ i x
   double i x =
@@ -154,12 +156,12 @@ module doubling {u} (A : Type u) where
   module rigidity {ℓ} (P : ((x : A) → x ≡ x) → Type ℓ)
     (P-prop : (i : (x : A) → x ≡ x) → is-prop (P i))
     (discharge : (i : (x : A) → x ≡ x)
-               → P i → UnitShape.absorb.held PG rx i ≡ UnitShape.absorb.cut PG rx)
+               → P i → Absorb.absorb.held PG rx i ≡ Absorb.absorb.cut PG rx)
     where
 
     doubling-rigid : (p : P rx) (q : rx ≡ rx) → ap dbl q ≡ refl
     doubling-rigid p q i j =
-      restrict (UnitShape.obstruction.rigid PG rx P P-prop discharge p q i j)
+      restrict (Absorb.obstruction.rigid PG rx P P-prop discharge p q i j)
 ```
 
 ## Crossed: the term hand's fiber, at an arbitrary chosen family
@@ -341,7 +343,7 @@ module reflexive-groupoid {u} (A : Type u) where
   t₀ : ∀ (x : A) → T (refl {x = x}) ≡ refl
   t₀ x = pcom.unit refl
 
-  rb≃ : Reflexive.readback PG rx absorb⁻ absorb⁺ ≃ (∀ (x y : A) (p : x ≡ y) → T p ≡ p)
+  rb≃ : framing.readback-of PG rx rx ≃ (∀ (x y : A) (p : x ≡ y) → T p ≡ p)
   rb≃ = iso→equiv (λ u _ _ p → u p) (λ rd p → rd _ _ p) (λ _ → refl) (λ _ → refl)
 
   at-refl-equiv : is-equiv (pin.at-refl T t₀)
@@ -441,7 +443,7 @@ module stable-groupoid {u} (A : Type u) where
 
   bridge
     : (τ₀ : ∀ x → eval (reflect (rx x)) ≡ rx x)
-    → (Σ v ∶ Stable.readback PG rx , (∀ x → v (rx x) ≡ τ₀ x))
+    → (Σ v ∶ framing.readback-of PG rx rx , (∀ x → v (rx x) ≡ τ₀ x))
     ≃ (Σ rd ∶ (∀ (x y : A) (p : x ≡ y) → T p ≡ p) , (∀ x → rd x x refl ≡ τ₀ x))
   bridge τ₀ = iso→equiv (λ (v , k) → (λ _ _ p → v p) , k)
                         (λ (rd , k) → (λ {x} {y} p → rd x y p) , k)
@@ -456,7 +458,7 @@ module stable-groupoid {u} (A : Type u) where
   PG-stable-pair : Unt.is-stable-pair
   PG-stable-pair = PG-stable , PG-stable⁺
 
-  rb≃ : Stable.readback PG rx ≃ (∀ (x y : A) (p : x ≡ y) → T p ≡ p)
+  rb≃ : framing.readback-of PG rx rx ≃ (∀ (x y : A) (p : x ≡ y) → T p ≡ p)
   rb≃ = iso→equiv (λ v _ _ p → v p) (λ rd p → rd _ _ p) (λ _ → refl) (λ _ → refl)
 
   at-refl-equiv : is-equiv (pin.at-refl T t₀)

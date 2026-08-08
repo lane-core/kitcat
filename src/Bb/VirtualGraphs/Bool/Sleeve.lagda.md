@@ -48,8 +48,8 @@ open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Recognition
-open import Bb.VirtualGraphs.Shape
-open import Bb.VirtualGraphs.Gluing
+open import Bb.VirtualGraphs.Degenerate.Shape
+open import Bb.VirtualGraphs.Degenerate.Gluing
 open import Bb.VirtualGraphs.Word.Carrier
 open import Bb.VirtualGraphs.Word.Model
 open import Bb.VirtualGraphs.Word.Census
@@ -235,7 +235,7 @@ and coterms.
 ```agda
 open shape EC
   using ( pair; flanks; is-half-twist; is-framed; family; rbᶠ; frame-of
-        ; coact-πᵗ; act-πᵗ; inv⁻ᵗ; inv⁺ᵗ; cuts; is-deductive-system
+        ; coact-πᵗ; act-πᵗ; inv⁻ᵗ; inv⁺ᵗ; cuts; is-deductive-system-depreciated
         ; deductive-prop )
 
 canonical : family
@@ -339,7 +339,7 @@ cutsᴱ =
     (λ f g → contr-from-embedding EC stableᴱ _ (composable⁺ f g))
   , (λ f g → contr-from-embedding EC stableᴱ _ (composable⁻ f g))
 
-deductiveᴱ : is-deductive-system
+deductiveᴱ : is-deductive-system-depreciated
 deductiveᴱ = stableᴱ , framedᴱ , cutsᴱ
 ```
 
@@ -388,7 +388,7 @@ contraction x .paths (p , T) =
 framed-prop : is-prop is-framed
 framed-prop = Π-is-prop λ x → is-contr→is-prop (contraction x)
 
-system-prop : is-prop is-deductive-system
+system-prop : is-prop is-deductive-system-depreciated
 system-prop = deductive-prop framed-prop
 ```
 
@@ -519,13 +519,13 @@ The diagonal pins here, so the conjunct follows from the record it
 extends and the two records convert.
 
 ```agda
-complete : is-deductive-system → coherence.is-coherent-deductive-system EC
+complete : is-deductive-system-depreciated → coherence.is-coherent-deductive-system-depreciated EC
 complete (E , R , C) =
   E , R , C
   , rb-residue (frame-of R) (λ x → R x .snd .fst)
       (diag→coh (frame-of R) (λ x → R x .snd .fst))
 
-strip : coherence.is-coherent-deductive-system EC → is-deductive-system
+strip : coherence.is-coherent-deductive-system-depreciated EC → is-deductive-system-depreciated
 strip (E , R , C , _) = E , R , C
 ```
 

@@ -45,6 +45,8 @@ open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
+open import Bb.VirtualGraphs.Naturality
+open import Bb.VirtualGraphs.Degenerate.Tower
 open import Bb.VirtualGraphs.Groupoid.Path using (module naturality)
 open import Bb.VirtualGraphs.Circle.Model
 open import Bb.VirtualGraphs.Circle.Torsor using (rb₀; rb₁)
@@ -61,7 +63,7 @@ fourth is definitional.
 module absorbing where
 
   open virtual-graph circle.model public using (ob; hom; judgment; reflect)
-  open tower circle.model (λ _ → base) (λ _ → base)
+  open transfer circle.model (λ _ → base) (λ _ → base)
     circle.stable circle.C⁺ circle.C⁻ public
   open framing circle.model (λ _ → base) (λ _ → base) public
     using (axiom; eval; readback-of; cell⁻; cell⁺; own⁻; own⁺;

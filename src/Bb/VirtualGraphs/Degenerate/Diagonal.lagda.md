@@ -14,7 +14,7 @@ under which the two-hand theory collapses to one.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Diagonal where
+module Bb.VirtualGraphs.Degenerate.Diagonal where
 
 open import Core.Type
 open import Core.Base
@@ -36,7 +36,7 @@ open import Core.Transport.Properties using (prop-inhabited→is-contr; transpor
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding using (is-representable; reflect-is-embedding)
 open import Bb.VirtualGraphs.Framing
-open import Bb.VirtualGraphs.Interchange
+open import Bb.VirtualGraphs.Degenerate.Interchange
 ```
 
 ## Neutrality, self-filled

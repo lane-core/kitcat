@@ -35,8 +35,10 @@ open import Core.Function.Embedding using (injective→is-embedding)
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
-open import Bb.VirtualGraphs.Interchange
+open import Bb.VirtualGraphs.Naturality
+open import Bb.VirtualGraphs.Degenerate.Interchange
 
 is-true : Bool → Type
 is-true true  = ⊤
@@ -73,7 +75,7 @@ module projection where
   C⁻ : framing⁺.is-composable⁻ P (λ _ → false)
   C⁻ f g = g , refl
 
-  open tower P (λ _ → false) (λ _ → false) S C⁺ C⁻
+  open transfer P (λ _ → false) (λ _ → false) S C⁺ C⁻
 ```
 
 With both hands projections, `associates f g h` is `h ≡ f`, and any
@@ -93,7 +95,7 @@ identity of the coterm family, which two coterms already refute.
   no-linear false L = subst is-true (sym (L true true)) tt
   no-linear true  L = subst is-true (L false false) tt
 
-  no-absorbing⁻ : framing⁻.is-absorbing⁻ P (λ _ → false) → ⊥
+  no-absorbing⁻ : absorbing⁻.is-absorbing⁻ P (λ _ → false) → ⊥
   no-absorbing⁻ I =
     subst is-true
       ( sym (happly (I tt .center .snd) (tt , true))
@@ -225,7 +227,7 @@ edge `π₁` is both half-twists, so the framing itself is linear and not
 thunkable.
 
 ```agda
-  open tower model (λ _ → π₁) (λ _ → π₁) S C⁺ C⁻
+  open transfer model (λ _ → π₁) (λ _ → π₁) S C⁺ C⁻
 
   no-associates : ∀ g → associates π₁ g π₂ → ⊥
   no-associates g w = subst flag₂ w tt

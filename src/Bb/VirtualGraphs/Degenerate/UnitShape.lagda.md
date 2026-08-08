@@ -8,14 +8,12 @@ propositional, a truncation condition. The one-fiber-for-both-hands
 candidate reduces the same way, to the path type between the two
 hands' projected units. A self-referential datum closes the file:
 an edge absorbing against itself in the held slot is statable over
-the bare carrier with no chosen edge at all, and at the path
-groupoid each clause collapses to the triviality of the edge's
-ternary composite with itself — squaring to a unit, not being one.
+the bare carrier, with no chosen edge at all.
 
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.UnitShape where
+module Bb.VirtualGraphs.Degenerate.UnitShape where
 
 open import Core.Type
 open import Core.Base
@@ -29,8 +27,7 @@ open import Core.Equiv.Properties using (_∙e_; esym; Σ-contr-fst; Π-contr-do
 open import Core.HLevel.Base using (is-prop-equiv)
 
 open import Bb.VirtualGraphs.Type
-open import Bb.VirtualGraphs.Engine
-open import Bb.VirtualGraphs.Groupoid.Path using (module path)
+open import Bb.VirtualGraphs.Degenerate.Chosen
 ```
 
 ## The identification datum is a path
@@ -157,90 +154,4 @@ module self {o h} (G : virtual-graph o h) (open virtual-graph G) where
 
   is-unital : Type (o ⊔ h)
   is-unital = ∀ x → is-contr (unit-data x)
-```
-
-At the path groupoid, terms and coterms are based path spaces, so
-each clause is a family over a contractible domain and collapses to
-its value at the centre: the ternary composite of the edge with
-itself is trivial. Absorption is a statement about a neutral edge in
-the held slot, and the self-referential form substitutes the very
-edge being tested — the collapsed condition reads `e ∙ e ≡ refl`
-through the trivial flank, which reflexivity satisfies without the
-edge being a unit.
-
-```agda
-module self-path {u} (A : Type u) where
-
-  open path {A = A} (λ _ → refl) (λ _ → refl)
-    using (PG; emb; term-contr; coterm-contr)
-
-  open virtual-graph PG using (term; coterm)
-
-  collapse⁺ : ∀ x (e : x ≡ x)
-            → ((t : term x) → virtual-graph.reflect PG e (t , (x , e)) ≡ t .snd)
-            ≃ (emb e x refl x e ≡ refl)
-  collapse⁺ x e =
-    Π-contr-dom
-      {B = λ t → virtual-graph.reflect PG e (t , (x , e)) ≡ t .snd}
-      (term-contr x)
-
-  collapse⁻ : ∀ x (e : x ≡ x)
-            → ((γ : coterm x) → virtual-graph.reflect PG e ((x , e) , γ) ≡ γ .snd)
-            ≃ (emb e x e x refl ≡ refl)
-  collapse⁻ x e =
-    Π-contr-dom
-      {B = λ γ → virtual-graph.reflect PG e ((x , e) , γ) ≡ γ .snd}
-      (coterm-contr x)
-```
-
-## Absorption pins the chosen family
-
-The held slot takes both its arguments from one family of
-endo-edges. Absorption is the claim that two elements of the
-resulting function type agree. One reads the family back through the
-held slot. The other reads the coterm's own edge out directly.
-
-```agda
-module absorb {o h} (G : virtual-graph o h) (open virtual-graph G)
-  (idn : (x : ob) → hom x x) where
-
-  flank : Type (o ⊔ h)
-  flank = (x : ob) (γ : coterm x) → hom x (γ .fst)
-
-  held : ((x : ob) → hom x x) → flank
-  held i x γ = reflect (i x) ((x , i x) , γ)
-
-  cut : flank
-  cut x γ = γ .snd
-
-  absorbs : Type (o ⊔ h)
-  absorbs = held idn ≡ cut
-```
-
-`held` reads the family back at every point. `cut` never mentions the
-family. A self-path of the family already traces a loop of `held`
-against a fixed target.
-
-A propositional predicate that delivers absorption cannot distinguish
-the family from any point on that loop. A witness at one endpoint
-then slides along the loop to a witness at every other point. The
-resulting square pins the loop to the constant path. This holds for
-any packaging of the predicate, with no further hypothesis on the
-carrier.
-
-```agda
-module obstruction {o h ℓ} (G : virtual-graph o h) (open virtual-graph G)
-  (idn : (x : ob) → hom x x) (open absorb G idn)
-  (P : ((x : ob) → hom x x) → Type ℓ)
-  (P-prop : (i : (x : ob) → hom x x) → is-prop (P i))
-  (pin : (i : (x : ob) → hom x x) → P i → held i ≡ cut)
-  where
-
-  drift : (p : P idn) (q : idn ≡ idn)
-        → PathP (λ i → held (q i) ≡ cut) (pin idn p) (pin idn p)
-  drift p q i = pin (q i) (is-prop→PathP (λ j → P-prop (q j)) p p i)
-
-  rigid : (p : P idn) (q : idn ≡ idn) → ap held q ≡ refl
-  rigid p q =
-    Path.loop-refl (sym (pin idn p)) (ap held q) (λ i j → drift p q i (~ j))
 ```

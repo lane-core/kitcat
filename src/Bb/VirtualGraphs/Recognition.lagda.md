@@ -25,6 +25,7 @@ open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
+open import Bb.VirtualGraphs.Mediation
 ```
 
 ## The candidate-relative kit
@@ -55,64 +56,12 @@ module candidate {o h} (G : virtual-graph o h) where
   act-π p {y = y} f t = reflect f (t , covar p y)
 ```
 
-The first condition is the fiber of each action map over the second
-projection, asked to be contractible. The anchor is the projection,
-which the candidate does not supply. Read through the argument, the
-negative half asks the first family for a unique right inverse and
-the positive half asks the second family for a unique left one.
-
-```agda
-  inv⁻ inv⁺ inv : frame → ob → Type (o ⊔ h)
-  inv⁻ p x = is-contr (fiber (coact-π p {x} {x}) snd)
-  inv⁺ p x = is-contr (fiber (act-π p {x} {x}) snd)
-  inv p x = inv⁻ p x × inv⁺ p x
-```
-
 The second condition is readback at the candidate's own axiom:
 reflection there returns the edge, at every edge of the carrier.
 
 ```agda
   rb : frame → Type (o ⊔ h)
-  rb p = ∀ {x y} (f : hom x y) → reflect f (var p x , covar p y) ≡ f
-```
-
-Contractibility is a proposition, so the first condition is one at
-each object. The two conditions sit at different quantifier depths.
-The first reads one object, since each action map closes the argument
-half whose axiom sits there. The second reads a pair of objects,
-since an edge runs between two, so it has no per-object form.
-
-```agda
-  inv⁻-is-prop : (p : frame) (x : ob) → is-prop (inv⁻ p x)
-  inv⁻-is-prop p x = is-contr-is-prop _
-
-  inv⁺-is-prop : (p : frame) (x : ob) → is-prop (inv⁺ p x)
-  inv⁺-is-prop p x = is-contr-is-prop _
-
-  inv-is-prop : (p : frame) (x : ob) → is-prop (inv p x)
-  inv-is-prop p x = is-prop-× (inv⁻-is-prop p x) (inv⁺-is-prop p x)
-```
-
-Candidate readback forces each fiber point to the candidate's own
-component. No absorption tier and no cut enters the argument.
-
-```agda
-  fiber⁻-point : (p : frame) → rb p → (x : ob)
-               → (w : fiber (coact-π p {x} {x}) snd) → w .fst ≡ p .snd x
-  fiber⁻-point p R x w = sym (R (w .fst)) ∙ happly (w .snd) (covar p x)
-
-  fiber⁺-point : (p : frame) → rb p → (x : ob)
-               → (w : fiber (act-π p {x} {x}) snd) → w .fst ≡ p .fst x
-  fiber⁺-point p R x w = sym (R (w .fst)) ∙ happly (w .snd) (var p x)
-```
-
-Read at the first family itself, readback is the sandwich of that
-family's edge between the two components.
-
-```agda
-  self-read : (p : frame) → rb p → (x : ob)
-            → reflect (p .fst x) (var p x , covar p x) ≡ p .fst x
-  self-read p R x = R (p .fst x)
+  rb p = framing.readback-of G (p .fst) (p .snd)
 ```
 
 ## The judgment-level cuts
@@ -220,17 +169,21 @@ module at-framing {o h} (G : virtual-graph o h) (open virtual-graph G)
 ```
 
 The two clauses read at this candidate are the two edge-level
-equations below.
+equations `Mediation` states over an arbitrary candidate pair, read
+at the pair the framing itself supplies.
 
 ```agda
+  private module M = mediation G rx corx S C⁺ C⁻
+
+  pair : (x : ob) → M.pair x
+  pair x = rx x , corx x
+
   lead₁ : (x : ob) → hom x x
-  lead₁ x = rx x ⨾⁺ (corx x ⨾⁺ (corx x ⨾⁻ corx x))
+  lead₁ x = M.corr₁ (pair x)
 
   law₀ law₁ : (x : ob) → Type h
-  law₀ x = corx x ⨾⁺ (rx x ⨾⁻ corx x)
-         ≡ corx x ⨾⁺ ((corx x ⨾⁺ rx x) ⨾⁻ corx x)
-  law₁ x = rx x ⨾⁺ (corx x ⨾⁻ corx x)
-         ≡ lead₁ x ⨾⁺ ((rx x ⨾⁺ corx x) ⨾⁻ corx x)
+  law₀ x = M.clause₀ x (pair x)
+  law₁ x = M.clause₁ x (pair x)
 ```
 
 Each side of each clause collapses onto the reflection of its edge

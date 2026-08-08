@@ -19,9 +19,11 @@ open import Core.Transport.Properties
 open import Core.HLevel.Base
   using (Π-is-prop; Πi-is-prop; is-prop-equiv; is-prop-×; Π-is-hlevel;
          retract→is-hlevel)
-open import Core.Function.Embedding using (is-embedding; injective→is-embedding)
-open import Core.Equiv.Base using (iso→equiv; is-contr-equiv; _≃_)
-open import Core.Equiv.Properties using (esym)
+open import Core.Function.Embedding
+  using (is-embedding; injective→is-embedding; is-embedding→ap-equiv;
+         is-equiv→is-embedding)
+open import Core.Equiv.Base using (iso→equiv; is-contr-equiv; _≃_; is-equiv)
+open import Core.Equiv.Properties using (esym; Σ-equiv-snd)
 
 open import Bb.VirtualGraphs.Type
 ```
@@ -233,4 +235,42 @@ op-embedding G S α =
                (λ w → w .fst , λ i γ → w .snd i (γ .snd , γ .fst))
                (λ _ → refl) (λ _ → refl))
     (S (λ δ → α (δ .snd , δ .fst)))
+```
+
+## The swap of arguments
+
+A judgment at the opposite carrier is this carrier's own judgment read
+against the exchanged argument. The exchange is its own inverse
+definitionally, so the reindexing is an equivalence on judgments, and
+`ap` of an equivalence is again one. A fiber of `reflect` over a
+judgment is therefore equivalent to a fiber of the opposite `reflect`
+over the swapped judgment, and a tier statement transfers along one
+`ap` of the swap. Nothing here reads a half-twist.
+
+```agda
+module _ {o h} (G : virtual-graph o h) (open virtual-graph G) where
+
+  swap-arg : ∀ {x z} → virtual-graph.argument (opⱽ G) x z → argument z x
+  swap-arg γ = γ .snd , γ .fst
+
+  swap-arg⁻ : ∀ {x z} → argument z x → virtual-graph.argument (opⱽ G) x z
+  swap-arg⁻ δ = δ .snd , δ .fst
+
+  swap-judgment : ∀ {x z} → judgment z x → virtual-graph.judgment (opⱽ G) x z
+  swap-judgment α γ = α (swap-arg γ)
+
+  swap-judgment⁻ : ∀ {x z} → virtual-graph.judgment (opⱽ G) x z → judgment z x
+  swap-judgment⁻ β δ = β (swap-arg⁻ δ)
+
+  swap-eqv : ∀ {x z} → judgment z x ≃ virtual-graph.judgment (opⱽ G) x z
+  swap-eqv = iso→equiv swap-judgment swap-judgment⁻ (λ _ → refl) (λ _ → refl)
+
+  ap-swap : ∀ {x z} {α β : judgment z x}
+          → is-equiv (ap (swap-judgment {x} {z}) {α} {β})
+  ap-swap = is-embedding→ap-equiv (is-equiv→is-embedding (swap-eqv .snd))
+
+  rep-op : ∀ {x z} (β : judgment z x)
+         → is-representable G β
+         ≃ is-representable (opⱽ G) (swap-judgment β)
+  rep-op β = Σ-equiv-snd (λ m → ap swap-judgment , ap-swap)
 ```

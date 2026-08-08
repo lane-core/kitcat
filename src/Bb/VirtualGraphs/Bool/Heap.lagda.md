@@ -32,7 +32,7 @@ open import Core.HLevel.Base using (Π-is-hlevel)
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding using (is-representable)
 open import Bb.VirtualGraphs.Framing
-open import Bb.VirtualGraphs.Diagonal
+open import Bb.VirtualGraphs.Degenerate.Diagonal
 
 open Bool using (xor; module xor)
 ```

@@ -26,8 +26,9 @@ open import Core.Rx.Base
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
-open import Bb.VirtualGraphs.Extraction
+open import Bb.VirtualGraphs.Degenerate.Extraction
 open import Bb.VirtualGraphs.Graph using (rxgraph)
 ```
 
@@ -85,6 +86,8 @@ supplies.
     open virtual-graph VG
     open framing⁻ VG (λ _ → t⁻)
     open framing⁺ VG (λ _ → t⁺)
+    open absorbing⁻ VG (λ _ → t⁻)
+    open absorbing⁺ VG (λ _ → t⁺)
     open framing VG (λ _ → t⁻) (λ _ → t⁺) using (cell⁻; cell⁺; embedding-from-hom-sets)
 ```
 

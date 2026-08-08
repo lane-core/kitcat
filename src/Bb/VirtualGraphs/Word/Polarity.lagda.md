@@ -37,8 +37,8 @@ open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
 open import Bb.VirtualGraphs.Polarity
-open import Bb.VirtualGraphs.Readback
-open import Bb.VirtualGraphs.Cancellation
+open import Bb.VirtualGraphs.Degenerate.Readback
+open import Bb.VirtualGraphs.Degenerate.Cancellation
 open import Bb.VirtualGraphs.Word.Carrier
 open import Bb.VirtualGraphs.Word.Model
 open import Bb.VirtualGraphs.Word.Defect

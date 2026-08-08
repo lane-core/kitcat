@@ -56,8 +56,9 @@ open Circle using (base; loop; rot; ind; mult; mult-unit-r; mult-assoc;
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Recognition
-open import Bb.VirtualGraphs.Shape
-open import Bb.VirtualGraphs.Gluing
+open import Bb.VirtualGraphs.Degenerate.Absorb
+open import Bb.VirtualGraphs.Degenerate.Shape
+open import Bb.VirtualGraphs.Degenerate.Gluing
 open import Bb.VirtualGraphs.Circle.Model
 ```
 
@@ -73,6 +74,7 @@ further factor appears.
 module frames where
 
   open candidate circle.model public
+  open candidate-absorbing circle.model public
 
   mk : Circle → Circle → frame
   mk a b = (λ _ → a) , (λ _ → b)
@@ -280,7 +282,7 @@ module shapes where
   cutsᶜ : cuts framedᶜ
   cutsᶜ = (λ f g → circle.cc⁺ f g) , (λ f g → circle.cc⁻ f g)
 
-  deductiveᶜ : is-deductive-system
+  deductiveᶜ : is-deductive-system-depreciated
   deductiveᶜ = circle.stable , framedᶜ , cutsᶜ
 
   sect : Circle → Σ p ∶ pair tt , is-half-twist p

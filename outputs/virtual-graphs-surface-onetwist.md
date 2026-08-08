@@ -86,7 +86,7 @@ Klein-four countermodel).
 
 ### `module system⁻` (the general `⁺`-tier theory)
 
-| `OneTwist.Cancel` (`file:line`) | `VirtualGraphs.Extraction` (`file:line`) |
+| `OneTwist.Cancel` (`file:line`) | `VirtualGraphs.Degenerate.Extraction` (`file:line`) |
 | --- | --- |
 | `centre⁺` — Cancel.lagda.md:56-57 | `system⁻.centre⁺` — Extraction.lagda.md:82-83, byte-identical |
 | `centre-cancel⁺` — Cancel.lagda.md:59-60 | `system⁻.centre-cancel⁺` — Extraction.lagda.md:85-86, byte-identical |

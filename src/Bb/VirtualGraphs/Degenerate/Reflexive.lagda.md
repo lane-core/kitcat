@@ -11,7 +11,7 @@ that readback.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Reflexive where
+module Bb.VirtualGraphs.Degenerate.Reflexive where
 
 open import Core.Type
 open import Core.Base
@@ -20,7 +20,8 @@ open import Core.Kan using (_∙_)
 open import Core.Equiv.Base using (is-equiv; eqv-fibers)
 
 open import Bb.VirtualGraphs.Type
-open import Bb.VirtualGraphs.Engine
+open import Bb.VirtualGraphs.Framing using (module framing)
+open import Bb.VirtualGraphs.Degenerate.Chosen
 open import Bb.VirtualGraphs.Embedding using (opⱽ)
 ```
 
@@ -109,13 +110,10 @@ with no unit fiber in sight, and every edge absorbing on either hand
 equals `idn` by that readback alone.
 
 ```agda
-  readback : Type (o ⊔ h)
-  readback = ∀ {x y} (f : hom x y) → eval (reflect f) ≡ f
-
   flank : Type (o ⊔ h)
   flank = ∀ x → eval (reflect (idn x)) ≡ idn x
 
-  restrict : readback → flank
+  restrict : framing.readback-of G idn idn → flank
   restrict u x = u (idn x)
 
   module redundancy (S : is-equiv restrict) where
@@ -123,7 +121,7 @@ equals `idn` by that readback alone.
     flank-pt : flank
     flank-pt x = absorb⁻ x (covar x)
 
-    rb : readback
+    rb : framing.readback-of G idn idn
     rb = S .eqv-fibers flank-pt .center .fst
 
     absorber-is-idn⁻ : ∀ x (e : hom x x) → (∀ γ → coact-π e γ ≡ γ .snd) → e ≡ idn x

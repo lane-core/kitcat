@@ -48,7 +48,7 @@ contractible, by retracting onto a singleton anchor.
 
 **Verdict — vocabulary: MOOT/SUPERSEDED.** `Bb.VirtualGraphs.Type` drops
 `idn` from the carrier record entirely (`ob`, `hom`, `reflect` only —
-`src/Bb/VirtualGraphs/Type.lagda.md:21-43`), and `Bb.VirtualGraphs.Engine`'s
+`src/Bb/VirtualGraphs/Type.lagda.md:21-43`), and `Bb.VirtualGraphs.Degenerate.Chosen`'s
 `module chosen` (`src/Bb/VirtualGraphs/Engine.lagda.md:41-79`) reconstructs
 `var`/`covar`/`argue`/`intro`/`elim`/`eval`/`coact-π`/`act-π`/`coact`/`act`/
 `composite⁻`/`composite⁺` with `idn` as an external function parameter
@@ -165,7 +165,7 @@ coherence pair itself to be a proposition — forces every twist vanishing
 on endomorphisms to be trivial, a truncation condition; `half-adjoint-
 forces-truncation` (:329-339) is the theorem.
 
-**Verdict.** `Bb.VirtualGraphs.Engine`'s readback-free route
+**Verdict.** `Bb.VirtualGraphs.Degenerate.Engine`'s readback-free route
 (`src/Bb/VirtualGraphs/Engine.lagda.md:136-250`) derives the same kind of
 absorption/uniqueness facts from unit-fiber contractibility **plus**
 composability — it explicitly does not need readback (docstring, `Engine.
@@ -197,7 +197,7 @@ the term-hand's canonical unit, via the "exchange" hypothesis
 (`exchange-hypothesis`, :143-146) and a path-groupoid instance
 (`module path`, :161-239) where the exchange holds unconditionally.
 
-**Verdict.** `Bb.VirtualGraphs.Extraction`'s `module system⁻`
+**Verdict.** `Bb.VirtualGraphs.Degenerate.Extraction`'s `module system⁻`
 (`src/Bb/VirtualGraphs/Extraction.lagda.md:76-111`) covers the same broad
 shape — a second unit (`centre⁺`) derived from the first (`twist⁺`, itself
 extracted from `U⁻`'s centre), with an `agree`/`cancel⁺` equivalence
@@ -252,7 +252,7 @@ an "Appendix — the tiers in `Core.Rx` terms" (:339-503) building `coslice`/
 `push-is-comp`/`pull-is-comp` (:381-410) plus `term-disp`/`coterm-disp`
 fibrations (:467-503).
 
-**Verdict.** `Bb.VirtualGraphs.Engine`'s `module chosen`/`module
+**Verdict.** `Bb.VirtualGraphs.Degenerate.Chosen`'s `module chosen`/`module
 composable`/`module engine` (`Engine.lagda.md:41-208`) derives the
 readback-free unit⁻/unit⁺ (fiber form, identical to `DeductiveSystem`'s
 `is-unital`), absorption, and uniqueness — **and, unlike
@@ -287,7 +287,7 @@ equivalence against the idempotence (`idn-absorb⁻`/`idn-absorb⁺`,
 `composable-op`/`unital-op`/`stable-op` and their involutions.
 
 **Verdict.** The readback-free-absorption *conclusion* is exactly what
-`Bb.VirtualGraphs.Engine`'s `module engine` reaches (see `DeductiveSystem`
+`Bb.VirtualGraphs.Degenerate.Engine`'s `module engine` reaches (see `DeductiveSystem`
 entry above), via a different technical packaging (unit-fiber
 contractibility, not action-is-equivalence-plus-idempotence). The two are
 not the same proof, but they establish the same fact about the same
@@ -343,7 +343,7 @@ more level of genericity (an arbitrary `emb`, not `virtual-graph`'s
 `Engine`/`Stability` as discussed there. The explicit "`flank-pin` is a
 type, uninhabited by design" observation — documenting exactly what
 stability adds beyond the two one-hand absorptions — has no literal
-counterpart, though `Bb.VirtualGraphs.Readback`'s `module residues`
+counterpart, though `Bb.VirtualGraphs.Degenerate.Readback`'s `module residues`
 (`Readback.lagda.md:116-151`, "The four absorption hypotheses do not
 follow from readback... each hypothesis is exactly a missing far unit law
 or a crossed pairing") makes a structurally similar point about a
@@ -370,7 +370,7 @@ sourced from `Cat.Logic.Graph`/`Cat.Logic.Display`, not from
 **two-sided** base (`rx.binary-product`). The specific one-sided
 `unbiased-lens` construction, the `virtual-graphᴰ` displaced calculus, and
 the Sterling citation/discussion are UNVENDORED-UNIQUE. The `hom-lens`'s
-two unit laws are, in substance, what `Bb.VirtualGraphs.Readback`'s
+two unit laws are, in substance, what `Bb.VirtualGraphs.Degenerate.Readback`'s
 `hand⁺`/`hand⁻` modules derive in the twist-framed setting
 (`unitr⁺`/`unitl⁻`, `Readback.lagda.md:46-52, 74-79`) — same shape of
 result (a unit law per hand, from a cut plus readback), different
@@ -395,7 +395,7 @@ interchange is equivalent to a **mediation** between the two compositions
 (`Graph.lagda.md:97-122`) builds the identical construction — `base =
 rx.binary-product (rx.op graph⁻) graph⁺` (:104), `bipush` (:117-118),
 `judgment-fam` (:120-121) — generalized from one twist to two
-(`twist⁻`/`twist⁺`). `Bb.VirtualGraphs.Display`'s `bipush-comp`
+(`twist⁻`/`twist⁺`). `Bb.VirtualGraphs.Degenerate.Display`'s `bipush-comp`
 (`Display.lagda.md:181-187`) is the same mismatched-hands composition
 lemma, generalized the same way. Display's `push-is-composite⁺`/
 `push-is-composite⁻`/`cospan-from-cuts`/`cuts-from-cospan`
@@ -507,7 +507,7 @@ task was scoped to pin down):
 literal vendoring** (the general theory reaches the same conclusions by a
 different, usually more general, route):
 
-- `Gist/DeductiveSystem.lagda.md` — superseded by `Bb.VirtualGraphs.Engine`
+- `Gist/DeductiveSystem.lagda.md` — superseded by `Bb.VirtualGraphs.Degenerate.Engine`
   (strictly stronger: includes associativity, which `DeductiveSystem`
   lacks; its Rx-dictionary appendix is reproduced near-verbatim in
   `Engine.dict`).

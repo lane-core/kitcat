@@ -42,8 +42,8 @@ open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
 open import Bb.VirtualGraphs.Recognition
-open import Bb.VirtualGraphs.Shape
-open import Bb.VirtualGraphs.Gluing
+open import Bb.VirtualGraphs.Degenerate.Shape
+open import Bb.VirtualGraphs.Degenerate.Gluing
 open import Bb.VirtualGraphs.Word.Carrier
 open import Bb.VirtualGraphs.Word.Model
 open import Bb.VirtualGraphs.Word.Mediation using (half-twists)
@@ -55,7 +55,7 @@ open candidate BW using (frame; rb)
 
 open shape BW
   using ( pair; flanks; is-half-twist; is-framed; frame-of; rx-of; corx-of
-        ; cuts; is-deductive-system; deductive-prop )
+        ; cuts; is-deductive-system-depreciated; deductive-prop )
 
 open grammar BW
   using (cross; sand; is-cross; glue⁻; glue⁺; pred; module play)
@@ -137,7 +137,7 @@ framedᵂ _ = half-twist-pair , half-twistᵂ
 cutsᵂ : cuts framedᵂ
 cutsᵂ = (λ f g → BW-contr⁺ f g) , (λ f g → BW-contr⁻ f g)
 
-deductiveᵂ : is-deductive-system
+deductiveᵂ : is-deductive-system-depreciated
 deductiveᵂ = BW-embedding , framedᵂ , cutsᵂ
 ```
 
@@ -166,7 +166,7 @@ contractionᵂ .paths (p , T) =
 framed-propᵂ : is-prop is-framed
 framed-propᵂ = Π-is-prop λ x → is-contr→is-prop contractionᵂ
 
-deductive-propᵂ : is-prop is-deductive-system
+deductive-propᵂ : is-prop is-deductive-system-depreciated
 deductive-propᵂ = deductive-prop framed-propᵂ
 ```
 

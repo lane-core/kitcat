@@ -11,7 +11,7 @@ is the half-twist of the other sign.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Neutral where
+module Bb.VirtualGraphs.Degenerate.Neutral where
 
 open import Core.Type
 open import Core.Base
@@ -25,9 +25,10 @@ open import Core.Function.Embedding
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
-open import Bb.VirtualGraphs.Readback
-open import Bb.VirtualGraphs.Cancellation
+open import Bb.VirtualGraphs.Degenerate.Readback
+open import Bb.VirtualGraphs.Degenerate.Cancellation
 ```
 
 ## The crossing
@@ -147,11 +148,13 @@ absorptions follow.
   cancel⁺ : ∀ x → act-π (rx x) ≡ snd
   cancel⁺ x = funext λ t → ⨾⁻-is-act (t .snd) (rx x) ∙ unitr⁻ (t .snd)
 
+  open from-cancel G rx corx using () renaming (absorb⁻ to abs⁻; absorb⁺ to abs⁺)
+
   absorb⁻ : ∀ {y} (k : coterm y) → coact (corx y) k ≡ k
-  absorb⁻ {y} k i = k .fst , cancel⁻ y i k
+  absorb⁻ = abs⁻ corx cancel⁻
 
   absorb⁺ : ∀ {x} (t : term x) → act (rx x) t ≡ t
-  absorb⁺ {x} t i = t .fst , cancel⁺ x i t
+  absorb⁺ = abs⁺ rx cancel⁺
 ```
 
 ## The polarity collapse
@@ -288,8 +291,8 @@ module from-absorbing {o h} (G : virtual-graph o h) (open virtual-graph G)
   (C⁺ : framing⁻.is-composable⁺ G rx)
   (C⁻ : framing⁺.is-composable⁻ G corx)
   (R : framing.readback-of G rx corx)
-  (T⁻ : framing⁻.is-absorbing⁻ G rx)
-  (T⁺ : framing⁺.is-absorbing⁺ G corx) where
+  (T⁻ : absorbing⁻.is-absorbing⁻ G rx)
+  (T⁺ : absorbing⁺.is-absorbing⁺ G corx) where
 
   open readback-tower G rx corx S C⁺ C⁻ R public
   open far G rx corx C⁺ C⁻ R T⁻ T⁺ using (unitr⁻; unitl⁺)

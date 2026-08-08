@@ -11,7 +11,7 @@ the framing to one edge.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Interchange where
+module Bb.VirtualGraphs.Degenerate.Interchange where
 
 open import Core.Type
 open import Core.Base
@@ -24,6 +24,7 @@ open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
 open import Bb.VirtualGraphs.Tower
+open import Bb.VirtualGraphs.Degenerate.Tower
 ```
 
 ## The interchange statement
@@ -267,14 +268,14 @@ module neutral-unit {o h} (G : virtual-graph o h) (open virtual-graph G)
   ⨾-agree : ∀ {x y z} (f : hom x y) (g : hom y z) → f ⨾⁺ g ≡ f ⨾⁻ g
   ⨾-agree f g = lc (reflect-⨾⁺ f g ∙ X f g ∙ sym (reflect-⨾⁻ f g))
 
-  unitl⁺ : ∀ {x y} (g : hom x y) → rx x ⨾⁺ g ≡ g
-  unitl⁺ g = ⨾-agree (rx _) g ∙ unitl⁻ g
+  unitl⁺-rx : ∀ {x y} (g : hom x y) → rx x ⨾⁺ g ≡ g
+  unitl⁺-rx g = ⨾-agree (rx _) g ∙ unitl⁻ g
 
-  unitr⁻ : ∀ {x y} (f : hom x y) → f ⨾⁻ corx y ≡ f
-  unitr⁻ f = sym (⨾-agree f (corx _)) ∙ unitr⁺ f
+  unitr⁻-corx : ∀ {x y} (f : hom x y) → f ⨾⁻ corx y ≡ f
+  unitr⁻-corx f = sym (⨾-agree f (corx _)) ∙ unitr⁺ f
 
   half-twists-agree : ∀ x → rx x ≡ corx x
-  half-twists-agree x = sym (unitr⁺ (rx x)) ∙ unitl⁺ (corx x)
+  half-twists-agree x = sym (unitr⁺ (rx x)) ∙ unitl⁺-rx (corx x)
 
   ι : (x : ob) → hom x x
   ι x = rx x ⨾⁺ corx x
@@ -289,7 +290,7 @@ module neutral-unit {o h} (G : virtual-graph o h) (open virtual-graph G)
   ι-either x = sym (⨾-agree (rx x) (corx x))
 
   ι-unitl⁺ : ∀ {x y} (g : hom x y) → ι x ⨾⁺ g ≡ g
-  ι-unitl⁺ {x} g = ap (_⨾⁺ g) (ι-rx x) ∙ unitl⁺ g
+  ι-unitl⁺ {x} g = ap (_⨾⁺ g) (ι-rx x) ∙ unitl⁺-rx g
 
   ι-unitr⁺ : ∀ {x y} (f : hom x y) → f ⨾⁺ ι y ≡ f
   ι-unitr⁺ {y = y} f = ap (f ⨾⁺_) (ι-corx y) ∙ unitr⁺ f

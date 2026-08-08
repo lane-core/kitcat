@@ -29,7 +29,7 @@ hands.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Stable where
+module Bb.VirtualGraphs.Degenerate.Stable where
 
 open import Core.Type
 open import Core.Base
@@ -39,13 +39,14 @@ open import Core.Path.Base
 open import Core.Equiv.Base using (_≃_; is-equiv; iso→equiv; eqv-fibers; is-contr-equiv)
 open import Core.HLevel.Base using (Π-is-prop; Πi-is-prop; ×-is-hlevel)
 open import Core.Transport.Properties using (is-contr-is-prop)
-open import Core.Equiv.Properties using (_∙e_; esym; is-equiv-is-prop; Σ-equiv-snd)
-open import Core.Function.Embedding
-  using (equiv→lc; is-equiv→is-embedding; is-embedding→ap-equiv)
+open import Core.Equiv.Properties using (_∙e_; esym; is-equiv-is-prop)
+open import Core.Function.Embedding using (equiv→lc)
 
 open import Bb.VirtualGraphs.Type
-open import Bb.VirtualGraphs.Embedding using (is-representable; opⱽ)
-open import Bb.VirtualGraphs.Engine
+open import Bb.VirtualGraphs.Framing using (module framing)
+open import Bb.VirtualGraphs.Embedding
+  using (is-representable; opⱽ; swap-judgment; rep-op)
+open import Bb.VirtualGraphs.Degenerate.Chosen
 ```
 
 ## Composability and unitality
@@ -61,9 +62,6 @@ actions already built for a chosen edge.
 ```agda
 module _ {o h} (G : virtual-graph o h) (open virtual-graph G)
   (idn : (x : ob) → hom x x) (open chosen G idn) where
-
-  readback : Type (o ⊔ h)
-  readback = ∀ {x y} (f : hom x y) → eval (reflect f) ≡ f
 
   is-composable : Type (o ⊔ h)
   is-composable =
@@ -162,23 +160,30 @@ thing: it forces the two canonicals to agree, a path between flank
 paths.
 
 ```agda
-  flank-restrict : readback G idn → (∀ x → eval (reflect (idn x)) ≡ idn x)
+  flank-restrict : framing.readback-of G idn idn
+                 → (∀ x → eval (reflect (idn x)) ≡ idn x)
   flank-restrict u x = u (idn x)
 
   is-stable : Type (o ⊔ h)
-  is-stable = is-contr (Σ u ∶ readback G idn , (∀ x → u (idn x) ≡ canonical-flank⁻ x))
+  is-stable = is-contr
+    (Σ u ∶ framing.readback-of G idn idn
+         , (∀ x → u (idn x) ≡ canonical-flank⁻ x))
 
   is-stable⁺ : Type (o ⊔ h)
-  is-stable⁺ = is-contr (Σ u ∶ readback G idn , (∀ x → u (idn x) ≡ canonical-flank⁺ x))
+  is-stable⁺ = is-contr
+    (Σ u ∶ framing.readback-of G idn idn
+         , (∀ x → u (idn x) ≡ canonical-flank⁺ x))
 
   is-stable± : Type (o ⊔ h)
   is-stable± = is-contr
-    (Σ u ∶ readback G idn , (∀ x → u (idn x) ≡ canonical-flank⁻ x)
-                          × (∀ x → u (idn x) ≡ canonical-flank⁺ x))
+    (Σ u ∶ framing.readback-of G idn idn
+         , (∀ x → u (idn x) ≡ canonical-flank⁻ x)
+         × (∀ x → u (idn x) ≡ canonical-flank⁺ x))
 
   both→agree
-    : (Σ u ∶ readback G idn , (∀ x → u (idn x) ≡ canonical-flank⁻ x)
-                            × (∀ x → u (idn x) ≡ canonical-flank⁺ x))
+    : (Σ u ∶ framing.readback-of G idn idn
+           , (∀ x → u (idn x) ≡ canonical-flank⁻ x)
+           × (∀ x → u (idn x) ≡ canonical-flank⁺ x))
     → ∀ x → canonical-flank⁻ x ≡ canonical-flank⁺ x
   both→agree (u , p , q) x = sym (p x) ∙ q x
 
@@ -213,7 +218,7 @@ module stable {o h} (G : virtual-graph o h) (open virtual-graph G)
   flank : Type (o ⊔ h)
   flank = ∀ x → eval (reflect (idn x)) ≡ idn x
 
-  restrict : readback G idn → flank
+  restrict : framing.readback-of G idn idn → flank
   restrict u x = u (idn x)
 
   is-stable : Type (o ⊔ h)
@@ -226,36 +231,6 @@ module stable {o h} (G : virtual-graph o h) (open virtual-graph G)
 The codomain is fixed by the graph, so any pin gives a contractible
 package this way — in particular either hand's canonical flank above,
 with neither privileged and no comparison between them required.
-
-## The swap of judgments
-
-Reversing edges exchanges term and coterm, so a judgment at the
-opposite carrier is this carrier's own judgment read against the
-swapped argument — `Engine`'s own `swap-judgment` already supplies
-that exchange. The swap is a definitional involution on arguments, so
-it is an equivalence on judgments with `refl` round trips, and `ap` of
-an equivalence is again one: a fiber of `reflect` over a judgment is
-equivalent to a fiber of the opposite `reflect` over the swapped
-judgment.
-
-```agda
-module _ {o h} (G : virtual-graph o h) (open virtual-graph G)
-  (idn : (x : ob) → hom x x) where
-
-  swap-judgment⁻ : ∀ {x z} → virtual-graph.judgment (opⱽ G) x z → judgment z x
-  swap-judgment⁻ β δ = β (swap-arg⁻ G idn δ)
-
-  swap-eqv : ∀ {x z} → judgment z x ≃ virtual-graph.judgment (opⱽ G) x z
-  swap-eqv = iso→equiv (swap-judgment G idn) swap-judgment⁻ (λ _ → refl) (λ _ → refl)
-
-  ap-swap : ∀ {x z} {α β : judgment z x}
-          → is-equiv (ap (swap-judgment G idn {x} {z}) {α} {β})
-  ap-swap = is-embedding→ap-equiv (is-equiv→is-embedding (swap-eqv .snd))
-
-  rep-op : ∀ {x z} (β : judgment z x)
-         → is-representable G β ≃ is-representable (opⱽ G) (swap-judgment G idn β)
-  rep-op β = Σ-equiv-snd (λ m → ap (swap-judgment G idn) , ap-swap)
-```
 
 ## Composability, transported
 
@@ -270,8 +245,8 @@ composable-op : ∀ {o h} (G : virtual-graph o h) (open virtual-graph G)
               (idn : (x : ob) → hom x x)
               → is-composable G idn → is-composable (opⱽ G) idn
 composable-op G idn (c⁻ , c⁺) =
-    (λ f g → is-contr-equiv (esym (rep-op G idn _)) (c⁺ g f))
-  , (λ f g → is-contr-equiv (esym (rep-op G idn _)) (c⁻ g f))
+    (λ f g → is-contr-equiv (esym (rep-op G _)) (c⁺ g f))
+  , (λ f g → is-contr-equiv (esym (rep-op G _)) (c⁻ g f))
 
 composable-op-invol
   : ∀ {o h} (G : virtual-graph o h) (open virtual-graph G)
@@ -286,7 +261,7 @@ composable-op-invol G idn C = is-composable-is-prop G idn _ _
 ⨾-op G idn C f g =
   ap fst (composable-op G idn C .fst f g .paths
            (C .snd g f .center .fst
-           , ap (swap-judgment G idn) (C .snd g f .center .snd)))
+           , ap (swap-judgment G) (C .snd g f .center .snd)))
 ```
 
 ## The unit tier, transported
@@ -303,8 +278,8 @@ unital-op : ∀ {o h} (G : virtual-graph o h) (open virtual-graph G)
           (idn : (x : ob) → hom x x)
           → is-unital G idn → is-unital (opⱽ G) idn
 unital-op G idn (e⁻ , e⁺ , i⁻ , i⁺) =
-  e⁺ , e⁻ , (λ x → ap (swap-judgment G idn) (i⁺ x))
-          , (λ x → ap (swap-judgment G idn) (i⁻ x))
+  e⁺ , e⁻ , (λ x → ap (swap-judgment G) (i⁺ x))
+          , (λ x → ap (swap-judgment G) (i⁻ x))
 
 unital-op-invol
   : ∀ {o h} (G : virtual-graph o h) (open virtual-graph G)
@@ -324,7 +299,8 @@ first, an isomorphism with `refl` round trips.
 ```agda
 readback-op : ∀ {o h} (G : virtual-graph o h) (open virtual-graph G)
             (idn : (x : ob) → hom x x)
-            → readback (opⱽ G) idn ≃ readback G idn
+            → framing.readback-of (opⱽ G) idn idn
+            ≃ framing.readback-of G idn idn
 readback-op G idn = iso→equiv (λ u f → u f) (λ u f → u f) (λ _ → refl) (λ _ → refl)
 
 flank-op : ∀ {o h} (G : virtual-graph o h) (open virtual-graph G)
@@ -334,7 +310,7 @@ flank-op G idn = refl
 
 restrict-op
   : ∀ {o h} (G : virtual-graph o h) (open virtual-graph G)
-    (idn : (x : ob) → hom x x) (u : readback (opⱽ G) idn)
+    (idn : (x : ob) → hom x x) (u : framing.readback-of (opⱽ G) idn idn)
   → stable.restrict (opⱽ G) idn u ≡ stable.restrict G idn (readback-op G idn .fst u)
 restrict-op G idn u = refl
 ```

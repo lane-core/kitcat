@@ -15,7 +15,7 @@ defects of the operator.
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Presentation where
+module Bb.VirtualGraphs.Degenerate.Presentation where
 
 open import Core.Type
 open import Core.Base
@@ -27,9 +27,10 @@ open import Core.HLevel.Base using (Π-is-hlevel; Σ-prop-path)
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
-open import Bb.VirtualGraphs.Readback
-open import Bb.VirtualGraphs.Cancellation
+open import Bb.VirtualGraphs.Degenerate.Readback
+open import Bb.VirtualGraphs.Degenerate.Cancellation
 ```
 
 ## The presentation
@@ -68,6 +69,8 @@ axiom — with `pivot` in the `rx` role and `unit` in the
   graph .virtual-graph.reflect f γ = (cross (γ .fst .snd) ⨾ f) ⨾ (γ .snd .snd)
 
   open framing graph pivot unit
+  open absorbing⁻ graph pivot
+  open absorbing⁺ graph unit
 
   readback : readback-of
   readback {y = y} f = ap (_⨾ unit y) (pivot-unitl f) ∙ unitr f
@@ -222,8 +225,8 @@ module presented {o h} (G : virtual-graph o h) (open virtual-graph G)
   (cc⁻ : ∀ {x y z} (f : hom x y) (g : hom y z)
        → is-contr (is-representable G (framing⁺.composite⁻ G corx f g)))
   (R : framing.readback-of G rx corx)
-  (T⁻ : framing⁻.is-absorbing⁻ G rx)
-  (T⁺ : framing⁺.is-absorbing⁺ G corx)
+  (T⁻ : absorbing⁻.is-absorbing⁻ G rx)
+  (T⁺ : absorbing⁺.is-absorbing⁺ G corx)
   where
 
   C⁺ : framing⁻.is-composable⁺ G rx

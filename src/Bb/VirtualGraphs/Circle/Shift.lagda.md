@@ -28,7 +28,7 @@ open import Core.Transport.Properties using (is-prop→is-set; sq-from-∙)
 
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Framing
-open import Bb.VirtualGraphs.Presentation
+open import Bb.VirtualGraphs.Degenerate.Presentation
 open import Bb.VirtualGraphs.Circle.Model
 open import Bb.VirtualGraphs.Circle.Torsor using (rb₀; rb₁)
 

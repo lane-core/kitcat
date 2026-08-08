@@ -28,6 +28,7 @@ open import Core.Equiv.Base using (is-equiv; iso→equiv)
 open import Bb.VirtualGraphs.Type
 open import Bb.VirtualGraphs.Embedding
 open import Bb.VirtualGraphs.Framing
+open import Bb.VirtualGraphs.Degenerate.Absorb
 open import Bb.VirtualGraphs.Tower
 
 is-true : Bool → Type
@@ -118,12 +119,12 @@ proposition. The negative fiber holds `a` and the positive one holds
     ∙ ap b (happly (happly p (tt , idfun Bool)) z)
     ∙ b-invol (e' z)
 
-  tier⁻ : framing⁻.is-absorbing⁻ model (λ _ → a)
+  tier⁻ : absorbing⁻.is-absorbing⁻ model (λ _ → a)
   tier⁻ _ = prop-inhabited→is-contr
     (injective→is-embedding action-set (coact-π {tt} {tt}) coact-inj snd)
     (a , funext λ γ → funext λ z → ap (γ .snd) (a-invol z))
 
-  tier⁺ : framing⁺.is-absorbing⁺ model (λ _ → b)
+  tier⁺ : absorbing⁺.is-absorbing⁺ model (λ _ → b)
   tier⁺ _ = prop-inhabited→is-contr
     (injective→is-embedding action-set (act-π {tt} {tt}) act-inj snd)
     (b , funext λ t → funext λ z → b-invol (t .snd z))
@@ -132,7 +133,7 @@ proposition. The negative fiber holds `a` and the positive one holds
 Each flanking operation composes the edge with `b ∘ a` or with
 `a ∘ b`, on one side. Both composites are involutions, so each
 operation is its own inverse and all four are equivalences. The two
-far flanks are the hypotheses `Bb.VirtualGraphs.Neutral`'s `neutral`
+far flanks are the hypotheses `Bb.VirtualGraphs.Degenerate.Neutral`'s `neutral`
 module takes.
 
 ```agda

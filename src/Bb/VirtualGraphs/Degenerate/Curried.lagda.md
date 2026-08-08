@@ -18,13 +18,13 @@ representability image, so the two compositions need not agree until
 a further hypothesis says so.
 
 This is a curried restatement of the `act-π`/`coact-π` vocabulary
-`Bb.VirtualGraphs.Engine` states directly over `reflect`; its results
+`Bb.VirtualGraphs.Degenerate.Chosen` states directly over `reflect`; its results
 are not re-derived here.
 
 ```agda
 {-# OPTIONS --safe --erased-cubical --no-guardedness #-}
 
-module Bb.VirtualGraphs.Curried where
+module Bb.VirtualGraphs.Degenerate.Curried where
 
 open import Core.Type
 open import Core.Base
