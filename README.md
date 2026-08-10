@@ -54,6 +54,6 @@ Homotopy Type Theory and Univalent Foundations. They are excellent, go look at t
 - [agda-categories](https://github.com/agda/agda-categories) —
   Category theory library for Agda
 
-## AI policy (updated 2026-07-04)
+## LLM policy (updated 2026-07-09)
 
-See [ai-policy](docs/ai.md) for my personally authored statement on the use of AI in this project.
+See [llm-policy](docs/llms.md) for my statement on the use of generative LLMs in this project.
