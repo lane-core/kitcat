@@ -4,6 +4,7 @@ sha256: 562be57f5f652004b7f0a816a9196b417f661e1f21f203e7a99f1fa034cb628d
 format: latex-source
 fetch-url: https://arxiv.org/e-print/2212.11082
 metadata-url: https://arxiv.org/abs/2212.11082
+doi: 10.1017/9781108933568
 version: v1
 fetched: 2026-07-12
 sha256-inner: 51ad7e31941f4959b8241c3e6c5518dac0cb750a87f731bc27cbe17a41a70b7f
@@ -22,9 +23,11 @@ univalence, and a first higher inductive type.
 
 Egbert Rijke. *Introduction to Homotopy Type Theory*.
 arXiv:2212.11082 [math.LO], December 2022.
-<https://arxiv.org/abs/2212.11082>. (A revised version of the
-author's lecture notes; later published by Cambridge University
-Press, 2025.)
+<https://arxiv.org/abs/2212.11082>. Published as a monograph:
+*Cambridge Studies in Advanced Mathematics* 219, Cambridge
+University Press, 23 October 2025, ISBN 9781108844161; DOI
+10.1017/9781108933568 (per the CrossRef record, checked
+2026-08-09).
 
 ## Vetting
 

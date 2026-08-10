@@ -4,6 +4,7 @@ sha256: 3cb80488fcee295aed19ff7bed478a8b8b373789f0f7ce7b57ab4f2c557f2317
 format: latex-source
 fetch-url: https://arxiv.org/e-print/2303.14754
 metadata-url: https://arxiv.org/abs/2303.14754
+doi: 10.48550/arXiv.2303.14754
 version: v1
 fetched: 2026-07-12
 sha256-inner: 85ce309afdcf4b01509ebdb84158d9f91c101e58c140f343b5fd27392ae698d6
@@ -28,7 +29,13 @@ arXiv:2303.14754v1 [math.CT] (secondary: math.LO), 26 March 2023.
 paper): Department of Computer Science, University of Verona
 (iosif.petrakis@univr.it). Only v1 exists on arXiv (submission
 history: `[v1] Sun, 26 Mar 2023 15:18:02 UTC`; no later version as
-of ingestion).
+of ingestion). arXiv-issued DOI (per the abs page):
+10.48550/arXiv.2303.14754. No journal or proceedings publication
+was found (a CrossRef bibliographic search on the title, checked
+2026-08-09, returned no match); the author's related talk on the
+follow-on "codependent arrows" material (vendored beside this entry
+as [petrakis-codep-slides](../petrakis-codep-slides/)) had not, as
+of that talk, appeared as a post-proceedings paper either.
 
 ## Vetting
 

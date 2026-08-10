@@ -16,10 +16,16 @@ Programmes, Systèmes, CNRS — Université Paris Diderot.
 Hosted at:
 <https://www.irif.fr/~mellies/tensorial-logic/dialogue-categories-up-to-deformation.pdf>
 
-Publication status: **unpublished manuscript** as far as this entry
-knows — the author's tensorial-logic index hosts it without a venue
-marking, and no literature check for a published version has been
-run for this entry yet. It is the long, deformation-focused
+Publication status: **unpublished manuscript**. A literature check
+(2026-08-09) — a CrossRef bibliographic search on the title, the
+author's DBLP bibliography (no entry mentions "deformation"), and
+the author's own tensorial-logic index (the manuscript is listed by
+title with no venue marking, its body text the only place
+"deformation" appears on that page) — found no journal, proceedings,
+or arXiv version. So "unpublished manuscript" is the correct
+citation (honest negative: the search was performed and returned
+nothing citable beyond the IRIF-hosted PDF), and no DOI exists to
+record in this entry's frontmatter. It is the long, deformation-focused
 companion of the published paper *Dialogue categories and
 chiralities* (vendored beside this entry as
 [mellies-dialogue-chiralities](../mellies-dialogue-chiralities/));
