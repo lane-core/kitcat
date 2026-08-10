@@ -8,6 +8,7 @@ __pycache__/
 .attic/
 .pi/tasks
 .pi/hindsight
+src/Test/**
 
 # outputs/ dot-directories are local working memory (run plans, research
 # intermediates, prove-loop state); the durable layer that IS tracked is
