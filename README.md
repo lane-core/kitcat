@@ -1,3 +1,5 @@
+
+
 # Kitcat
 
 An experiment with univalent programming and open source mathematics in cubical Agda.
@@ -34,7 +36,7 @@ organization of the theory whenever possible.
 While many lemmas are original (I've rewritten the Core library several times
 in the course of development), Kitcat has adapted or otherwise drawn upon code
 from the following projects, which are exemplars of open source mathematics and
-deserve ample credit for their contributions to the foudnational corpus of formalized
+deserve ample credit for their contributions to the foundational corpus of formalized
 Homotopy Type Theory and Univalent Foundations. They are excellent, go look at them.
 
 - [**1lab**](https://1lab.dev/) (Amélia Liao et al., AGPL-3.0) — Definitions
