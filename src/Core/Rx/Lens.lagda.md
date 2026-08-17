@@ -204,7 +204,6 @@ the central component `B p`; the mid unitor relates the two injections along
 reflexivity, and a lax unitor sends a vertex to its right injection.
 
 ```agda
-
 module _ {v e w z} (G : reflexive-graph v e) (B : rx.efam G w z) where
   private
     module G = reflexive-graph G
@@ -241,7 +240,6 @@ structure on the diagonal component transports along the fan to the component at
 any edge out of `x`.
 
 ```agda
-
   component-path-object : rx.is-univalent G → is-path-objects (rx.diag G B)
                         → (x y : G.vtx) (p : G.edge x y) → rx.is-univalent (B x y p)
   component-path-object G-univ B-univ x y p =
@@ -258,7 +256,6 @@ identity in `mid.vtx (G.rx x) ⋔ B (G.rx x)`, and that fan is contractible, so 
 mid unitor is left as the cofan of the identity.
 
 ```agda
-
   unb-lens-structure-is-prop : rx.is-univalent G → is-path-objects (rx.diag G B)
                              → is-prop unbiased-lens
   unb-lens-structure-is-prop G-univ B-univ = is-prop-equiv pointwise (Π-is-prop local-is-prop)
@@ -350,13 +347,11 @@ is univalent: its component fan at `u` is definitionally the fan of `B x` at the
 pushforward, hence a proposition.
 
 ```agda
-
 cov-disp-path-object : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.vfam G w z}
                      → (L : oplax-cov-lens G B) → is-path-objects B
                      → is-displayed-univalent (oplax-cov-lens.display L)
 cov-disp-path-object {G = G} L B-univ x u =
   B-univ x (oplax-cov-lens.has-push L x x (reflexive-graph.rx G x) u)
-
 ```
 
 The flattening operations are keyed on a lens over one base, recovered from the
@@ -378,7 +373,6 @@ identity function and the unitor supply the reflexive edge, so the unit law hold
 on the nose over the flattened base.
 
 ```agda
-
   cov-flatten : oplax-cov-lens G B → reflexive-graph v (w ⊔ e ⊔ z)
   cov-flatten L .reflexive-graph.vtx = G.vtx
   cov-flatten L .reflexive-graph.edge x y =
@@ -402,7 +396,6 @@ lens, the cofan — of the transported fibre in `B.vtx x ⋔ B y`, which the
 cotensor's path-object structure makes contractible.
 
 ```agda
-
   cov-flatten-path-object : (L : oplax-cov-lens G B)
                           → rx.is-univalent G → is-path-objects B
                           → rx.is-univalent (cov-flatten L)
@@ -450,15 +443,15 @@ with its unitor are `push` with its unitor read against the reversed edges. Its
 display is the total opposite of the covariant display, definitionally.
 
 ```agda
-
-tot-op-lens : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.vfam G w z}
-            → oplax-cov-lens G B → lax-ctrv-lens (rx.op G) (rx.op ∘ B)
+tot-op-lens
+  : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.vfam G w z}
+  → oplax-cov-lens G B → lax-ctrv-lens (rx.op G) (rx.op ∘ B)
 tot-op-lens L .lax-ctrv-lens.has-pull x y p   = oplax-cov-lens.has-push   L y x p
 tot-op-lens L .lax-ctrv-lens.has-unitor = oplax-cov-lens.has-unitor L
 
-display-of-tot-op : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.vfam G w z}
-                    (L : oplax-cov-lens G B)
-                  → lax-ctrv-lens.display (tot-op-lens L) ≡ rx.total-op G (oplax-cov-lens.display L)
+display-of-tot-op
+  : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.vfam G w z} (L : oplax-cov-lens G B)
+  → lax-ctrv-lens.display (tot-op-lens L) ≡ rx.total-op G (oplax-cov-lens.display L)
 display-of-tot-op L = refl
 ```
 
@@ -466,9 +459,9 @@ The contravariant dual, and the univalence of a contravariant display of a lens
 of path objects — routed through the covariant result along the total opposite.
 
 ```agda
-
-tot-op-lens⁻ : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.vfam G w z}
-             → lax-ctrv-lens G B → oplax-cov-lens (rx.op G) (λ x → rx.op (B x))
+tot-op-lens⁻
+  : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.vfam G w z}
+  → lax-ctrv-lens G B → oplax-cov-lens (rx.op G) (λ x → rx.op (B x))
 tot-op-lens⁻ M .oplax-cov-lens.has-push x y p   = lax-ctrv-lens.has-pull   M y x p
 tot-op-lens⁻ M .oplax-cov-lens.has-unitor = lax-ctrv-lens.has-unitor M
 
@@ -488,7 +481,6 @@ display recovered as the unbiased display definitionally. The covariant family
 sits over the target, the contravariant over the source.
 
 ```agda
-
 cov-lens-to-unbiased : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.vfam G w z}
                      → oplax-cov-lens G B → unbiased-lens G (λ _ y _ → B y)
 cov-lens-to-unbiased L .unbiased-lens.linj x y p u        = oplax-cov-lens.has-push   L x y p u
@@ -510,7 +502,6 @@ identity — hence an equivalence — so the component fan at `u` is definitiona
 the contractible fibre of `rinj` over the left injection.
 
 ```agda
-
 unb-disp-path-object
   : ∀ {v e w z} {G : reflexive-graph v e} {B : rx.efam G w z}
     (L : unbiased-lens G B) → is-path-objects (rx.diag G B)

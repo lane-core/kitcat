@@ -34,7 +34,6 @@ arguments, so pulling back along reflexivity returns the family unchanged and th
 unitor is reflexivity itself.
 
 ```agda
-
   gph-on : dep-rx (ℓ ⊔ ℓ') ℓ' U
   gph-on A = rx.cotensor (rx.cotensor 𝒰 (E A)) (E A)
 
@@ -52,7 +51,6 @@ together with an edge family, and edges are an equivalence of carriers together
 with a fibrewise equivalence of edge families over it.
 
 ```agda
-
   Gph : reflexive-graph (ℓ ⊔ ℓ') ℓ'
   Gph = rx.total 𝒰 (lax-ctrv-lens.display gph-lens)
 
@@ -72,7 +70,6 @@ right injection reindexes one along the vertex map, and at reflexivity both are
 the identity, so the two unitors are reflexivity.
 
 ```agda
-
   private
     module Gph = reflexive-graph Gph
 
@@ -108,7 +105,6 @@ reflexive graph. An edge of `RxGph` carries a vertex map and a fibrewise
 equivalence of edges, projected out below.
 
 ```agda
-
   module _ {v e} (gA : reflexive-graph v e) where
     private
       module A = reflexive-graph gA
@@ -134,7 +130,6 @@ pushforward `Φ` along base edges together with an oplax-unitor comparison to th
 vertex map of `f` at reflexivity.
 
 ```agda
-
     𝒜 : reflexive-graph (v ⊔ ℓ ⊔ ℓ') (v ⊔ ℓ')
     𝒜 = rx.cotensor RxGph A.vtx
 
@@ -154,7 +149,6 @@ and unitor along `f`'s vertex map and fibrewise edge equivalence; at reflexivity
 these act by the identity, so both unit laws hold on the nose.
 
 ```agda
-
     lens-of-lenses : unbiased-lens 𝒜 (λ gB₀ gB₁ f → discrete (CovLensStr gB₀ gB₁ f))
     lens-of-lenses .unbiased-lens.linj gB₀ gB₁ f (Φ , Φ̂) =
         (λ x y p u → vmap (gB₀ y) (gB₁ y) (f y) (Φ x y p u))
@@ -178,7 +172,6 @@ along a fibrewise equivalence of displayed vertices is a lax contravariant lens
 over `vtx gA ⋔ 𝒰`; its total classifies displayed-graph structures.
 
 ```agda
-
     dgph-base : reflexive-graph (v ⊔ ℓ) (v ⊔ ℓ')
     dgph-base = rx.cotensor 𝒰 A.vtx
 
@@ -211,7 +204,6 @@ carry a datum forward along the fibrewise edge equivalence of `f` and reindex on
 along its vertex map; both act by the identity at reflexivity.
 
 ```agda
-
     private module DGph = reflexive-graph DGph
 
     DRxOn : (gB₀ gB₁ : DGph.vtx) → DGph.edge gB₀ gB₁ → reflexive-graph (v ⊔ ℓ') (v ⊔ ℓ')
@@ -249,7 +241,6 @@ transport an operation forward along the vertex equivalence and reindex one
 against it, agreeing on the nose at reflexivity.
 
 ```agda
-
   binop± : rx.efam 𝒰 ℓ' ℓ'
   binop± A B f = product (E A × E A) (λ _ → discrete (E B))
 
@@ -282,7 +273,6 @@ equivalence, unital at reflexivity. Partial products give the path object of
 unordered pairs valued in any path object.
 
 ```agda
-
   hup-pred : U → Type ℓ'
   hup-pred X = ∥ E X ≃ Bool ∥
 
