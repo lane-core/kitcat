@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# nf — normal-form measurement for kitcat expressions
+# Usage: nf MODULE EXPR [EXPR ...] [--quiet]
+
+usage() {
+  echo "Usage: nf MODULE EXPR [EXPR ...] [--quiet]"
+  echo ""
+  echo "Normalize each EXPR in MODULE's scope and report its size."
+  echo ""
+  echo "  MODULE     Dot-path (e.g. Core.Kan) or file path"
+  echo "  EXPR       An Agda expression whose type Agda can infer."
+  echo "             A bare top-level name is the reliable form; a"
+  echo "             lambda with unannotated binders normalizes to a"
+  echo "             metavariable."
+  echo "  --quiet    Sizes only, without the normal form"
+  echo ""
+  echo "Reports characters and tokens, counted on the printed form."
+  echo ""
+  echo "A DISPLAY pragma folds a matched pattern back to its source"
+  echo "name, and the fold is large. Two forms of path composition read"
+  echo "54 and 100 characters through the library names, and 230 and"
+  echo "265 against clones carrying no pragma. The fold turns a"
+  echo "one-token difference into an apparent five-token one. To"
+  echo "measure a construction whose vocabulary carries pragmas, clone"
+  echo "it without them and measure the clone."
+  echo ""
+  echo "Tokens read truer than characters. Normal forms print"
+  echo "fully qualified names, which inflates the character count."
+}
+
+cd "$(git rev-parse --show-toplevel)"
+
+AGDA="${AGDA:-agda}"
+
+module=""
+quiet=0
+exprs=()
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  --quiet) quiet=1 ;;
+  -*)
+    echo "nf: unknown flag $1" >&2
+    usage >&2
+    exit 2
+    ;;
+  *)
+    if [ -z "$module" ]; then
+      module="$1"
+    else
+      exprs+=("$1")
+    fi
+    ;;
+  esac
+  shift
+done
+
+[ -n "$module" ] && [ "${#exprs[@]}" -gt 0 ] || {
+  usage >&2
+  exit 2
+}
+
+if [[ "$module" == *.lagda.md ]]; then
+  src="$module"
+else
+  src="src/$(echo "$module" | tr '.' '/').lagda.md"
+fi
+[ -f "$src" ] || {
+  echo "nf: no such module: $src" >&2
+  exit 1
+}
+
+# Agda's interaction protocol wants the expression inside a Haskell
+# string literal, nested in the IOTCM command.
+hs_escape() {
+  printf '%s' "$1" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read())[1:-1])'
+}
+
+{
+  printf 'IOTCM "%s" None Indirect (Cmd_load "%s" [])\n' "$src" "$src"
+  for e in "${exprs[@]}"; do
+    printf 'IOTCM "%s" None Indirect (Cmd_compute_toplevel DefaultCompute "%s")\n' \
+      "$src" "$(hs_escape "$e")"
+  done
+} | $AGDA --interaction-json 2>&1 | python3 -c '
+import json, sys, re
+
+forms = []
+for line in sys.stdin:
+    line = line.strip()
+    if not line.startswith("{"):
+        continue
+    try:
+        msg = json.loads(line)
+    except ValueError:
+        continue
+    info = msg.get("info") or {}
+    if info.get("kind") == "NormalForm":
+        forms.append(info.get("expr", ""))
+    elif info.get("kind") == "Error":
+        sys.stderr.write("nf: " + str(info.get("message", "")) + "\n")
+        sys.exit(1)
+
+exprs = sys.argv[1:-1]
+quiet = sys.argv[-1] == "1"
+
+if len(forms) != len(exprs):
+    sys.stderr.write(
+        "nf: normalized %d of %d expressions\n" % (len(forms), len(exprs)))
+    sys.exit(1)
+
+width = max(len(e) for e in exprs)
+for src, nf in zip(exprs, forms):
+    flat = " ".join(nf.split())
+    tokens = len([t for t in re.split(r"[\s()]+", flat) if t])
+    if not quiet:
+        print(src)
+        print("  " + flat)
+        print("  %d chars, %d tokens" % (len(flat), tokens))
+        print()
+    else:
+        print("%-*s  %5d chars  %5d tokens" % (width, src, len(flat), tokens))
+' "${exprs[@]}" "$quiet"

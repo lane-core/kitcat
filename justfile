@@ -21,6 +21,10 @@ check module:
 profile module *flags:
     bin/profile {{module}} {{flags}}
 
+# Normalize expressions in a module's scope and report their size [--quiet]
+nf module *exprs:
+    bin/nf {{module}} {{exprs}}
+
 # Typecheck every module under a directory (default: whole library), listing failures.
 check-tree dir="src":
     #!/usr/bin/env bash
@@ -55,18 +59,6 @@ new module *flags:
 mv old new *flags:
     bin/mmv {{old}} {{new}} {{flags}}
 
-# Module statistics
-stats:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    total=$(fd -e lagda.md . src/ | grep -v Stash | grep -v '^src/Test/' | wc -l | tr -d ' ')
-    namespaces=$(fd -e lagda.md --min-depth 2 . src/ | grep -v Stash | sed 's|^src/||;s|/.*||' | sort -u | tr '\n' ' ')
-    echo "Modules:    $total"
-    echo "Namespaces: $namespaces"
-
-# Run all lint checks
-lint *checks:
-    bin/lint {{checks}}
 # Verify resources/ custody: recorded hashes vs vendored artifacts
 # (--remote also reports latest arXiv versions for drift)
 resources-verify *flags:
