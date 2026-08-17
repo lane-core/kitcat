@@ -30,11 +30,25 @@ the cited line, so the map below is line-anchored, not vague.
 
 House the source's own markup when it exists. The format hierarchy:
 
-1. **Source markup** — LaTeX `.tex` (an arXiv e-print), or other
-   markup. Math and structure stay intact and greppable; this is
-   the canonical form, preferred over everything below.
-2. **PDF** — when no source markup is available.
-3. **Transcribed text** (`.pdftext`) — a `pdftotext` extraction, the
+1. **Publication source** (`latex-source`) — LaTeX `.tex` (an arXiv
+   e-print), or another publication's own markup. Math and structure
+   stay intact and greppable; this is the canonical form for a
+   document distributed as source rather than as a version-controlled
+   research corpus.
+2. **Repository source tree** (`source-tree`) — a deterministic archive
+   of an immutable VCS revision containing a formal library, software
+   artifact, research corpus, or mixed source tree. The full revision
+   identifier is mandatory in `version:`. The readable extraction lives
+   under `snapshot/` so the source repository's own custody files cannot
+   collide with the entry README. For Git, build the canonical archive
+   with `git archive` from the pinned commit rather than treating a
+   forge-generated download archive as byte-stable.
+3. **HTML** (`html`) — a web source whose published HTML is the form of
+   record and is vendored directly.
+4. **PDF** (`pdf`) — when no source markup is available.
+5. **Scan** (`scan`) — a PDF whose page images, rather than an embedded
+   text layer, are the form of record.
+6. **Transcribed text** (`.pdftext`) — a `pdftotext` extraction, the
    lowest form: a greppability fallback beside a PDF when the source
    markup is absent. For a PDF lacking a text layer (a pure scan) or
    carrying a broken one, the pinned repair/OCR chain is
@@ -57,7 +71,8 @@ House the source's own markup when it exists. The format hierarchy:
    until the audit is re-run.
 
 Each entry records its canonical format in its frontmatter
-(`format: latex-source | html | pdf | scan` — the schema is below).
+(`format: latex-source | source-tree | html | pdf | scan` — the schema
+is below).
 All vendored and derived forms are gitignored — the source tarball,
 the extracted markup, the `.pdftext` — so only tracked, regenerable
 metadata leaves the machine. A new unfolded-source file extension not
@@ -77,7 +92,7 @@ keys only, no nesting. Required keys, on every entry:
 ---
 artifact: <filename of the canonical artifact, in the entry dir>
 sha256: <64-hex sha256 of the canonical artifact>
-format: latex-source   # or: html | pdf | scan
+format: latex-source   # or: source-tree | html | pdf | scan
 fetch-url: <URL that retrieves the canonical artifact, or none>
 ---
 ```
@@ -91,7 +106,8 @@ omitted, never invented):
 - `metadata-url:` — the source's metadata page (an arXiv abs URL).
 - `doi:` — the DOI, bare (no resolver prefix).
 - `version:` — the version pin: the version the fetch URL served
-  at fetch time (an arXiv `v2`).
+  at fetch time (an arXiv `v2`), or the full immutable VCS revision
+  for a `source-tree`. This field is mandatory for `source-tree`.
 - `fetched:` — the date the vendored artifact was obtained,
   `YYYY-MM-DD`.
 - `sha256-inner:` — sha256 of the gunzip-decompressed inner form
@@ -104,12 +120,14 @@ omitted, never invented):
   superseded-but-retained compile); always a pair, verified
   against disk exactly like the canonical pair.
 
-Re-fetching is mechanical from the frontmatter — retrieve
-`fetch-url`, name the result `artifact`, verify `sha256` — so no
-entry records fetch commands. A re-fetch that changes `sha256` is
-a re-ingestion: it voids the entry's `Statements verified:` field
-until the audit is re-run, and a mismatch against the recorded
-identity is FATAL (see Acquiring documents).
+Re-fetching is mechanical from the frontmatter. For a directly hosted
+artifact, retrieve `fetch-url`, name the result `artifact`, and verify
+`sha256`, so no entry records fetch commands. For a `source-tree`, clone
+`fetch-url`, check out `version`, reproduce the deterministic archive
+described by the format rule above, and verify `sha256`. A re-fetch that
+changes `sha256` is a re-ingestion: it voids the entry's `Statements
+verified:` field until the audit is re-run, and a mismatch against the
+recorded identity is FATAL (see Acquiring documents).
 
 The body sections:
 

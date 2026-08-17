@@ -1,7 +1,7 @@
 ---
 artifact: catlog.tar.gz
 sha256: cec4fec0715767c67ff644b524975cd3710a9025b050f00b3a079941e7216d46
-format: latex-source
+format: source-tree
 fetch-url: https://github.com/mikeshulman/catlog.git
 metadata-url: https://github.com/mikeshulman/catlog
 version: f0e166e5c8fc898b7e1f5b00d6ccaacb7cf390be
@@ -78,9 +78,9 @@ been through a fresh independent audit pass.
 
 ## Files
 
-Canonical format: **LaTeX source** (a `git archive` of the pinned
-commit). All vendored and derived forms are gitignored; only this
-README is tracked.
+Canonical format: **repository source tree** (`source-tree`; a
+`git archive` of the pinned commit, predominantly LaTeX). All vendored
+and derived forms are gitignored; only this README is tracked.
 
 - `catlog.tar.gz` — the canonical artifact: a `git archive` of the
   full repository tree at the pinned commit (`.tex`, `.sty`, the one

@@ -89,6 +89,7 @@ for dir in resources/*/; do
 
     artifact="$(fm_get "$readme" artifact)"
     hash="$(fm_get "$readme" sha256)"
+    format="$(fm_get "$readme" format)"
 
     # Required-key policing: the schema (resources/README.md
     # "Entry format") makes artifact, sha256, format, and fetch-url
@@ -102,6 +103,21 @@ for dir in resources/*/; do
             fatal=$((fatal + 1))
         fi
     done
+
+    case "$format" in
+        latex-source|source-tree|html|pdf|scan) ;;
+        "") ;; # Already reported by required-key policing above.
+        *)
+            echo "  ${entry}: FATAL unknown format '${format}'" \
+                 "— expected latex-source, source-tree, html, pdf, or scan"
+            fatal=$((fatal + 1))
+            ;;
+    esac
+
+    if [ "$format" = "source-tree" ] && [ -z "$(fm_get "$readme" version)" ]; then
+        echo "  ${entry}: FATAL source-tree requires an immutable revision in 'version'"
+        fatal=$((fatal + 1))
+    fi
 
     if [ -n "$artifact" ] && [ -n "$hash" ]; then
         check_hash "$entry" "$dir" "$artifact" "$hash"

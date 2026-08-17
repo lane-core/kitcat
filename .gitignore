@@ -20,6 +20,7 @@ src/Test/**
 
 # resources/: vendored source documents and derived forms are local-only;
 # only the entry README (citation, hash, line-anchored map) is tracked.
+resources/**/snapshot/**
 resources/**/*.pdf
 resources/**/*.ps
 resources/**/*.djvu
