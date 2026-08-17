@@ -16,8 +16,7 @@ open import Core.Base
 open import Core.Type using (Level; Type)
 open import Core.Data.Sigma using (Σ; Σ-syntax; _,_; fst; snd)
 open import Core.Kan
-open import Core.Transport.Base
-  using (is-contr→is-set; total-contr-unique; Singl-contr)
+open import Core.Transport.Base using (Singl-contr)
 open import Core.Path using (ap-comp)
 
 private

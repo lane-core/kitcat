@@ -13,8 +13,8 @@ open import Agda.Primitive.Cubical public
         ; I       -- I : IUniv
         ; i0      -- i0 : I
         ; i1      -- i1 : I
-        ; IsOne   -- IsOne : I → Typeω
-        ; Partial -- Partial : ∀{ℓ} (i : I) (A : Type ℓ) → Type ℓ
+        ; IsOne   -- IsOne : I → Exo 0ℓ
+        ; Partial -- Partial : ∀{ℓ} (i : I) (A : Type ℓ) → Exo ℓ
                   -- Partial i A = IsOne i → A
         ; PartialP
         ; primPOr
@@ -71,6 +71,10 @@ open import Agda.Builtin.Cubical.Path public
 ∂ i = ~ i ∨ i
 
 module ∂ where
+  separate : I → I → I → I
+  separate φ ψ i = (φ ∧ ~ i) ∨ (ψ ∧ i)
+  {-# INLINE separate #-}
+
   contract : {ℓ : I → Level} (A : ∀ i → Type (ℓ i)) (i j : I) → Type (ℓ (i ∨ j))
   contract A i j = A (i ∨ j)
   {-# INLINE contract #-}
@@ -79,12 +83,12 @@ module ∂ where
   extend A i j = A (i ∧ j)
   {-# INLINE extend #-}
 
-  cover : {ℓ : I → Level} {@0 A : ∀ i → Type (ℓ i)}
+  cover : {ℓ : I → Level} (m : I → Level) {@0 A : ∀ i → Type (ℓ i)}
         → (φ : I)
-        → (P : ∀ k → A (φ ∧ k) → Type (ℓ (φ ∧ k)))
+        → (P : ∀ k → A (φ ∧ k) → Type (m (φ ∧ k)))
         → (∀ k → A k)
-        → (i : I) → Type (ℓ (φ ∧ i))
-  cover φ P f i = P (φ ∧ i) (f (φ ∧ i))
+        → (i : I) → Type (m (φ ∧ i))
+  cover m φ P f i = P (φ ∧ i) (f (φ ∧ i))
   {-# INLINE cover #-}
 
   sym : {ℓ : I → Level} (A : ∀ i → Type (ℓ i)) (i : I) → Type (ℓ (~ i))

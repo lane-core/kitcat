@@ -216,18 +216,18 @@ hc A φ f g h = hcom (∂ φ) sys
     hc-fil : (i : I) → A i1
     hc-fil i = hfil (∂ φ) i sys
 
-kext : {A : ∀ i → Type (ℓ i)} (φ : I)
-     → (P : ∀ i → A (φ ∧ i) → Type (ℓ (φ ∧ i)))
+kext : {w : Level} {A : ∀ i → Type (ℓ i)} (φ : I)
+     → (P : ∀ i → A (φ ∧ i) → Type w)
      → (g : ∀ i (a : A (φ ∧ i)) → P i a)
      → (f : ∀ k → A k)
      → P φ (f φ)
-kext φ P g f = com (∂.cover φ P f) (∂ φ) sys
+kext {w = w} φ P g f = com (∂.cover (λ _ → w) φ P f) (∂ φ) sys
   module kext where
     sys : PartialsP (∂ φ) λ i → P (φ ∧ i) (f (φ ∧ i))
     sys k (φ = i0) = g i0 (f i0)
     sys k (k = i0) = g i0 (f i0)
     sys k (φ = i1) = g k (f k)
-{-# DISPLAY com (∂.cover φ P f) φ (kext.sys φ P g f) = kext φ P g f #-}
+{-# DISPLAY com (∂.cover _ φ P f) φ (kext.sys φ P g f) = kext φ P g f #-}
 
 HComposite : ∀ {u} {A : I → Type u} {w x : A i0} {y z : A i1}
             → (p : x ≡ w) (q : x ≡ y ∶ A) (r : y ≡ z) → Type u
