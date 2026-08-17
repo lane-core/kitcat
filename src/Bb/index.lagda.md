@@ -15,6 +15,17 @@ module at once, which is what keeps the archive frozen green.
 module Bb.index where
 ```
 
+## Composite 2-cells and paths
+
+A virtual 2-graph whose total space of composite 2-cells is
+contractible carries a based identity system over every composite.
+Right units then identify every 2-cell type with the corresponding
+identity type.
+
+```agda
+import Bb.2CellEqvId
+```
+
 ## Cats with explicit interchange
 
 A category presented through a representable embedding `emb` of an
