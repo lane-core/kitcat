@@ -1,6 +1,7 @@
 ---
 author: Lane Biocini
 date: 2026-07-08
+last-modified: 2026-07-13
 ---
 
 Virtual graph theory aims to provide a higher-dimensional setting for
@@ -23,7 +24,9 @@ open import Core.Base
 open import Core.Data.Sigma
 open import Core.Path.Base
 open import Core.Transport.J using (J; subst)
-open import Core.Equiv.Base using (iso→equiv; _≃_)
+open import Core.Equiv.Base using (iso→equiv; _≃_; is-equiv)
+open import Core.Function.Embedding using (is-embedding)
+open import Core.Equiv.Properties using (has-section)
 ```
 
 A virtual graph begins with the data of a directed graph, or quiver.
@@ -62,7 +65,7 @@ are retained as the two sides of the contexts on which judgments act.
 Confronting a term based at x with a coterm based at y produces a
 two-sided context with a distinguished gap from x to y.
 
-   w → x  | ? |  y → z
+   `w → x  | ? |  y → z`
 
 We call such a pair an argument.
 
@@ -88,12 +91,11 @@ boundary.
 ```agda
   conclusion : ∀ {x y} → argument x y → Type h
   conclusion γ = hom (ant γ) (scd γ)
-
 ```
 
-We may now define the central notion. A judgment from x to y is a
-uniform two-sided action on contexts having a distinguished gap from x
-to y.
+We may now define the central notion, the Π counterpart of the Σ type
+above. A judgment from x to y is a uniform two-sided action on
+contexts having a distinguished gap from `x` to `y`.
 
 ```agda
   judgment : ob → ob → Type (o ⊔ h)
@@ -184,7 +186,7 @@ On purely syntactic grounds we might naively suppose that we are on
 sound footing: source and target match on the nose. Here the two
 middle boundaries are not independently presented and subsequently
 shown to be compatible: they are given from the outset by the very
-same index y. The ordinary dependent signature does not express that
+same index `y`. The ordinary dependent signature does not express that
 the two boundaries have been compared and found compatible. Rather, it
 prevents them from ever being presented separately. Compatibility has
 been strictified into the indexing discipline of the type itself.
@@ -202,7 +204,7 @@ above.
 The lesson we retain is not that compatibility must itself be an
 identity type, but that the data involved in compatibility should not
 be strictified away by the notation of a common boundary. The
-construction of judgment is designed to preserve the corresponding
+construction of `judgment` is designed to preserve the corresponding
 separation between contextual presentation and mediation. A term and
 coterm independently present the two sides of a context, leaving a
 distinguished gap from x to y; a judgment specifies a uniform action
@@ -223,8 +225,24 @@ of idempotent equivalence, then
   `reflect (idn x) : judgment x x`
 
 corresponds exactly to the expected notion of categorical composition:
-composition is recovered as the contextual action of the unit. Concretely,
-we would have:
+composition is recovered as the contextual action of the unit. What is
+this action? Informally, the unit does nothing to the way precomposite
+and postcomposite meet; it simply closes the gap between them. In a
+sense we will make literal, the unit can be said to reify the
+surrounding context that renders their encounter coherent, where their
+ability to meet is premised on this datum, the unit, which formally
+represents the legibility of their encounter. The resulting
+notion of composition will moreover carry higher coherences, such as
+the pentagon and its higher analogues, arising from the same
+representability principle.
+
+This picture has a close analogue in virtual double category theory.
+There, units are nullary composites, while ordinary loose composites
+are higher-arity instances of the same representability phenomenon; a
+virtual double category in which all horizontal composites and units
+exist is equivalently a pseudo double category.
+
+Returning to our concrete presentation, we would have:
 
 ```text
   f : hom w x
@@ -275,21 +293,118 @@ The following equivalence then has an immediate interpretation:
 
 Formally, this is the familiar equivalence between the domain of a map
 and the total space of its fibers. Here it admits a useful reading: an
-edge from `x` to `y` is equivalently a judgment from `x` to `y` together
-with a chosen representation of that judgment by an edge.
+edge from `x` to `y` is equivalently a judgment from `x` to `y`
+together with a chosen representation of that judgment by an edge.
 
 This does not assert that every judgment is representable. Rather, the
-subsequent structure carried by a virtual graph will be expressed
-by requiring particular contextual actions to admit canonical, typically
-contractibly determined, representatives.
+subsequent structure carried by a virtual graph will be expressed by
+requiring particular contextual actions to admit canonical, typically
+contractibly determined, representatives, particularly those expressed
+over various kinds of total spaces.
+
+In this spirit, we will now define the type of deductions which are
+possibly spurious in nature (no link between the argument and the
+supposed conclusion).
 
 ```agda
-  argue : ∀ {x y} → term x → coterm y → argument x y
-  argue h k = h , k
+  deduction : ob → ob → Type (o ⊔ h)
+  deduction x y = Σ γ ∶ argument x y , conclusion γ
 
-  intro : ∀ {x y} → hom x y → term y
-  intro {x} f = x , f
-
-  elim : ∀ {x y} → hom x y → coterm x
-  elim {y = y} f = y , f
+  module deduction {x y} (d : deduction x y) where
+    private
+      γ = d .fst
+      c = d .snd
 ```
+
+We regard that we have a viable solution when we possess some
+edge which can show that that way to fill the hole has a definite
+relation to the conclusion: it is not spurious. We demonstrate that a
+deduction is genuinely a solution by showing that there is a way to
+relate the specific conclusion to the canonical judgment given by
+reflect.
+
+```agda
+    solution : Type h
+    solution = Σ d ∶ hom x y , c ≡ reflect d γ
+
+    conclude : solution → Σ s ∶ conclusion γ , c ≡ s
+    conclude (d , p) = reflect d γ , p
+```
+
+Observe that we have a pullback square for this fixed argument and solution.
+
+                    conclude
+   solution  ───────────────────────>  Singl c
+       │                                  │
+       │                                  │
+   fst │                                  │ fst
+       │                                  │
+       ▼                                  ▼
+    hom x y  ───────────────────────>  conclusion γ
+               λ s → reflect s γ
+
+And furthermore that we can now formulate a hierarchy of coherence
+properties of interest, namely that the space of solutions satisfies
+various conditions related to lifts.
+
+```agda
+    has-answer : Type h
+    has-answer = has-section conclude
+
+    is-determinate : Type h
+    is-determinate = is-embedding conclude
+
+    is-solvable : Type h
+    is-solvable = is-equiv conclude
+
+  vcell
+    : ∀ {x y}
+    → ((u , t) : term x)
+    → judgment x y
+    → ((v , c) : coterm y)
+    → hom u v
+    → Type h
+  vcell Γ α Δ c = c ≡ α (Γ , Δ)
+
+  is-opcartesian : ∀ {x y} → judgment x y → Type (o ⊔ h)
+  is-opcartesian {x} {y} α =
+    (d : deduction x y) (q : d .snd ≡ α (d .fst))
+      → is-contr (fiber (deduction.conclude d) (α (d .fst) , q))
+
+```
+
+To conclude this module I offer the following final comments.
+
+A `deduction X Y` fixes the following problem: what is the way we can
+reason with Γ ⊢ X, X ⊢ Y, and Y ⊢ Δ such that we obtain, in the end,
+some Γ ⊢ Δ (the shape of a "conclusion" edge), which agrees with a
+coherent notion of cut. Notice that our formalism does not opine on
+the decision of which cut happens first in the casual sense: the cut
+of Γ ⊢ X and X ⊢ Y; or the cut of X ⊢ Y and Y ⊢ Δ; indeed this is
+essential for allowing a decisive area of concern to enter into our
+developing subject, matters such as Lafont's critical pair, which make
+the coherence of cut a subtle matter.
+
+In general this coherence ought to concern how the way of completing
+arguments using cut has some definite relationship to the shape of how
+things can be concluded in general. In other words, that cut
+elimination obtains for a candidate logical framework can be
+interpreted as the demand that for each proof using cut, there is some
+deduction which is not spuriously related to this means of deduction.
+If we can deduce something using cut, the cut-free deduction denoting
+it necessarily obtains, and both the procedure and the denotation are
+determined in mutual fashion.
+
+The matter of cut elimination is more subtle than "cut is unnecessary,
+the cut-free proof is canonical and the only one that truly
+matters". The subtlety comes from fixing how it comes to be that it
+matters, and this has precisely to do with how we can define an
+irrelevant procedure that coincides with it. Indeed, it is well known
+that a system is consistent, and hence only becomes relevant as a
+system of reasoning at all, once we are able to do precisely this
+thing: eliminate the cut. Philosophically speaking, we can say that
+what's at stake in forging a system of reasoning is not a procedure
+for defining what truth is, but how to forget everything except the
+truth, and to further observe that there is quite a lot that can be
+forgotten. In fact some part of the truth must disappear as well,
+otherwise the whole enterprise is lost.
