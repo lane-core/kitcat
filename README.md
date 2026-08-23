@@ -1,8 +1,19 @@
 # Kitcat
 
-An experiment with univalent programming and open source mathematics in cubical Agda.
+An experiment with univalent programming and open source mathematics in cubical
+Agda.
 
-> **WIP** — API is unstable. Expect breaking changes.
+> **WIP** — Kitcat is currently undergoing a total rewrite in line with its new
+> LLM policy. The current master is an example of what will be replaced, while
+> work continues in a separate branch that will be based on agda-prelude (with
+> some inspiration from 1lab's metaprogramming facilities), with univalent
+> mathematics presentation written to be faithful to the Rijke textbook.
+>
+> While the development of the cubical infrastructure will be custom to this
+> library (the development of this machinery will be much different than in
+> cubical or 1lab), notation is to be influenced by Bentzen's _Naive Cubical Type Theory_
+> while the mathematics arises from my own perspective and research into the
+> the construction of cubical path infrastructure.
 
 ## Contents
 
@@ -28,14 +39,16 @@ The category theory framework is built on a confluence of ideas from:
 
 ## Acknowledgments
 
-The primary HoTT reference used throughout is Rijke's _Introduction to Homotopy Type Theory_, which we take as our standard reference for identifiers and structural
-organization of the theory whenever possible.
+The primary HoTT reference used throughout is Rijke's _Introduction to Homotopy
+Type Theory_, which we take as our standard reference for identifiers and
+structural organization of the theory whenever possible.
 
 While many lemmas are original (I've rewritten the Core library several times
 in the course of development), Kitcat has adapted or otherwise drawn upon code
 from the following projects, which are exemplars of open source mathematics and
-deserve ample credit for their contributions to the foudnational corpus of formalized
-Homotopy Type Theory and Univalent Foundations. They are excellent, go look at them.
+deserve ample credit for their contributions to the foudnational corpus of
+formalized Homotopy Type Theory and Univalent Foundations. They are excellent,
+go look at them.
 
 - [**1lab**](https://1lab.dev/) (Amélia Liao et al., AGPL-3.0) — Definitions
   and proofs across `Core.Function.Embedding`, `Core.HLevel`, `Core.Trait.Trunc`,
@@ -54,6 +67,6 @@ Homotopy Type Theory and Univalent Foundations. They are excellent, go look at t
 - [agda-categories](https://github.com/agda/agda-categories) —
   Category theory library for Agda
 
-## LLM policy (updated 2026-07-09)
+## LLM policy (updated 2026-07-22)
 
 See [llm-policy](docs/llms.md) for my statement on the use of generative LLMs in this project.

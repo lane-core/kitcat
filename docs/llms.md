@@ -2,17 +2,19 @@
 
 _by Lane Biocini_
 
-Written and edited by hand on 2026-07-05, and last updated on 2026-07-09. See
+Written and edited by hand on 2026-07-05, and last updated on 2026-07-22. See
 the appendix for a changelog.
 
 ## General policy
 
 This repository is developed with some LLM assistance under my personal direction
 and review; in general it aims to be an exemplar of transparent LLM-assisted
-mathematics research. Truth be told, I'm still figuring out what that means.
-As such, I see this project in part as a living entry into the conversation
-about ethical practice in this domain. Here are the relevant factors I consider,
-and a description of my current approach:
+mathematics research. I'm still figuring out what that means, although I have
+trended towards a more restrictive policy on LLM usage.
+
+I see this aspect of the project as a living entry into the conversation about
+ethical practice in this domain. Here are the relevant factors I consider, and
+a description of my current approach:
 
 - Kitcat must not compromise on proper documentation and attribution for
   intellectual development; particularly because many ideas explored in this
@@ -71,93 +73,85 @@ a clear account of their intended contributions.
 I began to use LLM assistance starting from Opus 4.6 in late 2025 after being
 acquainted with its use during a prior consultancy to assist with their
 endeavors. When I have used it to assist with code generation, this was done in
-the belief that LLM use is only sound when granted a strong initial foundation
-by human-authored definitions and data structures. My belief is that when a
-fruitful foundation has been provided, many results depart naturally and
-mechanically.
+the initial belief that LLM use is only sound when granted a strong initial
+foundation by human-authored definitions and data structures. My belief is that
+when a fruitful foundation has been provided, many results depart naturally and
+mechanically. There is a point to which one must retreat from extensive use of
+such tools, which I became progressively convinced of by the latter half of 2026.
 
-I admire Grothendieck's view that the best proofs are those which are
-"trivial" in the sense that they follow naturally from the definitions at each
-step. Such circumstances are the ones which in my experience facilitate the
-best and most deterministic results from LLM-assisted research. I have
-constantly sought clarity and elegance in the structures of the library, and
-believe my success with LLM-assisted code generation is a direct result of the
-care and attention I have directed in this regard.
+I admire Grothendieck's view that the best proofs are those which are "trivial"
+in the sense that they follow naturally from the definitions at each step. Such
+circumstances are the ones which in my experience facilitate the best and most
+deterministic results from LLM-assisted research. I have constantly sought
+clarity and elegance in the structures of the library, and believe any success
+with LLM-assisted code generation is a direct result of the care and attention
+I have directed in this regard. But ultimately such evidence is merely
+circumstantial, and a more scientific approach is required to determine the
+correct methodology for LLM-assisted research.
 
-There is a point to which one must retreat from extensive use of such tools,
-which I became progressively convinced of by the latter half of 2026. There is
-no replacement for direct involvement in proof assistant coding especially. Not
-only do LLM tools tend to undermine one's ability to oversee the development
-and articulation of results, reducing one's ability to gain insight from the
-nuts and bolts of proofs, they additionally threaten to make one dependent on
-their use, which is much worse.
-
-Furthermore, given that the frontier is in general the most competent at
-proof-assistant tasks, this presents a non-trivial adversarial risk because
-such models are not developed and operated by actors with an uncontroversial
-reputation for transparency, fairness, and accountability, much as obtains with
-various actors within the proprietary software industry as a whole. This
-presents a certain tension which measures must be taken to mitigate. Explicit
-human review and authoritative developmental initiative are the principal such
-measures. The proliferation of alternative vendors, locally hosted models, and
-new methodologies is also a positive development in this regard, and my efforts
-are directed to meet them as they arrive.
+There is no replacement for direct involvement in proof assistant coding
+especially. Not only does the current state of LLM tools tend to undermine
+one's ability to oversee the development and articulation of results, reducing
+one's ability to gain insight from the nuts and bolts of proofs, they
+additionally threaten to make one dependent on their use, which is much worse.
 
 For these reasons I have sought to proactively regulate my use of LLM after my
 initial period of experiment, and have since renewed my focus on direct
-engagement with the codebase and its development. I also have some trash to
-clean out, as I pay off certain debts that accumulated during the above period.
+engagement with the codebase and its development. In August 2026, I made my
+decision to halt any use of LLM assistance, and started to rewrite the codebase
+in its entirety by hand to provide an absolute guarantee that all results can
+be understood and accounted for by me personally, and can be relied upon by
+others without concern. _This rewrite is currently ongoing, and this statement
+will be updated upon its completion._
 
 ## The Euler agentic suite
 
-I am working to explicitly codify the procedures by which LLM usage is regulated
-in Kitcat via a suite of agentic context management and skill infrastructure
-informed by my experience. To the extent that I will continue to use LLM
-assistance, it will be for trivial chore-related maintenance tasks and for
-probative work, which will serve as raw material for technical clarification
-and elaboration of personally authored proofs and theoretical developments.
+I will be working to explicitly codify procedures by which LLM usage is
+regulated in Kitcat via a suite of agentic context management and skill
+infrastructure informed by my research and experience with such methods. To the
+extent that I will continue to use LLM assistance, it will be for trivial
+chore-related maintenance tasks and for mechanical probative work, such as
+generation of counterexamples, which will serve as raw material for technical
+clarification for personally authored proofs and theoretical developments.
 
-Therefore I decided to develop a suite of tools to assist with the development
-of the library by forking the [feynman project's](https://www.feynman.is) skill
-and agentic context suite (MIT license) as its basis. This is intended as an
-experiment in agentic context management for proof assistants in general, and
-aims to provide a framework that maximizes the benefits of generative model
-usage while centering human users both philosophically and in practice. I
-maintain that the strongest results achievable with such methods require this
-perspective.
+The intention guiding Euler's eventual development is to provide a framework
+that maximizes the benefits of generative model usage while centering human
+users both philosophically and in practice. I maintain that the strongest
+results achievable with such methods require the perspective that there is
+nothing specifically generative in the use of LLMs or AI usage for mathematical
+purposes. The provenance of any mathematical construction departs from the
+material conditions of mathematical practice as exercised within the context of
+a shared cultural practice. Therefore the only tools which are suitable towards
+those ends must be ones that do not obscure such provenance at a minimum, and
+ideally they enable greater transparency and accountability in such
+development.
 
-Of particular interest is the development of interactive methodologies for
+Thus of particular interest is the development of interactive methodologies for
 LLM-assisted development that enable close involvement and oversight by human
 users at all stages of intellectual and technical development. The goal being,
-only the most trivial and mechanical tasks are delegated to LLM, so that the
-workflow exerts systematic safeguards against the divergence between one's own
-mental model of what is happening and the actually performed work. This is one
-of my most frustrating experiences with LLM-assisted development, and is a huge
-reason why I was forced to temper my own approach to the use of such tools. It
-made the pernicious aspects of this technology painfully clear to me.
-Furthermore, it seems an ethical obligation to show _things do not have to be
-this way_, that there is nothing inevitable about the development of this
-technology in the current direction that certain bad actors are disposing it
-towards. That both proponents and detractors alike appear to deem such an
-outcome to be settled should be cause for introspection among the latter group.
+only the most trivial and mechanical tasks are delegated to LLM, while workflows
+exert systematic safeguards against the degradation of one's own apprehension
+of what specific results obtain from actually performed work.
 
-One tool I plan to develop will assist here by scanning other libraries for
-similar proofs, flagging candidates for human review and citation confirmation
-where provenance is otherwise uncertain. Another feature will do the same for
-the citation resources vendored in the project, scrutinizing and comparing text
-to formalized results to discover results which arose independently or at worst
-had lapses of citation.
+That the naive use of LLM tools in no way leads to such an outcome is one of
+the worst frustrations with LLM-assisted development, and comprises a huge
+reason why I was forced to temper my own approach to the use of such tools. It
+also seems an ethical obligation to show _things do not have to be this way_,
+and that there is nothing inevitable about the development of this technology
+in the current direction that certain bad actors are disposing it towards.
 
 I will develop the Euler suite using Kitcat as a testbed for development to
-demonstrate the viability of the methodology I seek to encode with practical
-evidence. Once this evidence is suitably established, an effort will be undertaken
-to make it portable across different proof assistants (such as Rocq or Lean), and
-also deployable to your agentic harness of choice.
+demonstrate the viability of a satisfactory methodology informed and developed
+by practical evidence. Once such is suitably established, an effort will be
+undertaken to make the workflows portable across different proof assistants
+(such as Rocq or Lean), and also deployable to your agentic harness of choice.
+Local and open-source models will be the target of such development, and the
+central component of research will be to determine how they can be guided
+to produce salient and useful assistant that does not compromise on ethical
+integrity of practitioners.
 
-That being said, the current fork is at a very preliminary stage, and is not
-yet ready to be used, nor do I regard it as encoding the methodology described
-above at present. I will be working to develop it in the coming months, but it
-will not take priority over my actual research efforts.
+I will be working to develop it in the coming months, but it will not take
+priority over my actual research efforts.
 
 ## Commentary and philosophical remarks
 
@@ -169,82 +163,58 @@ political struggle over the enclosure of the commons some centuries prior, and
 have often marvelled at the alternation of outlook among the forces of industry
 and well-meaning independent commentators.
 
-At present I probably have a more liberal policy on LLM usage compared to some
-projects in this space, I do however believe that the attempt to inject nuance
-into the debate is worthwhile. It seems beyond doubt that the potential
-unlocked by LLMs and related technologies holds great promise. Irrespective of
-whether such technologies are useful however, more importantly I believe it
-would be irresponsible for those most capable of judgment in mathematical
-affairs to abdicate taking a strong, and indeed, leading role in helping to
-decide the proper use of such tools in mathematical practice by a blanket
-rejective stance.
+It seems beyond doubt that potentials unlocked by LLMs and related technologies
+hold some promise. At present I have a more liberal policy on LLM usage
+compared to some projects in this space, and I believe that the attempt to
+inject nuance into the debate is worthwhile (it is a regretable state of
+affairs that I am self-conscious that the word "nuance" will make the reader
+bristle).
 
-I conjecture that such a stance has the practical effect of ensuring that the
-only actors who may knowledgeably discuss the use of such tools in mathematical
-practice are those with the least affinity or accountability towards the
-community of mathematicians writ large. The danger is that those actors will
-thereby be able to progressively appropriate mathematical results beyond
+Indeed, I think it would be irresponsible for those most capable of judgment in
+mathematical affairs to abdicate taking a strong, and indeed, leading role in
+helping to decide the proper use of such tools in mathematical practice by a
+blanket rejective stance. I understand that some feel this is the only
+principled position, but I implore them to consider the following appeal.
+
+The danger I envision is that such a stance has the practical effect of
+ensuring that the only actors who may knowledgeably discuss the use of such
+tools in mathematical practice are those with the least affinity or
+accountability towards the community of mathematicians writ large. Those actors
+will thereby be able to progressively appropriate mathematical results beyond
 mathematicians' ability to check the development undertaken at community
-expense. If mathematics is fundamentally a social activity, as the constructive
-side believes, the present moment expresses a political struggle over
-mathematics itself in no uncertain terms.
+expense. Like in the history of various other domains, through a variety of
+statagems it may be possible to infilitrate conventional formal and informal
+settings and direct them to accommodate practices that subvert and redirect
+communal endeavors into modalities that facilitate extractive and exploitative
+practices. To the extent that such a scenario seems plausible today, it is
+because this road has already been prepared, and naive strategies of potential
+opposition have already been explicitly accounted for such during such
+preparation.
 
-I believe the most powerful counter to this dilemma is to wager that any
-approach that improves the ability of human oversight and agency in the use of
-LLM tools will also necessarily coincide with the most effective use of LLM
-tools overall; that the road to challenge the dangers its irresponsible use
-poses is to show concretely that a better road which does not alienate humans
-from their intellectual faculties is not only possible, but more compelling
-than any alternative. I am confident that the increasing sophistication of LLM
-models (or whatever else AI-aspirational tech has in store for us) will go on
-to vindicate this perspective if we can build the infrastructure and practices
-to support development in such a direction.
+I believe the most powerful counter to this dilemma is to pose an alternative
+vision which wagers that any approach that improves the ability of human
+oversight and agency in the use of LLM tools will also necessarily coincide
+with the most effective use of such tools overall; that the road to challenge
+the dangers its irresponsible use poses is to show concretely that a better
+road which does not alienate humans from their intellectual faculties is not
+only possible, but more compelling than any alternative.
 
-My hypothesis is that to the extent that LLM agents parallel the competence of
-human users, it will be because they will be able to dispose themselves to the
-problems such humans consider in a comparable and compatible way. While there
-may be differences in the particular way we experience the associated
-challenges such problems present, these will be differences of degree and not
-of kind - for if they were differences of kind, they would not be the problems
-of concern to us. This last conclusion does not follow automatically; it
-is not a tautology, but a fixed point contingent upon our engagement.
-
-This reorientation to the problem ought to lead us to think that the effective
-means of augmenting agentic capacities will coincide with the ability of such
-tools to augment the ones of human beings, because if we set up the problem
-correctly, the techniques allowing us to master the problems of our concern
-ought also to work for them, particularly if _they themselves_ go on to
-comprise a principal such technique in a virtuous and not degenerate sense.
-
-To the extent that LLM will be fruitful for the development of science and
-mathematics as a whole, it will be by making its practice more and not less
-comprehensible to human and LLM reasoners alike, and making the achievement of
-results more responsive to the agency of smaller participants. It is with that
-resolve that I seek to demonstrate this perspective by example.
-
-In general, artifacts that are inscrutable to human interlocutors undermine the
-connection between intentions and results for both human and LLM reasoners
-alike. Human beings were capable of writing slop long before LLM came in the
-picture, with similar results that affect the accessibility and reliability of
-constructions as exhibited in so-called technical or design debt arising from
-the unforeseen consequences of technical decisions. I struggle to believe that
-anyone who has seriously reviewed the output of totally self-driven LLM agent
-output would come to the conclusion that it represents goal-directed or
-intentional behavior in any meaningful sense. I would say the same thing for
-many large-scale software projects as well, or in particular any output of any
-large organization whose efforts are not continually renewed through responsive
-and systematic mechanisms of accountability, by consensus achieved through
-spirited internal debate allowed to be of consequence in determining the
-direction of collective efforts.
+I feel confident that the increasing sophistication of LLM models (or whatever
+else AI-aspirational tech has in store for us) will go on to vindicate this
+perspective if we can build the infrastructure and practices to support
+development in such a direction. To the extent that LLMs or other AI assisted
+technologies will be fruitful for the development of science and mathematics as
+a whole, it will be by making their practice more and not less comprehensible
+to its participants. It is with that resolve that I might seek to demonstrate
+this perspective by example.
 
 My endeavor aspires to participate in a larger collective effort to develop
 sound regulatory and ethical frameworks for the use of LLMs and successor
 technologies more generally. I do not claim that the present policy addresses
 all concerns, but I do hope that it serves as a useful entry into the wider
 conversation about the responsible and ethical use of such tools, which in my
-opinion can only reach an ultimate resolution when the efforts of civil society
-are focused and accountable towards democratically determined public policy and
-regulation.
+opinion can only reach an ultimate resolution when all efforts of civil society
+in this domain are accountable towards democratically determined public policy.
 
 ## Links
 
@@ -255,10 +225,16 @@ regulation.
 
 # CHANGELOG
 
-- 2025-07-09
-  - Tightening and further restriction of LLM usage policy, and clarification of the Euler agentic suite.
+- 2026-07-22
+  - Fixed changelog date error (embarrassing!).
+  - More restrictive language, and further clarification and editing down of
+    positions. In general my positions have gotten more restrictive over time.
+  - Euler is going to be cleanroom, so I removed all mention of feynman.
+- 2026-07-09
+  - Tightening and further restriction of LLM usage policy, and clarification
+    of the Euler agentic suite.
   - Substantial edits and expansion of prose.
   - Add Bowman's blog posts to new Links section.
   - Change all mention of "AI" to "LLM" (retroactive).
-- 2025-07-05
+- 2026-07-05
   - Initial draft of LLM policy and research provenance documentation.
